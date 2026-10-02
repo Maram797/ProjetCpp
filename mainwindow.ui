@@ -1,0 +1,1219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1300</width>
+    <height>750</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Pawché - Smart Pet Center</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+QMainWindow, #centralwidget, #centre, #pagescentre, #pageliste, #pageformulaire, #pagemodule,
+#colonnedroite, #lignePoste, #ligneDb { background-color: #FBF4EE; }
+QLabel { color: #713923; background-color: transparent; }
+
+/* Inputs */
+QLineEdit, QComboBox, QSpinBox {
+  background-color: white; border: 1px solid #E8D8D0; border-radius: 8px;
+  padding: 6px 8px; font-size: 10pt; color: black;
+}
+QComboBox QAbstractItemView {
+  background-color: white; color: black;
+  selection-background-color: #F8E5DF; selection-color: black;
+}
+#combocabinet { background-color: #F8E5DF; color: #713923; font-weight: bold; border: none; }
+
+/* Left menu */
+#sidebar { background-color: #FBF4EE; border: none; }
+#lblmarque { font-size: 16pt; font-weight: bold; }
+#lblposte, #lblpostenum { font-size: 7pt; font-weight: bold; }
+#lblnomvet { font-size: 10pt; font-weight: bold; margin-top: 4px; }
+#lbldb, #lbldbms { font-size: 8pt; }
+#btnanimaux, #btnproprietaires, #btnconsultations, #btnproduits, #btnfacturation {
+  text-align: left; padding: 8px; border: 1px solid #713923; border-radius: 6px;
+  font-size: 9pt; color: #713923; background-color: transparent;
+}
+#btnanimaux:hover, #btnproprietaires:hover, #btnconsultations:hover, #btnproduits:hover, #btnfacturation:hover { background-color: #F8E5DF; }
+#btnanimaux:checked, #btnproprietaires:checked, #btnconsultations:checked, #btnproduits:checked, #btnfacturation:checked {
+  background-color: #713923; color: white; font-weight: bold;
+}
+#btnsync {
+  background-color: transparent; color: #713923; border: 1px solid #713923; border-radius: 6px;
+  padding: 8px; font-size: 9pt;
+}
+#btnsync:hover { background-color: #F8E5DF; }
+
+/* Top bar */
+#editrecherche { padding: 8px; }
+#lblavatar { background-color: #F8E5DF; border-radius: 18px; font-size: 9pt; font-weight: bold; }
+#btnnouvelanimal, #btnajouter {
+  background-color: #713923; color: white; border: 2px solid #713923; border-radius: 6px;
+  padding: 8px 16px; font-size: 10pt; font-weight: bold;
+}
+#btnnouvelanimal:hover, #btnajouter:hover { background-color: #8A4A2F; }
+#btnannuler, #btnmodifier, #btnsupprimer {
+  background-color: transparent; color: #713923; border: 2px solid #713923; border-radius: 6px;
+  padding: 8px 16px; font-size: 10pt; font-weight: bold;
+}
+#btnannuler:hover, #btnmodifier:hover { background-color: #F8E5DF; }
+#btnsupprimer:hover { background-color: #C2455F; border-color: #C2455F; color: white; }
+#btnmodifier:disabled, #btnsupprimer:disabled { color: #CDB5A8; border-color: #E8D8D0; }
+
+/* Page header + filter tabs */
+#lbltitrepage, #lbltitremodule { font-size: 22pt; font-weight: bold; color: black; }
+#lblsoustitrepage, #lblmodule { font-size: 11pt; color: black; }
+#btntous, #btnchiens, #btnchats {
+  background-color: transparent; color: #713923; border: none; border-radius: 6px;
+  padding: 8px 14px; font-size: 10pt; font-weight: bold;
+}
+#btntous:checked, #btnchiens:checked, #btnchats:checked { background-color: #F8E5DF; }
+
+/* Table */
+#tableanimaux {
+  background-color: white; border: 1px solid #E8D8D0; border-radius: 12px;
+  font-size: 10pt; color: black; outline: 0;
+  gridline-color: transparent; alternate-background-color: #FBF4EE;
+}
+#tableanimaux::item { padding: 8px; border: none; }
+#tableanimaux::item:selected { background-color: #F8E5DF; color: black; }
+QHeaderView { background-color: #F8E5DF; border: none; }
+QTableCornerButton::section { background-color: #F8E5DF; border: none; }
+QHeaderView::section { background-color: #F8E5DF; color: #713923; font-size: 8pt; font-weight: bold;
+  border: none; border-right: 1px solid #E8D8D0; border-bottom: 1px solid #E8D8D0; padding: 8px; }
+
+/* Statistics bars */
+#barresains, #barreensoin, #barreurgent { background-color: #F3E9E2; border: none; border-radius: 6px; }
+#barresains::chunk { background-color: #713923; border-radius: 6px; }
+#barreensoin::chunk { background-color: #D9A384; border-radius: 6px; }
+#barreurgent::chunk { background-color: #EE91A5; border-radius: 6px; }
+#lblbsains, #lblbensoin, #lblburgent { font-size: 8pt; }
+
+/* Cards */
+#cadrestatistiques, #cadredetail { background-color: white; border: 1px solid #E8D8D0; border-radius: 16px; }
+#cadrestatistiques QLabel, #cadredetail QLabel { border: none; background-color: transparent; }
+#lbltitrestats, #lbltitredetail { font-size: 12pt; font-weight: bold; }
+#lblsante { color: #287554; font-size: 8pt; }
+#cadredetail QLabel { color: black; }
+#cadredetail #lblphoto { background-color: #F8E5DF; border-radius: 20px; font-size: 48pt; }
+#cadredetail #lblnom { font-size: 16pt; font-weight: bold; }
+#cadredetail #valage, #cadredetail #valpuce, #cadredetail #valvaccinal,
+#cadredetail #valproprietaire, #cadredetail #valtelephone, #cadredetail #valstatut { font-weight: bold; }
+#cadredetail #lignedetail { background-color: #E8D8D0; border: none; }
+#btnfermer { background-color: transparent; color: #713923; border: none; border-radius: 14px; font-size: 11pt; }
+#btnfermer:hover { background-color: #F8E5DF; }
+#btnconsulter {
+  background-color: #F8E5DF; color: #713923; border: 2px solid #713923; border-radius: 6px;
+  padding: 8px 16px; font-size: 10pt; font-weight: bold;
+}
+#btnconsulter:hover { background-color: #713923; color: white; }
+
+/* New / edit animal form */
+#cadreformulaire { background-color: white; border: 1px solid #E8D8D0; border-radius: 16px; }
+#cadreformulaire QLabel { border: none; background-color: transparent; }
+#lbltitreformulaire { font-size: 16pt; font-weight: bold; }
+#lblerreur { color: #C2455F; font-size: 9pt; }
+</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="mainLayout">
+    <property name="spacing">
+     <number>16</number>
+    </property>
+    <property name="leftMargin">
+     <number>16</number>
+    </property>
+    <property name="topMargin">
+     <number>16</number>
+    </property>
+    <property name="rightMargin">
+     <number>16</number>
+    </property>
+    <property name="bottomMargin">
+     <number>16</number>
+    </property>
+    <item>
+     <widget class="QFrame" name="sidebar">
+      <property name="minimumSize">
+       <size>
+        <width>230</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>230</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <layout class="QVBoxLayout" name="sidebarLayout">
+       <property name="spacing">
+        <number>6</number>
+       </property>
+       <property name="leftMargin">
+        <number>14</number>
+       </property>
+       <property name="topMargin">
+        <number>14</number>
+       </property>
+       <property name="rightMargin">
+        <number>14</number>
+       </property>
+       <property name="bottomMargin">
+        <number>14</number>
+       </property>
+       <item alignment="Qt::AlignTop">
+        <widget class="QLabel" name="lblmarque">
+         <property name="text">
+          <string>Pawché</string>
+         </property>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignTop">
+        <widget class="QLabel" name="lblsoustitre">
+         <property name="text">
+          <string>Smart Pet Center • V1.4</string>
+         </property>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignTop">
+        <widget class="QFrame" name="lignePoste">
+         <layout class="QHBoxLayout" name="posteLayout">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="lblposte">
+            <property name="text">
+             <string>POSTE VÉTÉRINAIRE</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblpostenum">
+            <property name="text">
+             <string>POST-01</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignTop">
+        <widget class="QPushButton" name="btnanimaux">
+         <property name="text">
+          <string>Gestion des Animaux</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="autoExclusive">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignTop">
+        <widget class="QPushButton" name="btnproprietaires">
+         <property name="text">
+          <string>Propriétaires et Clients</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="autoExclusive">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignTop">
+        <widget class="QPushButton" name="btnconsultations">
+         <property name="text">
+          <string>Consultations et Soins</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="autoExclusive">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignTop">
+        <widget class="QPushButton" name="btnproduits">
+         <property name="text">
+          <string>Produits et Stock</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="autoExclusive">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignTop">
+        <widget class="QPushButton" name="btnfacturation">
+         <property name="text">
+          <string>Facturation et Caisse</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="autoExclusive">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignTop">
+        <widget class="QFrame" name="ligneDb">
+         <layout class="QHBoxLayout" name="dbLayout">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="lbldb">
+            <property name="text">
+             <string>DB SQLite/Postgres</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lbldbms">
+            <property name="text">
+             <string>12ms</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignTop">
+        <widget class="QPushButton" name="btnsync">
+         <property name="text">
+          <string>⟳  Sauvegarder / Sync</string>
+         </property>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignTop">
+        <widget class="QLabel" name="lblnomvet">
+         <property name="text">
+          <string>Dr. Vétérinaire Titulaire</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item alignment="Qt::AlignTop">
+        <widget class="QLabel" name="lblrolevet">
+         <property name="text">
+          <string>Clinique Centrale • En service</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QWidget" name="centre">
+      <layout class="QVBoxLayout" name="centerLayout">
+       <property name="spacing">
+        <number>16</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <layout class="QHBoxLayout" name="topBarLayout">
+         <property name="spacing">
+          <number>8</number>
+         </property>
+         <item>
+          <widget class="QLineEdit" name="editrecherche">
+           <property name="placeholderText">
+            <string>Recherche rapide...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="combocabinet">
+           <item>
+            <property name="text">
+             <string>Cabinet Principal - esprit</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Cabinet Annexe</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnnouvelanimal">
+           <property name="text">
+            <string>+ Nouveau Animal</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="lblavatar">
+           <property name="text">
+            <string>DV</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>36</width>
+             <height>36</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>36</width>
+             <height>36</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QStackedWidget" name="pagescentre">
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <widget class="QWidget" name="pageliste">
+          <layout class="QVBoxLayout" name="listeLayout">
+           <property name="spacing">
+            <number>14</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <layout class="QVBoxLayout" name="headerLayout">
+             <property name="spacing">
+              <number>2</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="lbltitrepage">
+               <property name="text">
+                <string>Gestion des Animaux</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblsoustitrepage">
+               <property name="text">
+                <string>Registre des patients et consultations en cours</string>
+               </property>
+               <property name="wordWrap">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="filtresLayout">
+             <property name="spacing">
+              <number>6</number>
+             </property>
+             <item>
+              <widget class="QPushButton" name="btntous">
+               <property name="text">
+                <string>Tous</string>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+               <property name="autoExclusive">
+                <bool>true</bool>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnchiens">
+               <property name="text">
+                <string>Chiens</string>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+               <property name="autoExclusive">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnchats">
+               <property name="text">
+                <string>Chats</string>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
+               </property>
+               <property name="autoExclusive">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="editfiltre">
+               <property name="placeholderText">
+                <string>Rechercher par nom, puce, propriétaire...</string>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>260</width>
+                 <height>0</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QTableWidget" name="tableanimaux">
+             <property name="editTriggers">
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+             <property name="alternatingRowColors">
+              <bool>false</bool>
+             </property>
+             <property name="showGrid">
+              <bool>false</bool>
+             </property>
+             <property name="gridStyle">
+              <enum>Qt::SolidLine</enum>
+             </property>
+             <attribute name="horizontalHeaderHighlightSections">
+              <bool>false</bool>
+             </attribute>
+             <attribute name="horizontalHeaderDefaultSectionSize">
+              <number>125</number>
+             </attribute>
+             <attribute name="horizontalHeaderStretchLastSection">
+              <bool>true</bool>
+             </attribute>
+             <attribute name="verticalHeaderVisible">
+              <bool>false</bool>
+             </attribute>
+             <attribute name="verticalHeaderDefaultSectionSize">
+              <number>42</number>
+             </attribute>
+             <row/>
+             <row/>
+             <row/>
+             <column>
+              <property name="text">
+               <string>ANIMAL &amp; ESPÈCE</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>ÂGE</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>PROPRIÉTAIRE</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>TÉLÉPHONE</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>STATUT</string>
+              </property>
+             </column>
+             <item row="0" column="0">
+              <property name="text">
+               <string>Milo  •  Chien</string>
+              </property>
+             </item>
+             <item row="0" column="1">
+              <property name="text">
+               <string>4 ans</string>
+              </property>
+             </item>
+             <item row="0" column="2">
+              <property name="text">
+               <string>Mounir</string>
+              </property>
+             </item>
+             <item row="0" column="3">
+              <property name="text">
+               <string>+216 12345678</string>
+              </property>
+             </item>
+             <item row="0" column="4">
+              <property name="text">
+               <string>Sain</string>
+              </property>
+             </item>
+             <item row="1" column="0">
+              <property name="text">
+               <string>Luna  •  Chat</string>
+              </property>
+             </item>
+             <item row="1" column="1">
+              <property name="text">
+               <string>2 ans</string>
+              </property>
+             </item>
+             <item row="1" column="2">
+              <property name="text">
+               <string>Sara</string>
+              </property>
+             </item>
+             <item row="1" column="3">
+              <property name="text">
+               <string>+216 98765432</string>
+              </property>
+             </item>
+             <item row="1" column="4">
+              <property name="text">
+               <string>En soin</string>
+              </property>
+             </item>
+             <item row="2" column="0">
+              <property name="text">
+               <string>Rex  •  Chien</string>
+              </property>
+             </item>
+             <item row="2" column="1">
+              <property name="text">
+               <string>7 ans</string>
+              </property>
+             </item>
+             <item row="2" column="2">
+              <property name="text">
+               <string>Karim</string>
+              </property>
+             </item>
+             <item row="2" column="3">
+              <property name="text">
+               <string>+216 55512345</string>
+              </property>
+             </item>
+             <item row="2" column="4">
+              <property name="text">
+               <string>Urgent</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="basLayout">
+             <property name="spacing">
+              <number>10</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="lblcompte">
+               <property name="text">
+                <string>3 sur 3 animaux</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnmodifier">
+               <property name="text">
+                <string>Modifier</string>
+               </property>
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnsupprimer">
+               <property name="text">
+                <string>Supprimer</string>
+               </property>
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="pageformulaire">
+          <layout class="QVBoxLayout" name="pageFormLayout">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item alignment="Qt::AlignHCenter|Qt::AlignTop">
+            <widget class="QFrame" name="cadreformulaire">
+             <property name="minimumSize">
+              <size>
+               <width>440</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>520</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <layout class="QVBoxLayout" name="dialogLayout">
+              <property name="spacing">
+               <number>16</number>
+              </property>
+              <property name="leftMargin">
+               <number>24</number>
+              </property>
+              <property name="topMargin">
+               <number>24</number>
+              </property>
+              <property name="rightMargin">
+               <number>24</number>
+              </property>
+              <property name="bottomMargin">
+               <number>24</number>
+              </property>
+              <item>
+               <widget class="QLabel" name="lbltitreformulaire">
+                <property name="text">
+                 <string>Nouvel animal</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <layout class="QFormLayout" name="formLayout">
+                <property name="horizontalSpacing">
+                 <number>16</number>
+                </property>
+                <property name="verticalSpacing">
+                 <number>10</number>
+                </property>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="flblnom">
+                  <property name="text">
+                   <string>Nom *</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QLineEdit" name="editnom">
+                  <property name="placeholderText">
+                   <string>Ex. Milo</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="flblespece">
+                  <property name="text">
+                   <string>Espèce</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QComboBox" name="comboespece">
+                  <item>
+                   <property name="text">
+                    <string>Chien</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Chat</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Autre</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="flblrace">
+                  <property name="text">
+                   <string>Race</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QLineEdit" name="editrace">
+                  <property name="placeholderText">
+                   <string>Ex. Golden Retriever</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="0">
+                 <widget class="QLabel" name="flblage">
+                  <property name="text">
+                   <string>Âge</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QSpinBox" name="spinage">
+                  <property name="suffix">
+                   <string> an(s)</string>
+                  </property>
+                  <property name="maximum">
+                   <number>40</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="0">
+                 <widget class="QLabel" name="flblpuce">
+                  <property name="text">
+                   <string>Numéro de puce</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="1">
+                 <widget class="QLineEdit" name="editpuce">
+                  <property name="placeholderText">
+                   <string>15 chiffres</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="0">
+                 <widget class="QLabel" name="flblvaccinal">
+                  <property name="text">
+                   <string>Statut vaccinal</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="1">
+                 <widget class="QComboBox" name="combovaccinal">
+                  <item>
+                   <property name="text">
+                    <string>À jour</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>En retard</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Inconnu</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+                <item row="6" column="0">
+                 <widget class="QLabel" name="flblproprietaire">
+                  <property name="text">
+                   <string>Propriétaire *</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="6" column="1">
+                 <widget class="QLineEdit" name="editproprietaire">
+                  <property name="placeholderText">
+                   <string>Nom du propriétaire</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="7" column="0">
+                 <widget class="QLabel" name="flbltelephone">
+                  <property name="text">
+                   <string>Téléphone</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="7" column="1">
+                 <widget class="QLineEdit" name="edittelephone">
+                  <property name="placeholderText">
+                   <string>+216 12345678</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="8" column="0">
+                 <widget class="QLabel" name="flblsante">
+                  <property name="text">
+                   <string>Statut</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="8" column="1">
+                 <widget class="QComboBox" name="combosante">
+                  <item>
+                   <property name="text">
+                    <string>Sain</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>En soin</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Urgent</string>
+                   </property>
+                  </item>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <widget class="QLabel" name="lblerreur">
+                <property name="text">
+                 <string></string>
+                </property>
+                <property name="wordWrap">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="boutonsLayout">
+                <property name="spacing">
+                 <number>10</number>
+                </property>
+                <item>
+                 <widget class="QPushButton" name="btnannuler">
+                  <property name="text">
+                   <string>Annuler</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="btnajouter">
+                  <property name="text">
+                   <string>Ajouter animal</string>
+                  </property>
+                  <property name="default">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="pagemodule">
+          <layout class="QVBoxLayout" name="moduleLayout">
+           <property name="spacing">
+            <number>6</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item alignment="Qt::AlignTop">
+            <widget class="QLabel" name="lbltitremodule">
+             <property name="text">
+              <string>Module</string>
+             </property>
+            </widget>
+           </item>
+           <item alignment="Qt::AlignTop">
+            <widget class="QLabel" name="lblmodule">
+             <property name="text">
+              <string>Ce module sera disponible prochainement.</string>
+             </property>
+             <property name="wordWrap">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QWidget" name="colonnedroite">
+      <property name="minimumSize">
+       <size>
+        <width>260</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>260</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <layout class="QVBoxLayout" name="colonneLayout">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QFrame" name="cadrestatistiques">
+         <layout class="QVBoxLayout" name="statsLayout">
+          <property name="spacing">
+           <number>10</number>
+          </property>
+          <property name="leftMargin">
+           <number>20</number>
+          </property>
+          <property name="topMargin">
+           <number>16</number>
+          </property>
+          <property name="rightMargin">
+           <number>20</number>
+          </property>
+          <property name="bottomMargin">
+           <number>16</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="lbltitrestats">
+            <property name="text">
+             <string>Statistiques</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblsoustitrestats">
+            <property name="text">
+             <string>État de santé des animaux</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QGridLayout" name="statsgrid">
+            <property name="horizontalSpacing">
+             <number>10</number>
+            </property>
+            <property name="verticalSpacing">
+             <number>4</number>
+            </property>
+            <item row="0" column="0" alignment="Qt::AlignHCenter">
+             <widget class="QProgressBar" name="barresains">
+              <property name="minimum">
+               <number>0</number>
+              </property>
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="value">
+               <number>85</number>
+              </property>
+              <property name="textVisible">
+               <bool>false</bool>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>44</width>
+                <height>150</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>44</width>
+                <height>16777215</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1" alignment="Qt::AlignHCenter">
+             <widget class="QProgressBar" name="barreensoin">
+              <property name="minimum">
+               <number>0</number>
+              </property>
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="value">
+               <number>10</number>
+              </property>
+              <property name="textVisible">
+               <bool>false</bool>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>44</width>
+                <height>150</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>44</width>
+                <height>16777215</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2" alignment="Qt::AlignHCenter">
+             <widget class="QProgressBar" name="barreurgent">
+              <property name="minimum">
+               <number>0</number>
+              </property>
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="value">
+               <number>5</number>
+              </property>
+              <property name="textVisible">
+               <bool>false</bool>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>44</width>
+                <height>150</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>44</width>
+                <height>16777215</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0" alignment="Qt::AlignHCenter">
+             <widget class="QLabel" name="lblbsains">
+              <property name="text">
+               <string>Sains</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1" alignment="Qt::AlignHCenter">
+             <widget class="QLabel" name="lblbensoin">
+              <property name="text">
+               <string>En soin</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2" alignment="Qt::AlignHCenter">
+             <widget class="QLabel" name="lblburgent">
+              <property name="text">
+               <string>Urgents</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblsante">
+            <property name="text">
+             <string>●  85% des animaux en bonne santé</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

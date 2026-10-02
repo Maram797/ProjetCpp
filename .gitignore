@@ -1,6 +1,9 @@
 # Prerequisites
 *.d
 
+# Local Qt Creator settings
+.qtcreator/
+
 # Compiled Object files
 *.slo
 *.lo
