@@ -325,7 +325,7 @@ padding: 8px;</string>
       </rect>
      </property>
      <property name="styleSheet">
-      <string notr="true">background-color: #F8E5DF;
+      <string notr="true">background-color: #F9DEE4;
 color: black;
 border: none;
 border-radius: 10px;
@@ -490,7 +490,7 @@ QTableCornerButton::section {
      </item>
      <item row="0" column="3">
       <property name="text">
-       <string>     74,900 Tn</string>
+       <string>     74,900 </string>
       </property>
      </item>
      <item row="0" column="4">
@@ -515,7 +515,7 @@ QTableCornerButton::section {
      </item>
      <item row="1" column="3">
       <property name="text">
-       <string>     42,500 Tn</string>
+       <string>     42,500 </string>
       </property>
      </item>
      <item row="1" column="4">
@@ -540,7 +540,7 @@ QTableCornerButton::section {
      </item>
      <item row="2" column="3">
       <property name="text">
-       <string>    36,900 Tn</string>
+       <string>    36,900 </string>
       </property>
      </item>
      <item row="2" column="4">
@@ -565,7 +565,7 @@ QTableCornerButton::section {
      </item>
      <item row="3" column="3">
       <property name="text">
-       <string>   32,800 Tn </string>
+       <string>   32,800 </string>
       </property>
      </item>
      <item row="3" column="4">
@@ -1129,7 +1129,7 @@ border: none;</string>
        <string>Alimentation</string>
       </property>
      </widget>
-     <widget class="QLabel" name="label_10">
+     <widget class="QLabel" name="produitdisponible">
       <property name="geometry">
        <rect>
         <x>40</x>

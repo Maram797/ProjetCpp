@@ -28,10 +28,13 @@ private:
     void sortProductsByPrice();
     void clearProductForm();
     void refreshStatistics();
+    void loadProductIntoForm(int row);
+    void saveProductFromForm();
 
     Ui::MainWindow *ui;
     QList<QWidget*> navigationButtons;
     QHash<QWidget*, QString> normalButtonStyles;
     QString activeButtonStyle;
+    int selectedProductRow = -1;
 };
 #endif // MAINWINDOW_H

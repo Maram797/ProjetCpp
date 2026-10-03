@@ -17,6 +17,9 @@
 #include <QFrame>
 #include <QMouseEvent>
 #include <algorithm>
+#include <QMap>
+#include <QtMath>
+#include <QFont>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -60,6 +63,10 @@ MainWindow::MainWindow(QWidget *parent)
     setNavigationButton(ui->Bstocks);
 
     ui->FormulaireProduit->setVisible(false);
+    ui->ExListe->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->ExListe->setSelectionMode(QAbstractItemView::SingleSelection);
+    connect(ui->ExListe, &QTableWidget::cellClicked, this,
+            [this](int row, int) { loadProductIntoForm(row); });
     ui->Bnouveau->installEventFilter(this);
     ui->Bparametre->installEventFilter(this);
     ui->Baide->installEventFilter(this);
@@ -72,6 +79,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->Bnouveau, &QPushButton::clicked, this, [this] {
         const bool visible = !ui->FormulaireProduit->isVisible();
         ui->FormulaireProduit->setVisible(visible);
+        if (visible) {
+            selectedProductRow = -1;
+            clearProductForm();
+        }
         ui->Bnouveau->setProperty("active", visible);
         ui->Bnouveau->setStyleSheet(visible ? activeButtonStyle
                                             : normalButtonStyles.value(ui->Bnouveau));
@@ -108,21 +119,7 @@ MainWindow::MainWindow(QWidget *parent)
         QMessageBox::information(this, tr("Exportation"), tr("Les produits ont été exportés."));
     });
     connect(ui->Bvider, &QPushButton::clicked, this, &MainWindow::clearProductForm);
-    connect(ui->Benragister, &QPushButton::clicked, this, [this] {
-        if (ui->ExNom->text().trimmed().isEmpty()) {
-            QMessageBox::warning(this, tr("Formulaire"), tr("Le nom du produit est obligatoire."));
-            return;
-        }
-        const int row = ui->ExListe->rowCount();
-        ui->ExListe->insertRow(row);
-        ui->ExListe->setItem(row, 0, new QTableWidgetItem(ui->ExNom->text()));
-        ui->ExListe->setItem(row, 1, new QTableWidgetItem(ui->Excategorie->currentText()));
-        ui->ExListe->setItem(row, 2, new QTableWidgetItem(QString::number(ui->ExQuantite->value())));
-        ui->ExListe->setItem(row, 3, new QTableWidgetItem(QString::number(ui->ExPrix->value(), 'f', 3)));
-        ui->ExListe->setItem(row, 4, new QTableWidgetItem(ui->ExQuantite->value() == 0 ? tr("Rupture") : tr("En stock")));
-        clearProductForm();
-        filterProducts();
-    });
+    connect(ui->Benragister, &QPushButton::clicked, this, &MainWindow::saveProductFromForm);
     connect(ui->Bconseil, &QPushButton::clicked, this, [this] {
         QMessageBox::information(this, tr("Conseil automatique"),
                                  tr("Pensez à réapprovisionner les produits en rupture ou en stock faible."));
@@ -130,6 +127,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->Bparametre, &QLabel::linkActivated, this, [] {});
     ui->Bparametre->setCursor(Qt::PointingHandCursor);
     ui->Baide->setCursor(Qt::PointingHandCursor);
+    refreshStatistics();
 }
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
@@ -173,15 +171,29 @@ void MainWindow::filterProducts()
         if (value.endsWith('s')) value.chop(1);
         return value;
     };
+    auto categoryKey = [](QString value) {
+        value = value.trimmed().toLower();
+        if (value.startsWith("aliment")) return QString("alimentation");
+        if (value.startsWith("soin")) return QString("soin");
+        if (value.startsWith("access")) return QString("accessoire");
+        return value;
+    };
     const QString query = normalized(ui->Recherche->text());
-    const QString category = normalized(ui->Categorie->currentText());
+    const QString queryCategory = categoryKey(ui->Recherche->text());
+    const QString category = categoryKey(ui->Categorie->currentText());
     for (int r = 0; r < ui->ExListe->rowCount(); ++r) {
         const QString product = normalized(ui->ExListe->item(r, 0)->text());
-        const QString productCategory = normalized(ui->ExListe->item(r, 1)->text());
+        const QString productCategory = categoryKey(ui->ExListe->item(r, 1)->text());
         const bool showAll = query.isEmpty() || query == "tout" || query == "tous";
-        const bool textMatch = showAll || product.contains(query) || productCategory.contains(query);
+        const bool alimentationMatch = query.contains("aliment")
+            && ui->ExListe->item(r, 1)->text().trimmed().toLower().contains("aliment");
+        const bool categoryTextMatch = alimentationMatch || productCategory == queryCategory
+            || productCategory.contains(query) || queryCategory.contains(productCategory);
+        const bool textMatch = showAll || product.contains(query) || categoryTextMatch;
         const bool allCategories = category.isEmpty() || category == "tout" || category == "tous";
-        const bool categoryMatch = allCategories || productCategory.contains(category) || category.contains(productCategory);
+        const QString rawCategory = ui->ExListe->item(r, 1)->text().trimmed().toLower();
+        const bool categoryMatch = allCategories || productCategory == category
+            || (category.startsWith("aliment") && rawCategory.contains("aliment"));
         ui->ExListe->setRowHidden(r, !(textMatch && categoryMatch));
     }
 }
@@ -217,7 +229,87 @@ void MainWindow::clearProductForm()
     ui->ExQuantite->setValue(0); ui->ExPrix->setValue(0.0);
 }
 
-void MainWindow::refreshStatistics() {}
+void MainWindow::loadProductIntoForm(int row)
+{
+    selectedProductRow = row;
+    ui->Exid->setText(ui->ExListe->item(row, 0)->data(Qt::UserRole + 1).toString());
+    ui->ExNom->setText(ui->ExListe->item(row, 0)->text());
+    ui->Excategorie->setCurrentText(ui->ExListe->item(row, 1)->text());
+    ui->ExQuantite->setValue(ui->ExListe->item(row, 2)->text().toInt());
+    ui->ExPrix->setValue(ui->ExListe->item(row, 3)->text().replace(',', '.').toDouble());
+    ui->ExDesignation->setText(ui->ExListe->item(row, 0)->data(Qt::UserRole + 2).toString());
+    if (!ui->FormulaireProduit->isVisible()) {
+        ui->FormulaireProduit->setVisible(true);
+        ui->Bnouveau->setProperty("active", true);
+        ui->Bnouveau->setStyleSheet(activeButtonStyle);
+    }
+}
+
+void MainWindow::saveProductFromForm()
+{
+    const QString name = ui->ExNom->text().trimmed();
+    if (name.isEmpty() && selectedProductRow >= 0) {
+        ui->ExListe->removeRow(selectedProductRow);
+        selectedProductRow = -1;
+        clearProductForm();
+        refreshStatistics();
+        filterProducts();
+        return;
+    }
+    if (name.isEmpty()) {
+        QMessageBox::warning(this, tr("Formulaire"), tr("Le nom du produit est obligatoire."));
+        return;
+    }
+    const int row = selectedProductRow >= 0 ? selectedProductRow : ui->ExListe->rowCount();
+    if (selectedProductRow < 0) ui->ExListe->insertRow(row);
+    auto *nameItem = new QTableWidgetItem(name);
+    nameItem->setData(Qt::UserRole + 1, ui->Exid->text());
+    nameItem->setData(Qt::UserRole + 2, ui->ExDesignation->text());
+    ui->ExListe->setItem(row, 0, nameItem);
+    ui->ExListe->setItem(row, 1, new QTableWidgetItem(ui->Excategorie->currentText()));
+    ui->ExListe->setItem(row, 2, new QTableWidgetItem(QString::number(ui->ExQuantite->value())));
+    ui->ExListe->setItem(row, 3, new QTableWidgetItem(QString::number(ui->ExPrix->value(), 'f', 3)));
+    const QString availability = selectedProductRow < 0
+        ? tr("En stock")
+        : (ui->ExQuantite->value() == 0 ? tr("Rupture") : tr("En stock"));
+    ui->ExListe->setItem(row, 4, new QTableWidgetItem(availability));
+    selectedProductRow = -1;
+    clearProductForm();
+    refreshStatistics();
+    filterProducts();
+}
+
+void MainWindow::refreshStatistics()
+{
+    QMap<QString, int> counts;
+    for (int row = 0; row < ui->ExListe->rowCount(); ++row)
+        counts[ui->ExListe->item(row, 1)->text().trimmed()]++;
+    QString bestCategory;
+    int bestCount = 0;
+    for (auto it = counts.cbegin(); it != counts.cend(); ++it) {
+        if (it.value() > bestCount) { bestCategory = it.key(); bestCount = it.value(); }
+    }
+    const int total = ui->ExListe->rowCount();
+    const int percentage = total ? qRound(100.0 * bestCount / total) : 0;
+    ui->produitdisponible->setText(tr("   ● %1% des produits sont des %2").arg(percentage).arg(bestCategory.isEmpty() ? tr("produits") : bestCategory));
+    const QStringList categories = {tr("Alim."), tr("Soin"), tr("Access.")};
+    const QStringList categoryKeys = {tr("Alimentation"), tr("Soin"), tr("Accessoire")};
+    const QList<QPushButton*> labels = {ui->Btrier_2, ui->Btrier_5, ui->Btrier_4};
+    const QList<QFrame*> bars = {ui->frame_5, ui->frame_4, ui->frame_6};
+    for (int i = 0; i < labels.size(); ++i)
+    {
+        const int percent = total ? qRound(100.0 * counts.value(categoryKeys[i]) / total) : 0;
+        QFont font = labels[i]->font();
+        font.setPointSize(8);
+        labels[i]->setFont(font);
+        labels[i]->setText(QString("%1\n%2%").arg(categories[i]).arg(percent));
+        const int height = qMax(2, qRound(130.0 * percent / 100.0));
+        QRect geometry = bars[i]->geometry();
+        geometry.setY(190 - height);
+        geometry.setHeight(height);
+        bars[i]->setGeometry(geometry);
+    }
+}
 
 MainWindow::~MainWindow()
 {
