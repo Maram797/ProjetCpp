@@ -1,0 +1,1589 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1300</width>
+    <height>750</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>gestion veterinaire</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QFrame" name="centralFrame">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>-1</y>
+      <width>1300</width>
+      <height>750</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QFrame#centralFrame {
+	background-color : #FFF9F4
+}</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Shape::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Shadow::Raised</enum>
+    </property>
+    <widget class="QFrame" name="sideBar">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>240</width>
+       <height>750</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QFrame#sideBar { 
+	background-color : #FBF4EE ;
+	border: 2px solid #E77C8D;
+}</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Shape::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Shadow::Raised</enum>
+     </property>
+     <widget class="QLabel" name="logoLabel">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>18</y>
+        <width>200</width>
+        <height>81</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel#logoLabel {
+	color : #6B3F2E ;
+	font-family : Arial ;
+	background-color: transparent;
+}</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>../../../Downloads/pawche.jpeg</pixmap>
+      </property>
+      <property name="scaledContents">
+       <bool>true</bool>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnAnimaux">
+      <property name="geometry">
+       <rect>
+        <x>15</x>
+        <y>105</y>
+        <width>210</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>210</width>
+        <height>45</height>
+       </size>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton#btnAnimaux {
+    background-color: transparent;
+    color: #6B3F2E;
+    border: none;
+    border-radius: 8px;
+    text-align: left;
+    padding-left: 15px;
+    font-family: Arial;
+    font-size: 13px;
+    font-weight: bold;
+}
+QPushButton#btnAnimaux:hover {
+    background-color: #F9DEE4;
+}
+QPushButton#btnAnimaux:pressed {
+    background-color: #E77C8D;
+    color: white;
+}</string>
+      </property>
+      <property name="text">
+       <string>🐾  Gestion des Animaux</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnClients">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>180</y>
+        <width>210</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>210</width>
+        <height>45</height>
+       </size>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton#btnClients {
+    background-color: transparent;
+    color: #6B3F2E;
+    border: none;
+    border-radius: 8px;
+    text-align: left;
+    padding-left: 15px;
+    font-family: Arial;
+    font-size: 13px;
+    font-weight: bold;
+}
+QPushButton#btnClients:hover {
+    background-color: #F9DEE4;
+}
+QPushButton#btnClients:pressed {
+    background-color: #E77C8D;
+    color: white;
+}</string>
+      </property>
+      <property name="text">
+       <string>👥  Propriétaires &amp; Clients</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnProduits">
+      <property name="geometry">
+       <rect>
+        <x>15</x>
+        <y>325</y>
+        <width>210</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>210</width>
+        <height>45</height>
+       </size>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton#btnProduits {
+    background-color: transparent;
+    color: #6B3F2E;
+    border: none;
+    border-radius: 8px;
+    text-align: left;
+    padding-left: 15px;
+    font-family: Arial;
+    font-size: 13px;
+    font-weight: bold;
+}
+QPushButton#btnProduits:hover {
+    background-color: #F9DEE4;
+}
+QPushButton#btnProduits:pressed {
+    background-color: #E77C8D;
+    color: white;
+}</string>
+      </property>
+      <property name="text">
+       <string>📦  Produits &amp; Stock</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnCaisse">
+      <property name="geometry">
+       <rect>
+        <x>15</x>
+        <y>395</y>
+        <width>210</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>210</width>
+        <height>45</height>
+       </size>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton#btnCaisse {
+    background-color: transparent;
+    color: #6B3F2E;
+    border: none;
+    border-radius: 8px;
+    text-align: left;
+    padding-left: 15px;
+    font-family: Arial;
+    font-size: 13px;
+    font-weight: bold;
+}
+QPushButton#btnCaisse:hover {
+    background-color: #F9DEE4;
+}
+QPushButton#btnCaisse:pressed {
+    background-color: #E77C8D;
+    color: white;
+}</string>
+      </property>
+      <property name="text">
+       <string>💰  Facturation &amp; Caisse</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnConsultations">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>250</y>
+        <width>210</width>
+        <height>45</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>210</width>
+        <height>45</height>
+       </size>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="contextMenuPolicy">
+       <enum>Qt::ContextMenuPolicy::PreventContextMenu</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton#btnConsultations {
+    background-color: transparent;
+    color: #6B3F2E;
+    border: none;
+    border-radius: 8px;
+    text-align: left;
+    padding-left: 15px;
+    font-family: Arial;
+    font-size: 13px;
+    font-weight: bold;
+}
+QPushButton#btnConsultations:hover {
+    background-color: #F9DEE4;
+}
+QPushButton#btnConsultations:pressed {
+    background-color: #E77C8D;
+    color: white;
+}</string>
+      </property>
+      <property name="text">
+       <string>🩺 Gestion des rendez-vous</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QFrame" name="mainContent">
+     <property name="geometry">
+      <rect>
+       <x>240</x>
+       <y>0</y>
+       <width>1060</width>
+       <height>750</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QFrame#mainContent {
+	background-color : #FBF4EE ;
+}</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Shape::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Shadow::Raised</enum>
+     </property>
+     <widget class="QPushButton" name="btnCabinet">
+      <property name="geometry">
+       <rect>
+        <x>600</x>
+        <y>15</y>
+        <width>150</width>
+        <height>40</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton#btnCabinet {
+	background-color: white;
+	color: #6B3F2E;
+	border: 1px solid #F3E6DC;
+	border-radius: 8px;
+	font-size: 12px;
+	font-weight: bold;
+}
+QPushButton#btnCabinet:hover {
+	background-color: #F9DEE4;
+}</string>
+      </property>
+      <property name="text">
+       <string>🗂  Cabinet Principal</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnNouveauPatient">
+      <property name="geometry">
+       <rect>
+        <x>760</x>
+        <y>15</y>
+        <width>170</width>
+        <height>40</height>
+       </rect>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton#btnNouveauPatient {
+	background-color: #6B3F2E;
+	color: white;
+	border: none;
+	border-radius: 8px;
+	font-size: 12px;
+	font-weight: bold;
+}
+QPushButton#btnNouveauPatient:hover {
+	background-color: #5A3225;
+}</string>
+      </property>
+      <property name="text">
+       <string>+  Nouveau Patient</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="notifLabel">
+      <property name="geometry">
+       <rect>
+        <x>945</x>
+        <y>18</y>
+        <width>30</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel#notifLabel {
+	font-size : 16px ;
+	background-color: transparent;
+}</string>
+      </property>
+      <property name="text">
+       <string>🔔</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="avatarLabel">
+      <property name="geometry">
+       <rect>
+        <x>985</x>
+        <y>13</y>
+        <width>40</width>
+        <height>40</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel#avatarLabel {
+	background-color : #E77C8D ;
+	color : white ;
+	font-weight : bold ;
+	border-radius : 20px ;
+}</string>
+      </property>
+      <property name="text">
+       <string>👤</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="posteLabel">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>68</y>
+        <width>140</width>
+        <height>18</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel#posteLabel {
+	color : #A98268 ;
+	font-size : 10px ;
+	font-weight : bold ;
+	background-color: transparent;
+}</string>
+      </property>
+      <property name="text">
+       <string>POSTE VETERINAIRE</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="posteBadge">
+      <property name="geometry">
+       <rect>
+        <x>155</x>
+        <y>64</y>
+        <width>55</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel#posteBadge {
+	background-color : #F3E6DC ;
+	color : #6B3F2E ;
+	font-size : 10px ;
+	font-weight : bold ;
+	border-radius : 10px ;
+}</string>
+      </property>
+      <property name="text">
+       <string>POST-01</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="salleLabel">
+      <property name="geometry">
+       <rect>
+        <x>900</x>
+        <y>68</y>
+        <width>140</width>
+        <height>18</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel#salleLabel {
+	color : #A98268 ;
+	font-size : 11px ;
+	background-color: transparent;
+}</string>
+      </property>
+      <property name="text">
+       <string>Salle d'examen —</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="pageTitle">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>20</y>
+        <width>350</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel#pageTitle {
+	color : #6B3F2E ;
+	font-size : 20px ;
+	font-weight : bold ;
+	background-color: transparent;
+}</string>
+      </property>
+      <property name="text">
+       <string>Gestion des rendez-vous</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="pageSubtitle">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>50</y>
+        <width>350</width>
+        <height>18</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel#pageSubtitle {
+	color : #A98268 ;
+	font-size : 11px ;
+	background-color: transparent;
+}</string>
+      </property>
+      <property name="text">
+       <string>Session active • —</string>
+      </property>
+     </widget>
+     <widget class="QFrame" name="patientsFrame">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>160</y>
+        <width>300</width>
+        <height>470</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QFrame#patientsFrame {
+    background-color: white;
+    border: 1px solid #F3E6DC;
+    border-radius: 10px;
+}</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Raised</enum>
+      </property>
+      <widget class="QLabel" name="patientsTitle">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>30</y>
+         <width>160</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel#patientsTitle {
+    color: #6B3F2E;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: transparent;
+}</string>
+       </property>
+       <property name="text">
+        <string>Patients du jour</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="patientsCountBadge">
+       <property name="geometry">
+        <rect>
+         <x>210</x>
+         <y>40</y>
+         <width>75</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel#patientsCountBadge {
+    color: #A98268;
+    font-size: 10px;
+    background-color: transparent;
+}</string>
+       </property>
+       <property name="text">
+        <string>— en attente</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
+      <widget class="QScrollArea" name="patientsScroll">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>70</y>
+         <width>290</width>
+         <height>375</height>
+        </rect>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Shape::NoFrame</enum>
+       </property>
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+       </property>
+       <property name="widgetResizable">
+        <bool>true</bool>
+       </property>
+       <widget class="QWidget" name="patientsContainer">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>290</width>
+          <height>375</height>
+         </rect>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="selectedPatientFrame">
+      <property name="geometry">
+       <rect>
+        <x>340</x>
+        <y>160</y>
+        <width>700</width>
+        <height>470</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QFrame#selectedPatientFrame {
+    background-color: white;
+    border: 1px solid #F3E6DC;
+    border-radius: 10px;
+}</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Raised</enum>
+      </property>
+      <widget class="QLabel" name="avatarSelected">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>20</y>
+         <width>60</width>
+         <height>60</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel#avatarSelected {
+    background-color: #F3E6DC;
+    border-radius: 30px;
+}</string>
+       </property>
+       <property name="text">
+        <string>🐾</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="patientName">
+       <property name="geometry">
+        <rect>
+         <x>95</x>
+         <y>20</y>
+         <width>300</width>
+         <height>30</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel#patientName {
+    color: #6B3F2E;
+    font-size: 18px;
+    font-weight: bold;
+    background-color: transparent;
+}</string>
+       </property>
+       <property name="text">
+        <string>Patient name</string>
+       </property>
+       <property name="placeholderText">
+        <string>Nom de l'animal</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="patientBreedAge">
+       <property name="geometry">
+        <rect>
+         <x>95</x>
+         <y>50</y>
+         <width>220</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel#patientBreedAge {
+    color: #A98268;
+    font-size: 11px;
+    background-color: transparent;
+}</string>
+       </property>
+       <property name="text">
+        <string>— • —</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="ownerLabel">
+       <property name="geometry">
+        <rect>
+         <x>95</x>
+         <y>72</y>
+         <width>300</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel#ownerLabel {
+    color: #6B3F2E;
+    font-size: 11px;
+    background-color: transparent;
+}</string>
+       </property>
+       <property name="text">
+        <string>Propriétaire : —</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="dossierLabel">
+       <property name="geometry">
+        <rect>
+         <x>530</x>
+         <y>22</y>
+         <width>150</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel#dossierLabel {
+    color: #A98268;
+    font-size: 11px;
+    background-color: transparent;
+}</string>
+       </property>
+       <property name="text">
+        <string>Dossier #------</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
+      <widget class="QLabel" name="genderLabel">
+       <property name="geometry">
+        <rect>
+         <x>530</x>
+         <y>42</y>
+         <width>150</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel#genderLabel {
+    color: #E77C8D;
+    font-size: 11px;
+    background-color: transparent;
+}</string>
+       </property>
+       <property name="text">
+        <string>—</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+       </property>
+      </widget>
+      <widget class="QFrame" name="dateCard">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>100</y>
+         <width>150</width>
+         <height>56</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QFrame#dateCard {
+    background-color: #FDFBF9;
+    border: 1px solid #F3E6DC;
+    border-radius: 8px;
+}</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Shape::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Shadow::Raised</enum>
+       </property>
+       <widget class="QLabel" name="dateCaption">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>6</y>
+          <width>126</width>
+          <height>14</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel#dateCaption {
+    color: #A98268;
+    font-size: 10px;
+    font-weight: bold;
+    background-color: transparent;
+}</string>
+        </property>
+        <property name="text">
+         <string>DATE</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="champDate">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>23</y>
+          <width>126</width>
+          <height>26</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit#champDate {
+    background-color: transparent;
+    color: #6B3F2E;
+    border: none;
+    border-bottom: 1px solid transparent;
+    padding: 0px;
+    font-size: 14px;
+    font-weight: bold;
+}
+QLineEdit#champDate:focus {
+    border-bottom: 1px solid #E77C8D;
+}</string>
+        </property>
+        <property name="placeholderText">
+         <string>jj/mm/aaaa</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QFrame" name="heureCard">
+       <property name="geometry">
+        <rect>
+         <x>180</x>
+         <y>100</y>
+         <width>100</width>
+         <height>56</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QFrame#heureCard {
+    background-color: #FDFBF9;
+    border: 1px solid #F3E6DC;
+    border-radius: 8px;
+}</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Shape::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Shadow::Raised</enum>
+       </property>
+       <widget class="QLabel" name="heureCaption">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>6</y>
+          <width>76</width>
+          <height>14</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel#heureCaption {
+    color: #A98268;
+    font-size: 10px;
+    font-weight: bold;
+    background-color: transparent;
+}</string>
+        </property>
+        <property name="text">
+         <string>HEURE</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="champHeure">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>23</y>
+          <width>76</width>
+          <height>26</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit#champHeure {
+    background-color: transparent;
+    color: #6B3F2E;
+    border: none;
+    border-bottom: 1px solid transparent;
+    padding: 0px;
+    font-size: 14px;
+    font-weight: bold;
+}
+QLineEdit#champHeure:focus {
+    border-bottom: 1px solid #E77C8D;
+}</string>
+        </property>
+        <property name="placeholderText">
+         <string>hh:mm</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QFrame" name="nomCard">
+       <property name="geometry">
+        <rect>
+         <x>290</x>
+         <y>100</y>
+         <width>190</width>
+         <height>56</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QFrame#nomCard {
+    background-color: #FDFBF9;
+    border: 1px solid #F3E6DC;
+    border-radius: 8px;
+}</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Shape::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Shadow::Raised</enum>
+       </property>
+       <widget class="QLabel" name="nomCaption">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>6</y>
+          <width>166</width>
+          <height>14</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel#nomCaption {
+    color: #A98268;
+    font-size: 10px;
+    font-weight: bold;
+    background-color: transparent;
+}</string>
+        </property>
+        <property name="text">
+         <string>NOM DE L'ANIMAL</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="champNom">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>23</y>
+          <width>166</width>
+          <height>26</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit#champNom {
+    background-color: transparent;
+    color: #6B3F2E;
+    border: none;
+    border-bottom: 1px solid transparent;
+    padding: 0px;
+    font-size: 14px;
+    font-weight: bold;
+}
+QLineEdit#champNom:focus {
+    border-bottom: 1px solid #E77C8D;
+}</string>
+        </property>
+        <property name="placeholderText">
+         <string>Nom de l'animal</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QFrame" name="telCard">
+       <property name="geometry">
+        <rect>
+         <x>490</x>
+         <y>100</y>
+         <width>190</width>
+         <height>56</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QFrame#telCard {
+    background-color: #FDFBF9;
+    border: 1px solid #F3E6DC;
+    border-radius: 8px;
+}</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Shape::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Shadow::Raised</enum>
+       </property>
+       <widget class="QLabel" name="telCaption">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>6</y>
+          <width>166</width>
+          <height>14</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel#telCaption {
+    color: #A98268;
+    font-size: 10px;
+    font-weight: bold;
+    background-color: transparent;
+}</string>
+        </property>
+        <property name="text">
+         <string>TÉLÉPHONE</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="champTel">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>23</y>
+          <width>166</width>
+          <height>26</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit#champTel {
+    background-color: transparent;
+    color: #6B3F2E;
+    border: none;
+    border-bottom: 1px solid transparent;
+    padding: 0px;
+    font-size: 14px;
+    font-weight: bold;
+}
+QLineEdit#champTel:focus {
+    border-bottom: 1px solid #E77C8D;
+}</string>
+        </property>
+        <property name="placeholderText">
+         <string>Téléphone du propriétaire</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QFrame" name="motifCard">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>164</y>
+         <width>320</width>
+         <height>56</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QFrame#motifCard {
+    background-color: #FDFBF9;
+    border: 1px solid #F3E6DC;
+    border-radius: 8px;
+}</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Shape::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Shadow::Raised</enum>
+       </property>
+       <widget class="QLabel" name="motifCaption">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>6</y>
+          <width>296</width>
+          <height>14</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel#motifCaption {
+    color: #A98268;
+    font-size: 10px;
+    font-weight: bold;
+    background-color: transparent;
+}</string>
+        </property>
+        <property name="text">
+         <string>MOTIF</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="champMotif">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>23</y>
+          <width>296</width>
+          <height>26</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit#champMotif {
+    background-color: transparent;
+    color: #6B3F2E;
+    border: none;
+    border-bottom: 1px solid transparent;
+    padding: 0px;
+    font-size: 14px;
+    font-weight: bold;
+}
+QLineEdit#champMotif:focus {
+    border-bottom: 1px solid #E77C8D;
+}</string>
+        </property>
+        <property name="placeholderText">
+         <string>Motif de la visite</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QFrame" name="notesCard">
+       <property name="geometry">
+        <rect>
+         <x>350</x>
+         <y>164</y>
+         <width>330</width>
+         <height>56</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QFrame#notesCard {
+    background-color: #FDFBF9;
+    border: 1px solid #F3E6DC;
+    border-radius: 8px;
+}</string>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::Shape::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Shadow::Raised</enum>
+       </property>
+       <widget class="QLabel" name="notesCaption">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>6</y>
+          <width>306</width>
+          <height>14</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel#notesCaption {
+    color: #A98268;
+    font-size: 10px;
+    font-weight: bold;
+    background-color: transparent;
+}</string>
+        </property>
+        <property name="text">
+         <string>NOTES</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="champNotes">
+        <property name="geometry">
+         <rect>
+          <x>12</x>
+          <y>23</y>
+          <width>306</width>
+          <height>26</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit#champNotes {
+    background-color: transparent;
+    color: #6B3F2E;
+    border: none;
+    border-bottom: 1px solid transparent;
+    padding: 0px;
+    font-size: 14px;
+    font-weight: bold;
+}
+QLineEdit#champNotes:focus {
+    border-bottom: 1px solid #E77C8D;
+}</string>
+        </property>
+        <property name="placeholderText">
+         <string>Notes</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QLabel" name="motifTitle">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>235</y>
+         <width>250</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel#motifTitle {
+    color: #6B3F2E;
+    font-size: 12px;
+    font-weight: bold;
+    background-color: transparent;
+}</string>
+       </property>
+       <property name="text">
+        <string>Constatations</string>
+       </property>
+      </widget>
+      <widget class="QTextEdit" name="motifText">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>258</y>
+         <width>660</width>
+         <height>55</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QTextEdit#motifText {
+    background-color: #FDFBF9;
+    border: 1px solid #F3E6DC;
+    border-radius: 8px;
+    color: #6B3F2E;
+    font-size: 11px;
+    padding: 6px;
+}</string>
+       </property>
+       <property name="placeholderText">
+        <string>Constatations de l'examen clinique…</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="diagnosticTitle">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>325</y>
+         <width>250</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel#diagnosticTitle {
+    color: #6B3F2E;
+    font-size: 12px;
+    font-weight: bold;
+    background-color: transparent;
+}</string>
+       </property>
+       <property name="text">
+        <string>Diagnostic retenu</string>
+       </property>
+      </widget>
+      <widget class="QTextEdit" name="diagnosticText">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>348</y>
+         <width>660</width>
+         <height>45</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QTextEdit#diagnosticText {
+    background-color: #FDFBF9;
+    border: 1px solid #F3E6DC;
+    border-radius: 8px;
+    color: #6B3F2E;
+    font-size: 11px;
+    padding: 6px;
+}</string>
+       </property>
+       <property name="placeholderText">
+        <string>Diagnostic retenu…</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="actesTitle">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>408</y>
+         <width>250</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel#actesTitle {
+    color: #6B3F2E;
+    font-size: 12px;
+    font-weight: bold;
+    background-color: transparent;
+}</string>
+       </property>
+       <property name="text">
+        <string>Actes &amp; Prescriptions</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="actesSubtitle">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>430</y>
+         <width>400</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel#actesSubtitle {
+    color: #A98268;
+    font-size: 10px;
+    background-color: transparent;
+}</string>
+       </property>
+       <property name="text">
+        <string>Prestations et traitements appliqués lors de la séance</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnEnregistrer">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>540</x>
+         <y>420</y>
+         <width>140</width>
+         <height>28</height>
+        </rect>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton#btnEnregistrer {
+    background-color: #6B3F2E;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: bold;
+}
+QPushButton#btnEnregistrer:hover {
+    background-color: #5A3225;
+}
+QPushButton#btnEnregistrer:disabled {
+    background-color: #A98268;
+}</string>
+       </property>
+       <property name="text">
+        <string>Enregistré</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btnExporterPreConsultation">
+       <property name="geometry">
+        <rect>
+         <x>320</x>
+         <y>420</y>
+         <width>205</width>
+         <height>28</height>
+        </rect>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton#btnExporterPreConsultation {
+    background-color: white;
+    color: #6B3F2E;
+    border: 1px solid #F3E6DC;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: bold;
+}
+QPushButton#btnExporterPreConsultation:hover {
+    background-color: #F9DEE4;
+}</string>
+       </property>
+       <property name="text">
+        <string>Exporter la pré-consultation PDF</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="appointmentStatsFrame">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>610</y>
+        <width>1020</width>
+        <height>130</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QFrame#appointmentStatsFrame {
+    background-color: white;
+    border: 1px solid #F3E6DC;
+    border-radius: 10px;
+}</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Raised</enum>
+      </property>
+      <widget class="QLabel" name="statsTitleLabel">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>10</y>
+         <width>240</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel#statsTitleLabel {
+    color: #6B3F2E;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: transparent;
+}</string>
+       </property>
+       <property name="text">
+        <string>Statistiques des rendez-vous</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="statTotalLabel">
+       <property name="geometry">
+        <rect>
+         <x>285</x>
+         <y>10</y>
+         <width>220</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel#statTotalLabel {
+    color: #6B3F2E;
+    font-size: 13px;
+    font-weight: bold;
+    background-color: transparent;
+}</string>
+       </property>
+       <property name="text">
+        <string>Total des rendez-vous : 0</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="statRealisesLabel">
+       <property name="geometry">
+        <rect>
+         <x>530</x>
+         <y>10</y>
+         <width>180</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel#statRealisesLabel {
+    color: #2E7D46;
+    font-size: 13px;
+    font-weight: bold;
+    background-color: transparent;
+}</string>
+       </property>
+       <property name="text">
+        <string>Réalisés : 0</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="statARealiserLabel">
+       <property name="geometry">
+        <rect>
+         <x>735</x>
+         <y>10</y>
+         <width>220</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel#statARealiserLabel {
+    color: #A98268;
+    font-size: 13px;
+    font-weight: bold;
+    background-color: transparent;
+}</string>
+       </property>
+       <property name="text">
+        <string>À réaliser : 0</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QPushButton" name="btnTrier">
+      <property name="geometry">
+       <rect>
+        <x>450</x>
+        <y>110</y>
+        <width>130</width>
+        <height>40</height>
+       </rect>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton#btnTrier {
+	background-color: white;
+	color: #6B3F2E;
+	border: 1px solid #F3E6DC;
+	border-radius: 8px;
+	font-size: 12px;
+	font-weight: bold;
+	text-align: left;
+	padding-left: 12px;
+}
+QPushButton#btnTrier:hover {
+	background-color: #F9DEE4;
+}
+QPushButton#btnTrier::menu-indicator {
+	right: 10px;
+}</string>
+      </property>
+      <property name="text">
+       <string>⇅  Trier</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="searchBar">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>110</y>
+        <width>420</width>
+        <height>40</height>
+       </rect>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>40</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLineEdit#searchBar {
+	background-color : white ;
+	color : #6B3F2E ;
+	border : 1px solid #F3E6DC ;
+	border-radius : 20px ;
+	padding-left : 15px ;
+	font-size : 12px ; 
+}</string>
+      </property>
+      <property name="placeholderText">
+       <string>Rechercher les rendez-vous selon le nom ...</string>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1300</width>
+     <height>25</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
