@@ -1,0 +1,935 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1274</width>
+    <height>780</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Pawché - Gestion des Commandes Fournisseurs</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+    QMainWindow {
+        background-color: #FAF5F0;
+    }
+    QWidget#centralwidget {
+        background-color: #FAF5F0;
+    }
+    QFrame#sidebarFrame {
+        background-color: #FFFDF9;
+        border: 1px solid #EFE4DC;
+        border-radius: 16px;
+    }
+    QPushButton.navButton {
+        background-color: transparent;
+        border: 1px solid #D9C3B5;
+        border-radius: 8px;
+        padding: 9px 12px;
+        text-align: center;
+        color: #5C3826;
+        font-family: &quot;Segoe UI&quot;, sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+    }
+    QPushButton.navButton:hover {
+        background-color: #F8EEE6;
+        border-color: #633927;
+    }
+    QPushButton.navButton[active="true"], QPushButton.navButton[active="true"]:hover {
+        background-color: #633927;
+        border: 1px solid #633927;
+        border-radius: 8px;
+        padding: 9px 12px;
+        text-align: center;
+        color: #FFFFFF;
+        font-family: &quot;Segoe UI&quot;, sans-serif;
+        font-size: 11px;
+        font-weight: bold;
+    }
+    QPushButton.navButtonActive {
+        background-color: #633927;
+        border: 1px solid #633927;
+        border-radius: 8px;
+        padding: 9px 12px;
+        text-align: center;
+        color: #FFFFFF;
+        font-family: &quot;Segoe UI&quot;, sans-serif;
+        font-size: 11px;
+        font-weight: bold;
+    }
+    QFrame.cardFrame {
+        background-color: #FFFFFF;
+        border: 1px solid #EFE6DF;
+        border-radius: 14px;
+    }
+    QLineEdit, QDateEdit, QDoubleSpinBox, QSpinBox, QComboBox {
+        background-color: #FFFFFF;
+        border: 1.5px solid #D9C3B5;
+        border-radius: 8px;
+        padding: 6px 10px;
+        color: #3D2619;
+        font-family: &quot;Segoe UI&quot;, sans-serif;
+        font-size: 11px;
+    }
+    QLineEdit:focus, QDateEdit:focus, QDoubleSpinBox:focus, QSpinBox:focus, QComboBox:focus {
+        border: 1.5px solid #633927;
+        background-color: #FFFDF9;
+    }
+    QTableWidget {
+        background-color: #FFFFFF;
+        border: 1px solid #EFE6DF;
+        border-radius: 12px;
+        gridline-color: #F5EEE9;
+        color: #3D2619;
+        font-family: &quot;Segoe UI&quot;, sans-serif;
+        font-size: 11px;
+        selection-background-color: #F8E2E6;
+        selection-color: #3D2619;
+    }
+    QHeaderView::section {
+        background-color: #FFF7F2;
+        color: #633927;
+        font-weight: bold;
+        border: none;
+        border-bottom: 2px solid #EEDCD0;
+        padding: 8px 6px;
+        font-size: 11px;
+    }
+    QPushButton.actionBtn {
+        background-color: #633927;
+        color: #FFFFFF;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 11px;
+        padding: 8px 14px;
+        border: none;
+    }
+    QPushButton.actionBtn:hover {
+        background-color: #4D2B1D;
+    }
+    QPushButton.secondaryBtn {
+        background-color: #FFFFFF;
+        color: #633927;
+        border: 1.5px solid #633927;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 11px;
+        padding: 7px 12px;
+    }
+    QPushButton.secondaryBtn:hover {
+        background-color: #FFF7F2;
+    }
+    QLabel.formTag {
+        background-color: #633927;
+        color: #FFFFFF;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 10px;
+        padding: 4px 8px;
+        min-width: 95px;
+    }
+   </string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="mainHLayout">
+    <property name="spacing">
+     <number>12</number>
+    </property>
+    <property name="leftMargin">
+     <number>12</number>
+    </property>
+    <property name="topMargin">
+     <number>12</number>
+    </property>
+    <property name="rightMargin">
+     <number>12</number>
+    </property>
+    <property name="bottomMargin">
+     <number>12</number>
+    </property>
+    <item>
+     <widget class="QFrame" name="sidebarFrame">
+      <property name="minimumSize">
+       <size>
+        <width>190</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>200</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <layout class="QVBoxLayout" name="sidebarVLayout">
+       <property name="spacing">
+        <number>9</number>
+       </property>
+       <property name="leftMargin">
+        <number>12</number>
+       </property>
+       <property name="topMargin">
+        <number>14</number>
+       </property>
+       <property name="rightMargin">
+        <number>12</number>
+       </property>
+       <property name="bottomMargin">
+        <number>14</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="labelLogo">
+         <property name="minimumSize">
+          <size>
+           <width>160</width>
+           <height>115</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>180</width>
+           <height>130</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="resources.qrc">:/resources/logo.png</pixmap>
+         </property>
+         <property name="scaledContents">
+          <bool>true</bool>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnNavAnimaux">
+         <property name="text">
+          <string>Gestion Animaux</string>
+         </property>
+         <property name="class" stdset="0">
+          <string>navButton</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnNavCommandes">
+         <property name="text">
+          <string>gestionFournisseurs</string>
+         </property>
+         <property name="class" stdset="0">
+          <string>navButton</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnNavSoins">
+         <property name="text">
+          <string>rendez_vous</string>
+         </property>
+         <property name="class" stdset="0">
+          <string>navButton</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnNavProduits">
+         <property name="text">
+          <string>gestion stokes</string>
+         </property>
+         <property name="class" stdset="0">
+          <string>navButton</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnNavPaiements">
+         <property name="text">
+          <string>commandes</string>
+         </property>
+         <property name="class" stdset="0">
+          <string>navButton</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="centerVLayout">
+      <property name="spacing">
+       <number>10</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="lblTitle">
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>20</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: #3D2619;</string>
+        </property>
+        <property name="text">
+          <string>Fournisseurs</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lblSubtitle">
+        <property name="styleSheet">
+         <string notr="true">color: #7D6658; font-size: 11px; margin-bottom: 2px;</string>
+        </property>
+        <property name="text">
+         <string>Gérez les commandes fournisseurs, approvisionnements et livraisons</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="searchHLayout">
+        <property name="spacing">
+         <number>8</number>
+        </property>
+        <item>
+         <widget class="QLineEdit" name="inputSearch">
+          <property name="placeholderText">
+          <string>🔍 Rechercher par nom, prénom, téléphone ou e-mail...</string>
+          </property>
+          <property name="clearButtonEnabled">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="comboFilterType">
+          <property name="minimumSize">
+           <size>
+            <width>150</width>
+            <height>0</height>
+           </size>
+          </property>
+          <item>
+           <property name="text">
+           <string>Tous les fournisseurs</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+           <string>Gmail</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+           <string>Outlook</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+           <string>Yahoo</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+           <string>Autres domaines</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="toolsHLayout">
+        <property name="spacing">
+         <number>8</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="lblListTitle">
+          <property name="font">
+           <font>
+            <family>Segoe UI</family>
+            <pointsize>13</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: #5C3826;</string>
+          </property>
+          <property name="text">
+          <string>Liste des Fournisseur</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="toolsSpacer">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnTrierPrix">
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="text">
+           <string>↕ Trier par prix</string>
+          </property>
+          <property name="class" stdset="0">
+           <string>secondaryBtn</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnTrierDate">
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="text">
+           <string>📅 Trier par date</string>
+          </property>
+          <property name="class" stdset="0">
+           <string>secondaryBtn</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnExportPdf">
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">
+            background-color: #FCE4E8;
+            color: #633927;
+            border: 1.5px solid #F6A5B5;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 11px;
+            padding: 7px 12px;
+           </string>
+          </property>
+          <property name="text">
+           <string>📄 Exporter PDF</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QTableWidget" name="tableCommandes">
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+        </property>
+        <property name="showGrid">
+         <bool>false</bool>
+        </property>
+        <property name="sortingEnabled">
+         <bool>false</bool>
+        </property>
+        <attribute name="horizontalHeaderStretchLastSection">
+         <bool>true</bool>
+        </attribute>
+        <column>
+         <property name="text">
+          <string>ID fournisseur</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Nom</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>prenom</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>téléphone</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Mail</string>
+         </property>
+        </column>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="bottomHLayout">
+        <property name="spacing">
+         <number>12</number>
+        </property>
+        <item>
+         <widget class="QFrame" name="statsFrame">
+          <property name="class" stdset="0">
+           <string>cardFrame</string>
+          </property>
+          <layout class="QVBoxLayout" name="statsVLayout">
+           <property name="leftMargin">
+            <number>12</number>
+           </property>
+           <property name="topMargin">
+            <number>10</number>
+           </property>
+           <property name="rightMargin">
+            <number>12</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="lblStatsTitle">
+             <property name="font">
+              <font>
+               <family>Segoe UI</family>
+               <pointsize>11</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color: #5C3826;</string>
+             </property>
+             <property name="text">
+              <string>📈 Statistiques par domaine e-mail (Courbe)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="CurveStatsWidget" name="widgetCurve" native="true">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>160</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="alertFrame">
+          <property name="maximumSize">
+           <size>
+            <width>250</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">
+            QFrame#alertFrame {
+                background-color: #FFFFFF;
+                border: 1.5px solid #F6A5B5;
+                border-radius: 14px;
+            }
+           </string>
+          </property>
+          <layout class="QVBoxLayout" name="alertVLayout">
+           <property name="leftMargin">
+            <number>14</number>
+           </property>
+           <property name="topMargin">
+            <number>14</number>
+           </property>
+           <property name="rightMargin">
+            <number>14</number>
+           </property>
+           <property name="bottomMargin">
+            <number>14</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="lblAlertHeading">
+             <property name="font">
+              <font>
+               <family>Segoe UI</family>
+               <pointsize>12</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color: #D3455B;</string>
+             </property>
+             <property name="text">
+              <string>Fournisseurs enregistrés</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblAlertBadge">
+             <property name="font">
+              <font>
+               <family>Segoe UI</family>
+               <pointsize>28</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color: #D3455B;</string>
+             </property>
+             <property name="text">
+              <string>3</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblAlertDesc">
+             <property name="styleSheet">
+              <string notr="true">color: #7D6658; font-size: 11px;</string>
+             </property>
+             <property name="text">
+              <string>commandes en attente ⚠️</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblTotalMontant">
+             <property name="font">
+              <font>
+               <family>Segoe UI</family>
+               <pointsize>10</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">
+                background-color: #F8EEE6;
+                color: #5C3826;
+                padding: 6px;
+                border-radius: 6px;
+              </string>
+             </property>
+             <property name="text">
+              <string>Total: 1450</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignmentFlag::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QFrame" name="formFrame">
+      <property name="minimumSize">
+       <size>
+        <width>310</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>330</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">
+        QFrame#formFrame {
+            background-color: #FFFFFF;
+            border: 1px solid #EFE4DC;
+            border-radius: 16px;
+        }
+       </string>
+      </property>
+      <layout class="QVBoxLayout" name="formVLayout">
+       <property name="spacing">
+        <number>9</number>
+       </property>
+       <property name="leftMargin">
+        <number>14</number>
+       </property>
+       <property name="topMargin">
+        <number>14</number>
+       </property>
+       <property name="rightMargin">
+        <number>14</number>
+       </property>
+       <property name="bottomMargin">
+        <number>14</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="lblFormBanner">
+         <property name="font">
+          <font>
+           <family>Segoe UI</family>
+           <pointsize>12</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">
+            background-color: #633927;
+            color: #FFFFFF;
+            padding: 10px;
+            border-radius: 8px;
+          </string>
+         </property>
+         <property name="text">
+          <string>+ Fournisseur</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="lblFormCircle">
+         <property name="minimumSize">
+          <size>
+           <width>60</width>
+           <height>60</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>60</width>
+           <height>60</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>22</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">
+            border: 2px solid #D9C3B5;
+            border-radius: 30px;
+            background-color: #FFFDF9;
+          </string>
+         </property>
+         <property name="text">
+          <string>📦</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="rowIdLayout">
+         <item>
+          <widget class="QLabel" name="tagId">
+           <property name="text">
+           <string>ID Fournisseur</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>formTag</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="txtId">
+           <property name="placeholderText">
+            <string>Ex: CMD-2026-01</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="rowDateLayout">
+         <item>
+          <widget class="QLabel" name="tagDate">
+           <property name="text">
+           <string>Nom </string>
+           </property>
+           <property name="class" stdset="0">
+            <string>formTag</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="rowMontantLayout">
+         <item>
+          <widget class="QLabel" name="tagMontant">
+           <property name="text">
+           <string>prenom</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>formTag</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit_2"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="rowTypeLayout">
+         <item>
+          <widget class="QLabel" name="tagType">
+           <property name="text">
+           <string>Tèlèphone:</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>formTag</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit_3"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="rowQteLayout">
+         <item>
+          <widget class="QLabel" name="tagQte">
+           <property name="text">
+           <string>Mail</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>formTag</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit_4"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="rowEtatLayout"/>
+       </item>
+       <item>
+        <spacer name="formSpacer">
+         <property name="orientation">
+          <enum>Qt::Orientation::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>10</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <layout class="QGridLayout" name="buttonsGrid">
+         <item row="0" column="0">
+          <widget class="QPushButton" name="btnAjouter">
+           <property name="cursor">
+            <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="text">
+            <string>+ Ajouter</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>actionBtn</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QPushButton" name="btnModifier">
+           <property name="cursor">
+            <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="text">
+            <string>✏ Modifier</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>secondaryBtn</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QPushButton" name="btnSupprimer">
+           <property name="cursor">
+            <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+                background-color: #FFF0F2;
+                color: #C0392B;
+                border: 1.5px solid #F6A5B5;
+                border-radius: 8px;
+                font-weight: bold;
+                font-size: 11px;
+                padding: 7px 12px;
+            </string>
+           </property>
+           <property name="text">
+            <string>🗑 Supprimer</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QPushButton" name="btnVider">
+           <property name="cursor">
+            <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="text">
+            <string>🔄 Vider</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>secondaryBtn</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CurveStatsWidget</class>
+   <extends>QWidget</extends>
+   <header>curvestatswidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>
