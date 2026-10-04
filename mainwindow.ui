@@ -1,0 +1,1103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1240</width>
+    <height>780</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Pawché - Gestion des Commandes Fournisseurs</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+    QMainWindow {
+        background-color: #FAF5F0;
+    }
+    QWidget#centralwidget {
+        background-color: #FAF5F0;
+    }
+    QFrame#sidebarFrame {
+        background-color: #FFFDF9;
+        border: 1px solid #EFE4DC;
+        border-radius: 16px;
+    }
+    QPushButton.navButton {
+        background-color: transparent;
+        border: 1px solid #D9C3B5;
+        border-radius: 8px;
+        padding: 9px 12px;
+        text-align: center;
+        color: #5C3826;
+        font-family: &quot;Segoe UI&quot;, sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+    }
+    QPushButton.navButton:hover {
+        background-color: #F8EEE6;
+        border-color: #633927;
+    }
+    QPushButton.navButtonActive {
+        background-color: #633927;
+        border: 1px solid #633927;
+        border-radius: 8px;
+        padding: 9px 12px;
+        text-align: center;
+        color: #FFFFFF;
+        font-family: &quot;Segoe UI&quot;, sans-serif;
+        font-size: 11px;
+        font-weight: bold;
+    }
+    QFrame.cardFrame {
+        background-color: #FFFFFF;
+        border: 1px solid #EFE6DF;
+        border-radius: 14px;
+    }
+    QLineEdit, QDateEdit, QDoubleSpinBox, QSpinBox, QComboBox {
+        background-color: #FFFFFF;
+        border: 1.5px solid #D9C3B5;
+        border-radius: 8px;
+        padding: 6px 10px;
+        color: #3D2619;
+        font-family: &quot;Segoe UI&quot;, sans-serif;
+        font-size: 11px;
+    }
+    QLineEdit:focus, QDateEdit:focus, QDoubleSpinBox:focus, QSpinBox:focus, QComboBox:focus {
+        border: 1.5px solid #633927;
+        background-color: #FFFDF9;
+    }
+    QTableWidget {
+        background-color: #FFFFFF;
+        border: 1px solid #EFE6DF;
+        border-radius: 12px;
+        gridline-color: #F5EEE9;
+        color: #3D2619;
+        font-family: &quot;Segoe UI&quot;, sans-serif;
+        font-size: 11px;
+        selection-background-color: #F8E2E6;
+        selection-color: #3D2619;
+    }
+    QHeaderView::section {
+        background-color: #FFF7F2;
+        color: #633927;
+        font-weight: bold;
+        border: none;
+        border-bottom: 2px solid #EEDCD0;
+        padding: 8px 6px;
+        font-size: 11px;
+    }
+    QPushButton.actionBtn {
+        background-color: #633927;
+        color: #FFFFFF;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 11px;
+        padding: 8px 14px;
+        border: none;
+    }
+    QPushButton.actionBtn:hover {
+        background-color: #4D2B1D;
+    }
+    QPushButton.secondaryBtn {
+        background-color: #FFFFFF;
+        color: #633927;
+        border: 1.5px solid #633927;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 11px;
+        padding: 7px 12px;
+    }
+    QPushButton.secondaryBtn:hover {
+        background-color: #FFF7F2;
+    }
+    QLabel.formTag {
+        background-color: #633927;
+        color: #FFFFFF;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 10px;
+        padding: 4px 8px;
+        min-width: 95px;
+    }
+   </string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="mainHLayout">
+    <property name="spacing">
+     <number>12</number>
+    </property>
+    <property name="leftMargin">
+     <number>12</number>
+    </property>
+    <property name="topMargin">
+     <number>12</number>
+    </property>
+    <property name="rightMargin">
+     <number>12</number>
+    </property>
+    <property name="bottomMargin">
+     <number>12</number>
+    </property>
+    <item>
+     <!-- LEFT SIDEBAR -->
+     <widget class="QFrame" name="sidebarFrame">
+      <property name="minimumSize">
+       <size>
+        <width>190</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>200</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <layout class="QVBoxLayout" name="sidebarVLayout">
+       <property name="spacing">
+        <number>9</number>
+       </property>
+       <property name="leftMargin">
+        <number>12</number>
+       </property>
+       <property name="topMargin">
+        <number>14</number>
+       </property>
+       <property name="rightMargin">
+        <number>12</number>
+       </property>
+       <property name="bottomMargin">
+        <number>14</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="labelLogo">
+         <property name="minimumSize">
+          <size>
+           <width>160</width>
+           <height>115</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>180</width>
+           <height>130</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="resources.qrc">:/resources/logo.png</pixmap>
+         </property>
+         <property name="scaledContents">
+          <bool>true</bool>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="spacerLogo">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>8</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnNavAnimaux">
+         <property name="text">
+          <string>Gestion Animaux</string>
+         </property>
+         <property name="class" stdset="0">
+          <string>navButton</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnNavProprietaires">
+         <property name="text">
+          <string>Gestion Propriétaires</string>
+         </property>
+         <property name="class" stdset="0">
+          <string>navButton</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnNavSoins">
+         <property name="text">
+          <string>Consultations et Soins</string>
+         </property>
+         <property name="class" stdset="0">
+          <string>navButton</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnNavCommandes">
+         <property name="text">
+          <string>Commandes Fournisseurs</string>
+         </property>
+         <property name="class" stdset="0">
+          <string>navButtonActive</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnNavProduits">
+         <property name="text">
+          <string>Produits et Accessoires</string>
+         </property>
+         <property name="class" stdset="0">
+          <string>navButton</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnNavPaiements">
+         <property name="text">
+          <string>Paiements et Factures</string>
+         </property>
+         <property name="class" stdset="0">
+          <string>navButton</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="sidebarSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnNavParametre">
+         <property name="text">
+          <string>⚙ Paramètre</string>
+         </property>
+         <property name="class" stdset="0">
+          <string>navButton</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnNavAide">
+         <property name="text">
+          <string>? Aide</string>
+         </property>
+         <property name="class" stdset="0">
+          <string>navButton</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <!-- CENTER WORKSPACE -->
+     <layout class="QVBoxLayout" name="centerVLayout">
+      <property name="spacing">
+       <number>10</number>
+      </property>
+      <item>
+       <!-- Header Titles -->
+       <widget class="QLabel" name="lblTitle">
+        <property name="text">
+         <string>Commandes Fournisseurs</string>
+        </property>
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>20</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: #3D2619;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lblSubtitle">
+        <property name="text">
+         <string>Gérez les commandes fournisseurs, approvisionnements et livraisons</string>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: #7D6658; font-size: 11px; margin-bottom: 2px;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <!-- Search Bar -->
+       <layout class="QHBoxLayout" name="searchHLayout">
+        <property name="spacing">
+         <number>8</number>
+        </property>
+        <item>
+         <widget class="QLineEdit" name="inputSearch">
+          <property name="placeholderText">
+           <string>🔍 Rechercher par type de produit (ex: Alimentation, Soin...)</string>
+          </property>
+          <property name="clearButtonEnabled">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="comboFilterType">
+          <property name="minimumSize">
+           <size>
+            <width>150</width>
+            <height>0</height>
+           </size>
+          </property>
+          <item>
+           <property name="text">
+            <string>Tous les types</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Alimentation</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Soin &amp; Santé</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Accessoire</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Hygiène</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Équipement</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <!-- Section Title & Table Tools -->
+       <layout class="QHBoxLayout" name="toolsHLayout">
+        <property name="spacing">
+         <number>8</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="lblListTitle">
+          <property name="text">
+           <string>Liste des Commandes</string>
+          </property>
+          <property name="font">
+           <font>
+            <family>Segoe UI</family>
+            <pointsize>13</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: #5C3826;</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="toolsSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnTrierPrix">
+          <property name="text">
+           <string>↕ Trier par prix</string>
+          </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="class" stdset="0">
+           <string>secondaryBtn</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnTrierDate">
+          <property name="text">
+           <string>📅 Trier par date</string>
+          </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="class" stdset="0">
+           <string>secondaryBtn</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnExportPdf">
+          <property name="text">
+           <string>📄 Exporter PDF</string>
+          </property>
+          <property name="cursor">
+           <cursorShape>PointingHandCursor</cursorShape>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">
+            background-color: #FCE4E8;
+            color: #633927;
+            border: 1.5px solid #F6A5B5;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 11px;
+            padding: 7px 12px;
+           </string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <!-- Table of Orders -->
+       <widget class="QTableWidget" name="tableCommandes">
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::SingleSelection</enum>
+        </property>
+        <property name="showGrid">
+         <bool>false</bool>
+        </property>
+        <property name="sortingEnabled">
+         <bool>false</bool>
+        </property>
+        <attribute name="horizontalHeaderStretchLastSection">
+         <bool>true</bool>
+        </attribute>
+        <column>
+         <property name="text">
+          <string>ID Commande</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Date livraison</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Montant (DT)</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Type produit</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Quantité</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>État</string>
+         </property>
+        </column>
+       </widget>
+      </item>
+      <item>
+       <!-- Bottom Section: Stats Curve & Summary Card -->
+       <layout class="QHBoxLayout" name="bottomHLayout">
+        <property name="spacing">
+         <number>12</number>
+        </property>
+        <item>
+         <!-- Curve Stats Card -->
+         <widget class="QFrame" name="statsFrame">
+          <property name="class" stdset="0">
+           <string>cardFrame</string>
+          </property>
+          <layout class="QVBoxLayout" name="statsVLayout">
+           <property name="leftMargin">
+            <number>12</number>
+           </property>
+           <property name="topMargin">
+            <number>10</number>
+           </property>
+           <property name="rightMargin">
+            <number>12</number>
+           </property>
+           <property name="bottomMargin">
+            <number>10</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="lblStatsTitle">
+             <property name="text">
+              <string>📈 Statistiques des commandes selon statut (Courbe)</string>
+             </property>
+             <property name="font">
+              <font>
+               <family>Segoe UI</family>
+               <pointsize>11</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color: #5C3826;</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="CurveStatsWidget" name="widgetCurve" native="true">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>160</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <!-- Alert / Info Card -->
+         <widget class="QFrame" name="alertFrame">
+          <property name="maximumSize">
+           <size>
+            <width>250</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">
+            QFrame#alertFrame {
+                background-color: #FFFFFF;
+                border: 1.5px solid #F6A5B5;
+                border-radius: 14px;
+            }
+           </string>
+          </property>
+          <layout class="QVBoxLayout" name="alertVLayout">
+           <property name="leftMargin">
+            <number>14</number>
+           </property>
+           <property name="topMargin">
+            <number>14</number>
+           </property>
+           <property name="rightMargin">
+            <number>14</number>
+           </property>
+           <property name="bottomMargin">
+            <number>14</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="lblAlertHeading">
+             <property name="text">
+              <string>Alerte Commandes !</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="font">
+              <font>
+               <family>Segoe UI</family>
+               <pointsize>12</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color: #D3455B;</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblAlertBadge">
+             <property name="text">
+              <string>3</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="font">
+              <font>
+               <family>Segoe UI</family>
+               <pointsize>28</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color: #D3455B;</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblAlertDesc">
+             <property name="text">
+              <string>commandes en attente ⚠️</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">color: #7D6658; font-size: 11px;</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lblTotalMontant">
+             <property name="text">
+              <string>Total: 1,450.00 DT</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="font">
+              <font>
+               <family>Segoe UI</family>
+               <pointsize>10</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">
+                background-color: #F8EEE6;
+                color: #5C3826;
+                padding: 6px;
+                border-radius: 6px;
+              </string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <!-- RIGHT CRUD FORM PANEL -->
+     <widget class="QFrame" name="formFrame">
+      <property name="minimumSize">
+       <size>
+        <width>310</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>330</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">
+        QFrame#formFrame {
+            background-color: #FFFFFF;
+            border: 1px solid #EFE4DC;
+            border-radius: 16px;
+        }
+       </string>
+      </property>
+      <layout class="QVBoxLayout" name="formVLayout">
+       <property name="spacing">
+        <number>9</number>
+       </property>
+       <property name="leftMargin">
+        <number>14</number>
+       </property>
+       <property name="topMargin">
+        <number>14</number>
+       </property>
+       <property name="rightMargin">
+        <number>14</number>
+       </property>
+       <property name="bottomMargin">
+        <number>14</number>
+       </property>
+       <item>
+        <!-- Top banner button -->
+        <widget class="QLabel" name="lblFormBanner">
+         <property name="text">
+          <string>+ Commande Fournisseur</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <property name="font">
+          <font>
+           <family>Segoe UI</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">
+            background-color: #633927;
+            color: #FFFFFF;
+            padding: 10px;
+            border-radius: 8px;
+          </string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <!-- Circular Decorative Icon -->
+        <widget class="QLabel" name="lblFormCircle">
+         <property name="minimumSize">
+          <size>
+           <width>60</width>
+           <height>60</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>60</width>
+           <height>60</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>📦</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>22</pointsize>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">
+            border: 2px solid #D9C3B5;
+            border-radius: 30px;
+            background-color: #FFFDF9;
+          </string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <!-- ID Commande -->
+        <layout class="QHBoxLayout" name="rowIdLayout">
+         <item>
+          <widget class="QLabel" name="tagId">
+           <property name="text">
+            <string>ID Commande :</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>formTag</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="txtId">
+           <property name="placeholderText">
+            <string>Ex: CMD-2026-01</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <!-- Date livraison -->
+        <layout class="QHBoxLayout" name="rowDateLayout">
+         <item>
+          <widget class="QLabel" name="tagDate">
+           <property name="text">
+            <string>Date livraison :</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>formTag</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDateEdit" name="dateLivraison">
+           <property name="calendarPopup">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <!-- Montant -->
+        <layout class="QHBoxLayout" name="rowMontantLayout">
+         <item>
+          <widget class="QLabel" name="tagMontant">
+           <property name="text">
+            <string>Montant (DT) :</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>formTag</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="spinMontant">
+           <property name="maximum">
+            <double>999999.99</double>
+           </property>
+           <property name="singleStep">
+            <double>10.0</double>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <!-- Type produit -->
+        <layout class="QHBoxLayout" name="rowTypeLayout">
+         <item>
+          <widget class="QLabel" name="tagType">
+           <property name="text">
+            <string>Type produit :</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>formTag</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="comboType">
+           <item>
+            <property name="text">
+             <string>Alimentation</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Soin &amp; Santé</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Accessoire</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Hygiène</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Équipement</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <!-- Quantité -->
+        <layout class="QHBoxLayout" name="rowQteLayout">
+         <item>
+          <widget class="QLabel" name="tagQte">
+           <property name="text">
+            <string>Quantité :</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>formTag</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="spinQuantite">
+           <property name="maximum">
+            <number>99999</number>
+           </property>
+           <property name="value">
+            <number>1</number>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <!-- État -->
+        <layout class="QHBoxLayout" name="rowEtatLayout">
+         <item>
+          <widget class="QLabel" name="tagEtat">
+           <property name="text">
+            <string>État :</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>formTag</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="comboEtat">
+           <item>
+            <property name="text">
+             <string>En attente</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Confirmée</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>En cours</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Livrée</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Annulée</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="formSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>10</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <!-- Buttons CRUD -->
+        <layout class="QGridLayout" name="buttonsGrid">
+         <item row="0" column="0">
+          <widget class="QPushButton" name="btnAjouter">
+           <property name="text">
+            <string>+ Ajouter</string>
+           </property>
+           <property name="cursor">
+            <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="class" stdset="0">
+            <string>actionBtn</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QPushButton" name="btnModifier">
+           <property name="text">
+            <string>✏ Modifier</string>
+           </property>
+           <property name="cursor">
+            <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="class" stdset="0">
+            <string>secondaryBtn</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QPushButton" name="btnSupprimer">
+           <property name="text">
+            <string>🗑 Supprimer</string>
+           </property>
+           <property name="cursor">
+            <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">
+                background-color: #FFF0F2;
+                color: #C0392B;
+                border: 1.5px solid #F6A5B5;
+                border-radius: 8px;
+                font-weight: bold;
+                font-size: 11px;
+                padding: 7px 12px;
+            </string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QPushButton" name="btnVider">
+           <property name="text">
+            <string>🔄 Vider</string>
+           </property>
+           <property name="cursor">
+            <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="class" stdset="0">
+            <string>secondaryBtn</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CurveStatsWidget</class>
+   <extends>QWidget</extends>
+   <header>curvestatswidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>
