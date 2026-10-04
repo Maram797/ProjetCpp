@@ -1,0 +1,79 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-a6e937cf2a31f5e3e8dd.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "pawche",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "pawche::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-pawche-Debug-5fc8663244c0924897a3.json",
+					"name" : "pawche",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "pawche_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-pawche_autogen-Debug-79cc25bcb7af26699ceb.json",
+					"name" : "pawche_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "pawche_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-pawche_autogen_timestamp_deps-Debug-aa4792d24fccd7240d65.json",
+					"name" : "pawche_autogen_timestamp_deps",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/hadil/Documents/pawche/build/Desktop_Qt_6_11_2_MinGW_64_bit_Debug",
+		"source" : "C:/Users/hadil/Documents/pawche"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}
