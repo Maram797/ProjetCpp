@@ -1,5 +1,5 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef GESTIONRENDEZVOUS_H
+#define GESTIONRENDEZVOUS_H
 
 #include <QMainWindow>
 #include <QString>
@@ -15,16 +15,15 @@ class QPushButton;
 class AppointmentChart;
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+namespace Ui { class GestionRendezvous; }
 QT_END_NAMESPACE
 
-// Un patient (une fiche / un dossier). Chaque patient a un numero de dossier
-// unique, attribue a la creation et jamais reutilise.
+
 struct Patient
 {
-    int     id = 0;            // numero d'ordre de creation (1, 2, 3...)
-    QString dossier;           // numero de dossier unique, ex. "DOS-2026-0007"
-    QString nom;               // nom de l'animal
+    int     id = 0;            
+    QString dossier;           
+    QString nom;               
     QDate   date;
     QTime   heure;
     QString motif;
@@ -33,12 +32,11 @@ struct Patient
     QString constatations;
     QString diagnostic;
     QString statut     = "En attente";
-    QString statutType = "neutre";   // succes | alerte | neutre
+    QString statutType = "neutre";   
     bool    rendezVousRealise = false;
 };
 
-// Charte graphique de l'application : genere les feuilles de style Qt (QSS)
-// a partir d'une seule palette de couleurs. Utilisee par MainWindow.
+
 class charte
 {
 private:
@@ -91,23 +89,21 @@ public:
     void afficher() const;
 };
 
-class MainWindow : public QMainWindow
+class GestionRendezvous : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    GestionRendezvous(QWidget *parent = nullptr);
+    ~GestionRendezvous();
 
-    // Change le badge de statut d'un patient de la liste (numero = id du patient,
-    // 1 pour le premier patient cree, etc.).
-    // type : "succes" (vert), "alerte" (rouge) ou "neutre"
+
     void setStatutPatient(int numero, const QString &texte, const QString &type);
 
 private slots:
-    void nouveauPatient();                 // bouton "+ Nouveau Patient"
-    void selectionnerPatient(int id);      // clic sur un patient de la liste
-    void appliquerTri(int critere);        // menu du bouton "Trier"
+    void nouveauPatient();                
+    void selectionnerPatient(int id);      
+    void appliquerTri(int critere);        
     void modifierPatient(int id);
     void supprimerPatient(int id);
     void enregistrerPatient();
@@ -120,29 +116,29 @@ private:
     void appliquer(const QString &nom, const std::string &style);
     void appliquerCharte();   // applique la charte graphique a tous les widgets
     void chargerLogo();
-    void configurerChamps();  // champs editables + connexions
-    void configurerTri();     // menu du bouton "Trier"
+    void configurerChamps();  
+    void configurerTri();     
 
     int      ajouterPatient(const QString &nom, const QDate &date, const QTime &heure);
     QString  genererDossier();
     Patient *trouver(int id);
     Patient *patientCourant();
 
-    void reconstruireListe();             // recree les lignes dans l'ordre de tri
-    void majLigne(int id);                // met a jour le texte d'une ligne
+    void reconstruireListe();          
+    void majLigne(int id);                
     void majCompteur();
     void majStatistiques();
     void afficherPatient(const Patient &p);
     void appliquerModeEdition(bool actif);
 
-    Ui::MainWindow *ui;
-    charte m_charte;          // palette unique de l'application
+    Ui::GestionRendezvous *ui;
+    charte m_charte;          
 
-    QVector<Patient> m_patients;      // dans l'ordre de creation
+    QVector<Patient> m_patients;      
     int  m_dernierId     = 0;
-    int  m_courant       = -1;        // id du patient affiche
+    int  m_courant       = -1;        
     int  m_critereTri    = NumeroDossier;
-    bool m_chargement    = false;     // true pendant le remplissage des champs
+    bool m_chargement    = false;     
     bool m_modeEdition   = false;
 
     QVBoxLayout  *m_listeLayout = nullptr;
@@ -150,4 +146,4 @@ private:
     AppointmentChart *m_graphiqueRendezVous = nullptr;
 };
 
-#endif // MAINWINDOW_H
+#endif // GESTIONRENDEZVOUS_H

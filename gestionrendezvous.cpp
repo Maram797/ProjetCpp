@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
+#include "gestionrendezvous.h"
+#include "ui_gestionrendezvous.h"
 
 #include <QAction>
 #include <QActionGroup>
@@ -12,6 +12,8 @@
 #include <QFile>
 #include <QFontMetrics>
 #include <QLabel>
+#include <QMap>
+#include <QPageSize>
 #include <QLineEdit>
 #include <QMenu>
 #include <QMenuBar>
@@ -398,9 +400,9 @@ void charte::afficher() const
     cout << "Rayon des coins  : " << rayon << " px" << endl;
 }
 
-// =====================  MAINWINDOW  =====================
 
-// std::string (classe charte) -> QString (Qt)
+
+
 static QString qss(const std::string &s)
 {
     return QString::fromStdString(s);
@@ -429,20 +431,20 @@ static bool avant(const Patient &a, const Patient &b, int critere)
     };
 
     switch (critere) {
-    case 0: /* HeureCroissante   */ return parHeure(a, b);
-    case 1: /* HeureDecroissante */ return parHeure(b, a);
-    case 2: /* NomAZ             */ return QString::localeAwareCompare(a.nom, b.nom) < 0;
-    case 3: /* NomZA             */ return QString::localeAwareCompare(b.nom, a.nom) < 0;
-    case 4: /* MotifAZ           */ return QString::localeAwareCompare(a.motif, b.motif) < 0;
-    case 5: /* Statut            */ if (rang(a) != rang(b)) return rang(a) < rang(b);
+    case 0:  return parHeure(a, b);
+    case 1:  return parHeure(b, a);
+    case 2:  return QString::localeAwareCompare(a.nom, b.nom) < 0;
+    case 3:  return QString::localeAwareCompare(b.nom, a.nom) < 0;
+    case 4:  return QString::localeAwareCompare(a.motif, b.motif) < 0;
+    case 5:  if (rang(a) != rang(b)) return rang(a) < rang(b);
         return parHeure(a, b);
-    default:/* NumeroDossier     */ return a.id < b.id;
+    default: return a.id < b.id;
     }
 }
 
-MainWindow::MainWindow(QWidget *parent)
+GestionRendezvous::GestionRendezvous(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , ui(new Ui::GestionRendezvous)
 {
     ui->setupUi(this);
 
@@ -464,7 +466,6 @@ MainWindow::MainWindow(QWidget *parent)
     m_graphiqueRendezVous->setGeometry(18, 44, 984, 78);
     m_graphiqueRendezVous->show();
 
-    // liste scrollable des patients (les lignes sont creees dans reconstruireListe)
     m_listeLayout = new QVBoxLayout(ui->patientsContainer);
     m_listeLayout->setContentsMargins(10, 5, 6, 5);
     m_listeLayout->setSpacing(10);
@@ -476,39 +477,36 @@ MainWindow::MainWindow(QWidget *parent)
     configurerChamps();
     configurerTri();
 
-    connect(ui->btnNouveauPatient, &QPushButton::clicked, this, &MainWindow::nouveauPatient);
+    connect(ui->btnNouveauPatient, &QPushButton::clicked, this, &GestionRendezvous::nouveauPatient);
     connect(ui->btnEnregistrer, &QPushButton::clicked,
-            this, &MainWindow::enregistrerPatient);
+            this, &GestionRendezvous::enregistrerPatient);
     connect(ui->btnExporterPreConsultation, &QPushButton::clicked,
-            this, &MainWindow::exporterPreConsultationPdf);
+            this, &GestionRendezvous::exporterPreConsultationPdf);
 
     ajouterPatient(QString::fromUtf8("Milo"), QDate::currentDate(), QTime(9, 0));
     reconstruireListe();
     selectionnerPatient(m_patients.first().id);
 }
 
-MainWindow::~MainWindow()
+GestionRendezvous::~GestionRendezvous()
 {
     delete ui;
 }
 
-// ------------------------------------------------------------------ logo
-// Le logo n'etait pas affiche : le .ui pointait vers "../../../Downloads/pawche.jpeg",
-// un chemin relatif au dossier de travail qui n'existe plus a l'execution.
-// On cherche maintenant l'image a plusieurs endroits fiables (ressource Qt en premier).
-void MainWindow::chargerLogo()
+
+void GestionRendezvous::chargerLogo()
 {
     const QString appDir = QCoreApplication::applicationDirPath();
     const QString cwd    = QDir::currentPath();
 
     QStringList candidats = {
-        ":/images/pawche.jpeg",            // ressource Qt (resources.qrc) - recommande
+        ":/images/pawche.jpeg",            
         ":/pawche.jpeg",
-        appDir + "/pawche.jpeg",           // a cote de l'executable
+        appDir + "/pawche.jpeg",           
         appDir + "/images/pawche.jpeg",
         cwd + "/pawche.jpeg",
         cwd + "/images/pawche.jpeg",
-        "../../../Downloads/pawche.jpeg"   // ancien chemin du .ui
+        "../../../Downloads/pawche.jpeg"   
     };
     const QStringList dl = QStandardPaths::standardLocations(QStandardPaths::DownloadLocation);
     for (const QString &d : dl)
@@ -538,32 +536,27 @@ void MainWindow::chargerLogo()
     }
 }
 
-// Applique une feuille de style au widget portant ce nom (ignore s'il n'existe pas)
-void MainWindow::appliquer(const QString &nom, const std::string &style)
+void GestionRendezvous::appliquer(const QString &nom, const std::string &style)
 {
     if (QWidget *w = findChild<QWidget *>(nom))
         w->setStyleSheet(qss(style));
 }
 
-void MainWindow::appliquerCharte()
+void GestionRendezvous::appliquerCharte()
 {
     const charte &c = m_charte;
 
-    // barre de menu / de statut vides : on les cache pour garder 1300x750 utiles
     if (QMenuBar *mb = findChild<QMenuBar *>())    mb->hide();
     if (QStatusBar *sb = findChild<QStatusBar *>()) sb->hide();
 
-    // ----- Fonds -----
     appliquer("centralFrame", c.styleFond("centralFrame", "principal"));
     appliquer("sideBar",      c.styleSidebar("sideBar"));      // cadre exterieur visible
     appliquer("mainContent",  c.styleFond("mainContent", "sidebar"));
 
-    // ----- Menu lateral -----
     for (const char *n : {"btnAnimaux", "btnClients", "btnConsultations",
                           "btnProduits", "btnCaisse"})
         appliquer(n, c.styleBoutonMenu(n));
 
-    // ----- Barre du haut -----
     appliquer("searchBar",         c.styleChampTexte("searchBar"));
     appliquer("btnCabinet",        c.styleBoutonSecondaire("btnCabinet"));
     appliquer("btnNouveauPatient", c.styleBoutonPrincipal("btnNouveauPatient"));
@@ -573,7 +566,6 @@ void MainWindow::appliquerCharte()
     appliquer("posteBadge",        c.styleStatut("posteBadge", "neutre"));
     appliquer("salleLabel",        c.styleLabel("salleLabel", "sous-titre"));
 
-    // ----- Titre de page -----
     appliquer("pageTitle",    c.styleLabel("pageTitle", "titre"));
     appliquer("pageSubtitle", c.styleLabel("pageSubtitle", "sous-titre"));
 
@@ -584,7 +576,6 @@ void MainWindow::appliquerCharte()
     appliquer("patientsScroll",     c.styleScrollListe("patientsScroll"));
     appliquer("appointmentStatsFrame", c.styleCadre("appointmentStatsFrame", "white"));
 
-    // ----- Fiche du patient selectionne -----
     appliquer("selectedPatientFrame", c.styleCadre("selectedPatientFrame", "white"));
     appliquer("btnEnregistrer", c.styleBoutonPrincipal("btnEnregistrer"));
     appliquer("btnExporterPreConsultation",
@@ -597,7 +588,6 @@ void MainWindow::appliquerCharte()
     appliquer("dossierLabel",    c.styleLabel("dossierLabel", "sous-titre"));
     appliquer("genderLabel",     c.styleLabel("genderLabel", "accent"));
 
-    // cartes : date / heure / nom de l'animal / telephone / motif / notes
     for (const char *k : {"date", "heure", "nom", "tel", "motif", "notes"}) {
         const std::string key = k;
         const std::string champ = std::string("champ") + char(std::toupper(k[0])) + (k + 1);
@@ -614,8 +604,7 @@ void MainWindow::appliquerCharte()
     appliquer("actesSubtitle", c.styleLabel("actesSubtitle", "petit"));
 }
 
-// ------------------------------------------------- champs editables
-void MainWindow::configurerChamps()
+void GestionRendezvous::configurerChamps()
 {
     ui->champDate->setInputMask("00/00/0000;_");
     ui->champHeure->setInputMask("00:00;_");
@@ -623,7 +612,6 @@ void MainWindow::configurerChamps()
         new QRegularExpressionValidator(QRegularExpression("[0-9 +().\\-/]*"), this));
     appliquerModeEdition(false);
 
-    // Nom de l'animal : le titre de la fiche et la carte "Nom de l'animal" sont synchronises
     connect(ui->patientName, &QLineEdit::textEdited, this, [this](const QString &t) {
         if (!m_modeEdition) return;
         if (Patient *p = patientCourant()) {
@@ -654,7 +642,6 @@ void MainWindow::configurerChamps()
         if (Patient *p = patientCourant()) p->notes = t;
     });
 
-    // Date / heure : validees quand on quitte le champ (valeur invalide -> on restaure)
     connect(ui->champDate, &QLineEdit::editingFinished, this, [this]() {
         Patient *p = patientCourant();
         if (!p || !m_modeEdition) return;
@@ -672,7 +659,6 @@ void MainWindow::configurerChamps()
         majLigne(p->id);
     });
 
-    // Constatations et diagnostic (enregistres par patient)
     connect(ui->motifText, &QTextEdit::textChanged, this, [this]() {
         if (m_chargement || !m_modeEdition) return;
         if (Patient *p = patientCourant()) p->constatations = ui->motifText->toPlainText();
@@ -683,8 +669,8 @@ void MainWindow::configurerChamps()
     });
 }
 
-// ----------------------------------------------------------- bouton Trier
-void MainWindow::configurerTri()
+// bouton Trier
+void GestionRendezvous::configurerTri()
 {
     struct Option { const char *texte; int critere; };
     const Option options[] = {
@@ -714,21 +700,21 @@ void MainWindow::configurerTri()
     ui->btnTrier->setMenu(menu);
 }
 
-void MainWindow::appliquerTri(int critere)
+void GestionRendezvous::appliquerTri(int critere)
 {
     m_critereTri = critere;
     reconstruireListe();
 }
 
-// ---------------------------------------------------------------- patients
-QString MainWindow::genererDossier()
+// patients
+QString GestionRendezvous::genererDossier()
 {
-    // l'id ne fait qu'augmenter -> le numero de dossier est unique et jamais reutilise
+    
     return QString("DOS-%1-%2").arg(QDate::currentDate().year())
         .arg(m_dernierId, 4, 10, QChar('0'));
 }
 
-int MainWindow::ajouterPatient(const QString &nom, const QDate &date, const QTime &heure)
+int GestionRendezvous::ajouterPatient(const QString &nom, const QDate &date, const QTime &heure)
 {
     Patient p;
     p.id      = ++m_dernierId;
@@ -740,21 +726,20 @@ int MainWindow::ajouterPatient(const QString &nom, const QDate &date, const QTim
     return p.id;
 }
 
-Patient *MainWindow::trouver(int id)
+Patient *GestionRendezvous::trouver(int id)
 {
     for (Patient &p : m_patients)
         if (p.id == id) return &p;
     return nullptr;
 }
 
-Patient *MainWindow::patientCourant()
+Patient *GestionRendezvous::patientCourant()
 {
     return trouver(m_courant);
 }
 
-// Clic sur "+ Nouveau Patient" : nouvelle fiche datee d'aujourd'hui (heure actuelle),
-// les autres champs sont a saisir directement dans la fiche.
-void MainWindow::nouveauPatient()
+
+void GestionRendezvous::nouveauPatient()
 {
     const QTime maintenant = QTime::currentTime();
     const int id = ajouterPatient(QString::fromUtf8("Nouveau patient"), QDate::currentDate(),
@@ -774,7 +759,7 @@ void MainWindow::nouveauPatient()
     ui->patientName->selectAll();
 }
 
-void MainWindow::selectionnerPatient(int id)
+void GestionRendezvous::selectionnerPatient(int id)
 {
     Patient *p = trouver(id);
     if (!p) return;
@@ -785,7 +770,7 @@ void MainWindow::selectionnerPatient(int id)
     afficherPatient(*p);
 }
 
-void MainWindow::afficherPatient(const Patient &p)
+void GestionRendezvous::afficherPatient(const Patient &p)
 {
     m_chargement = true;
     ui->patientName->setText(p.nom);
@@ -801,7 +786,7 @@ void MainWindow::afficherPatient(const Patient &p)
     m_chargement = false;
 }
 
-void MainWindow::appliquerModeEdition(bool actif)
+void GestionRendezvous::appliquerModeEdition(bool actif)
 {
     m_modeEdition = actif;
     ui->patientName->setReadOnly(!actif);
@@ -819,8 +804,8 @@ void MainWindow::appliquerModeEdition(bool actif)
         : QString::fromUtf8("Enregistré"));
 }
 
-// -------------------------------------------------------- liste des patients
-void MainWindow::reconstruireListe()
+//  liste des patients
+void GestionRendezvous::reconstruireListe()
 {
     // 1. vider la liste
     while (QLayoutItem *it = m_listeLayout->takeAt(0)) {
@@ -834,7 +819,7 @@ void MainWindow::reconstruireListe()
         delete it;
     }
 
-    // 2. ordre d'affichage selon le critere de tri
+    //  ordre d'affichage selon le critere de tri
     QVector<int> ordre;
     for (const Patient &p : qAsConst(m_patients))
         ordre.append(p.id);
@@ -842,7 +827,7 @@ void MainWindow::reconstruireListe()
         return avant(*trouver(a), *trouver(b), m_critereTri);
     });
 
-    // 3. une ligne par patient : bouton + avatar + badge de statut
+    // une ligne par patient : bouton + avatar + badge de statut
     for (int id : qAsConst(ordre)) {
         const QString nBtn = QString("btnPatient%1").arg(id);
         const QString nAv  = QString("avatarPatient%1").arg(id);
@@ -894,7 +879,7 @@ void MainWindow::reconstruireListe()
     majCompteur();
 }
 
-void MainWindow::majLigne(int id)
+void GestionRendezvous::majLigne(int id)
 {
     const Patient *p = trouver(id);
     auto *b = findChild<QPushButton *>(QString("btnPatient%1").arg(id));
@@ -912,7 +897,7 @@ void MainWindow::majLigne(int id)
     }
 }
 
-void MainWindow::majCompteur()
+void GestionRendezvous::majCompteur()
 {
     int n = 0;
     for (const Patient &p : qAsConst(m_patients))
@@ -921,7 +906,7 @@ void MainWindow::majCompteur()
     majStatistiques();
 }
 
-void MainWindow::majStatistiques()
+void GestionRendezvous::majStatistiques()
 {
     int realises = 0;
     for (const Patient &p : qAsConst(m_patients))
@@ -934,7 +919,7 @@ void MainWindow::majStatistiques()
     m_graphiqueRendezVous->setAppointments(m_patients);
 }
 
-void MainWindow::modifierPatient(int id)
+void GestionRendezvous::modifierPatient(int id)
 {
     if (!trouver(id))
         return;
@@ -944,7 +929,7 @@ void MainWindow::modifierPatient(int id)
     ui->patientName->selectAll();
 }
 
-void MainWindow::enregistrerPatient()
+void GestionRendezvous::enregistrerPatient()
 {
     Patient *patient = patientCourant();
     if (!patient || !m_modeEdition)
@@ -973,7 +958,7 @@ void MainWindow::enregistrerPatient()
     appliquerModeEdition(false);
 }
 
-void MainWindow::exporterPreConsultationPdf()
+void GestionRendezvous::exporterPreConsultationPdf()
 {
     const Patient *patient = patientCourant();
     if (!patient) {
@@ -1071,7 +1056,7 @@ void MainWindow::exporterPreConsultationPdf()
                              QString::fromUtf8("Le questionnaire de pré-consultation a été enregistré."));
 }
 
-void MainWindow::supprimerPatient(int id)
+void GestionRendezvous::supprimerPatient(int id)
 {
     Patient *patient = trouver(id);
     if (!patient)
@@ -1111,7 +1096,7 @@ void MainWindow::supprimerPatient(int id)
     appliquerModeEdition(false);
 }
 
-void MainWindow::setStatutPatient(int numero, const QString &texte, const QString &type)
+void GestionRendezvous::setStatutPatient(int numero, const QString &texte, const QString &type)
 {
     Patient *p = trouver(numero);
     if (!p)
