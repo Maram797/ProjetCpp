@@ -15,6 +15,7 @@ class MainWindow final : public QMainWindow {
 public:
     MainWindow() : ui(new Ui::MainWindow) {
         ui->setupUi(this);
+        ui->cadreformulaire->hide();
         ui->tableanimaux->verticalHeader()->hide();
         ui->tableanimaux->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
         ui->tableanimaux->setShowGrid(false);
@@ -68,8 +69,16 @@ private:
     Animal *animalById(int id) { for (Animal &a : m_animals) if (a.id == id) return &a; return nullptr; }
     int selectedId() const { const int row = ui->tableanimaux->currentRow(); return row >= 0 && ui->tableanimaux->item(row, 0) ? ui->tableanimaux->item(row, 0)->data(Qt::UserRole).toInt() : 0; }
     void updateActions() { const bool selected = selectedId() != 0; ui->btnmodifier->setEnabled(selected); ui->btnsupprimer->setEnabled(selected); }
-    void showList() { ui->pagescentre->setCurrentWidget(ui->pageliste); }
-    void showForm() { clearForm(); m_editId = 0; ui->lbltitreformulaire->setText("Nouvel animal"); ui->pagescentre->setCurrentWidget(ui->pageformulaire); ui->editnom->setFocus(); }
+    void showList() {
+        ui->pagescentre->setCurrentWidget(ui->pageliste);
+        ui->cadreformulaire->hide();
+    }
+    void showForm() {
+        clearForm(); m_editId = 0; ui->lbltitreformulaire->setText("Nouvel animal");
+        ui->pagescentre->setCurrentWidget(ui->pageliste);
+        ui->cadreformulaire->show();
+        ui->editnom->setFocus();
+    }
     void clearForm() {
         ui->editnom->clear(); ui->editrace->clear(); ui->editpuce->clear(); ui->editproprietaire->clear(); ui->edittelephone->clear(); ui->spinage->setValue(0);
         ui->comboespece->setCurrentIndex(0); ui->combovaccinal->setCurrentIndex(0); ui->combosante->setCurrentIndex(0); ui->lblerreur->clear();
@@ -78,15 +87,27 @@ private:
         if (ui->editnom->text().trimmed().isEmpty() || ui->editproprietaire->text().trimmed().isEmpty()) { ui->lblerreur->setText("Le nom de l'animal et le propriétaire sont obligatoires."); return; }
         Animal fresh; Animal *a = m_editId ? animalById(m_editId) : nullptr; if (!a) { fresh.id = m_nextId++; a = &fresh; }
         a->nom = ui->editnom->text().trimmed(); a->espece = ui->comboespece->currentText(); a->race = ui->editrace->text().trimmed(); a->age = ui->spinage->value(); a->puce = ui->editpuce->text().trimmed(); a->vaccinal = ui->combovaccinal->currentText(); a->proprietaire = ui->editproprietaire->text().trimmed(); a->telephone = ui->edittelephone->text().trimmed(); a->sante = static_cast<Health>(ui->combosante->currentIndex());
-        if (!m_editId) m_animals.append(fresh); clearForm(); showList(); refresh();
+        if (!m_editId) {
+            m_animals.append(fresh);
+        }
+        clearForm();
+        showList();
+        refresh();
     }
     void editSelected() {
         Animal *a = animalById(selectedId()); if (!a) return; m_editId = a->id; ui->lbltitreformulaire->setText("Modifier l'animal");
-        ui->editnom->setText(a->nom); ui->comboespece->setCurrentText(a->espece); ui->editrace->setText(a->race); ui->spinage->setValue(a->age); ui->editpuce->setText(a->puce); ui->combovaccinal->setCurrentText(a->vaccinal); ui->editproprietaire->setText(a->proprietaire); ui->edittelephone->setText(a->telephone); ui->combosante->setCurrentIndex(static_cast<int>(a->sante)); ui->pagescentre->setCurrentWidget(ui->pageformulaire);
+        ui->editnom->setText(a->nom); ui->comboespece->setCurrentText(a->espece); ui->editrace->setText(a->race); ui->spinage->setValue(a->age); ui->editpuce->setText(a->puce); ui->combovaccinal->setCurrentText(a->vaccinal); ui->editproprietaire->setText(a->proprietaire); ui->edittelephone->setText(a->telephone); ui->combosante->setCurrentIndex(static_cast<int>(a->sante));
+        ui->pagescentre->setCurrentWidget(ui->pageliste); ui->cadreformulaire->show(); ui->editnom->setFocus();
     }
     void deleteSelected() {
         const int id = selectedId(); if (!id) return; if (QMessageBox::question(this, "Supprimer l'animal", "Supprimer cet animal ?") != QMessageBox::Yes) return;
-        for (int i = 0; i < m_animals.size(); ++i) if (m_animals[i].id == id) { m_animals.removeAt(i); break; } refresh();
+        for (int i = 0; i < m_animals.size(); ++i) {
+            if (m_animals[i].id == id) {
+                m_animals.removeAt(i);
+                break;
+            }
+        }
+        refresh();
     }
     Ui::MainWindow *ui; QList<Animal> m_animals; int m_nextId = 1; int m_editId = 0;
 };

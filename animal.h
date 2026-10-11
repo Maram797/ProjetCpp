@@ -4,18 +4,15 @@
 #include <QString>
 #include <QWidget>
 
-// ---------------------------------------------------------------------------
-// Data
-// ---------------------------------------------------------------------------
 
 enum class Health { Sain, EnSoin, Urgent };
 
 struct Animal {
     int     id = 0;
     QString nom;
-    QString espece = QStringLiteral("Chien");   // "Chien", "Chat" or "Autre"
+    QString espece = QStringLiteral("Chien");
     QString race;
-    int     age = 0;                            // years
+    int     age = 0;
     QString puce;
     QString vaccinal = QStringLiteral("À jour");
     QString proprietaire;
@@ -28,9 +25,6 @@ QColor  healthColor(Health h);
 QString ageText(int years);
 QString speciesEmoji(const QString &species);
 
-// ---------------------------------------------------------------------------
-// Health bar chart (promoted widget "StatsBars" in mainwindow.ui)
-// ---------------------------------------------------------------------------
 
 class StatsBars : public QWidget {
 public:

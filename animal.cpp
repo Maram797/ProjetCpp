@@ -2,9 +2,7 @@
 
 #include <QPainter>
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
+
 
 QString healthText(Health h)
 {
@@ -35,14 +33,12 @@ QString ageText(int years)
 
 QString speciesEmoji(const QString &species)
 {
-    if (species == QLatin1String("Chien")) return QString::fromUtf8("\xF0\x9F\x90\xB6");  // dog
-    if (species == QLatin1String("Chat"))  return QString::fromUtf8("\xF0\x9F\x90\xB1");  // cat
-    return QString::fromUtf8("\xF0\x9F\x90\xBE");                                          // paw prints
+    if (species == QLatin1String("Chien")) return QString::fromUtf8("\xF0\x9F\x90\xB6");
+    if (species == QLatin1String("Chat"))  return QString::fromUtf8("\xF0\x9F\x90\xB1");
+    return QString::fromUtf8("\xF0\x9F\x90\xBE");
 }
 
-// ---------------------------------------------------------------------------
-// StatsBars
-// ---------------------------------------------------------------------------
+
 
 StatsBars::StatsBars(QWidget *parent)
     : QWidget(parent)
