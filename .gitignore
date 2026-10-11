@@ -47,17 +47,12 @@ build/
 Build/
 build-*/
 
-# CMake generated files
-CMakeFiles/
-CMakeCache.txt
-cmake_install.cmake
+# qmake generated files
 Makefile
 Makefile.Debug
 Makefile.Release
 .qmake.stash
 ui_*.h
-install_manifest.txt
-compile_commands.json
 
 # Temporary files
 *.tmp
