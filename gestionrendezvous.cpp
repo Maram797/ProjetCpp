@@ -26,6 +26,9 @@
 #include <QRegularExpression>
 #include <QRegularExpressionValidator>
 #include <QSaveFile>
+#include <QSqlDatabase>
+#include <QSqlError>
+#include <QSqlQuery>
 #include <QScrollArea>
 #include <QScrollBar>
 #include <QStandardPaths>
@@ -483,7 +486,9 @@ GestionRendezvous::GestionRendezvous(QWidget *parent)
     connect(ui->btnExporterPreConsultation, &QPushButton::clicked,
             this, &GestionRendezvous::exporterPreConsultationPdf);
 
-    ajouterPatient(QString::fromUtf8("Milo"), QDate::currentDate(), QTime(9, 0));
+    chargerDepuisBase();
+    if (m_patients.isEmpty())   // base vide : patient de demonstration (non enregistre)
+        ajouterPatient(QString::fromUtf8("Milo"), QDate::currentDate(), QTime(9, 0));
     reconstruireListe();
     selectionnerPatient(m_patients.first().id);
 }
@@ -953,6 +958,11 @@ void GestionRendezvous::enregistrerPatient()
 
     patient->date = date;
     patient->heure = heure;
+
+    // enregistrement dans Oracle (INSERT la premiere fois, UPDATE ensuite)
+    if (!sauvegarderEnBase(*patient))
+        return;   // on reste en mode edition pour corriger
+
     majLigne(patient->id);
     majCompteur();
     appliquerModeEdition(false);
@@ -1072,6 +1082,10 @@ void GestionRendezvous::supprimerPatient(int id)
     if (confirmation != QMessageBox::Yes)
         return;
 
+    // suppression dans Oracle d'abord (si le rendez-vous y est enregistre)
+    if (patient->enBase && !supprimerEnBase(*patient))
+        return;
+
     const int index = int(patient - m_patients.data());
     m_patients.removeAt(index);
     if (m_courant == id)
@@ -1109,6 +1123,167 @@ void GestionRendezvous::setStatutPatient(int numero, const QString &texte, const
         || texte.compare(QStringLiteral("Realise"), Qt::CaseInsensitive) == 0
         || texte.compare(QString::fromUtf8("Terminé"), Qt::CaseInsensitive) == 0
         || texte.compare(QStringLiteral("Termine"), Qt::CaseInsensitive) == 0;
+    if (p->enBase)
+        sauvegarderEnBase(*p);   // met a jour la colonne ETAT
     majLigne(numero);
     majCompteur();
+}
+
+
+// ============================================================
+//  Base de donnees Oracle : table GESTIONRENDEZVOUS
+//  Colonnes : HEURE (TIMESTAMP), ETAT, TELEPHONE (NUMBER),
+//             DATE_RENDEZ_VOUS (DATE), MOTIF
+//  Les valeurs sont echangees sous forme de texte puis converties
+//  par Oracle (TO_TIMESTAMP, TO_DATE, TO_NUMBER).
+// ============================================================
+static const QString SQL_FORMAT_HEURE = QStringLiteral("YYYY-MM-DD HH24:MI:SS.FF6");
+static const QString SQL_FORMAT_DATE  = QStringLiteral("YYYY-MM-DD");
+
+static QString chiffresSeulement(const QString &s)
+{
+    QString r;
+    for (const QChar &ch : s)
+        if (ch.isDigit()) r += ch;
+    return r;
+}
+
+void GestionRendezvous::chargerDepuisBase()
+{
+    QSqlQuery q;
+    const QString sql = QString(
+        "SELECT TO_CHAR(heure, '%1'), TO_CHAR(date_rendez_vous, '%2'), "
+        "TO_CHAR(telephone), etat, motif "
+        "FROM gestionrendezvous ORDER BY date_rendez_vous, heure")
+        .arg(SQL_FORMAT_HEURE, SQL_FORMAT_DATE);
+
+    if (!q.exec(sql)) {
+        qDebug() << "Chargement impossible :" << q.lastError().text();
+        return;
+    }
+
+    while (q.next()) {
+        const QString cleHeure = q.value(0).toString();
+        const QString cleDate  = q.value(1).toString();
+        const QString tel      = q.value(2).toString();
+        const QString etat     = q.value(3).toString();
+        const QString motif    = q.value(4).toString();
+
+        const QDate date   = QDate::fromString(cleDate, "yyyy-MM-dd");
+        const QTime heure  = QTime::fromString(cleHeure.mid(11, 5), "HH:mm");
+
+        // La table n'a pas de colonne NOM : on affiche le telephone a la place
+        const int id = ajouterPatient(QString("Patient %1").arg(tel), date, heure);
+        Patient *p = trouver(id);
+        if (!p) continue;
+
+        p->telephone = tel;
+        p->motif     = motif;
+        if (!etat.trimmed().isEmpty())
+            p->statut = etat;
+
+        const QString e = p->statut.toLower();
+        if (e.contains(QString::fromUtf8("réalis")) || e.contains("realis")
+            || e.contains(QString::fromUtf8("terminé")) || e.contains("termine")) {
+            p->statutType = "succes";
+            p->rendezVousRealise = true;
+        } else if (e.contains("urgent") || e.contains("annul")) {
+            p->statutType = "alerte";
+        } else {
+            p->statutType = "neutre";
+        }
+
+        p->enBase   = true;
+        p->cleHeure = cleHeure;
+        p->cleDate  = cleDate;
+        p->cleTel   = chiffresSeulement(tel);
+    }
+}
+
+bool GestionRendezvous::sauvegarderEnBase(Patient &p)
+{
+    const QString tel = chiffresSeulement(p.telephone);
+    if (tel.isEmpty()) {
+        QMessageBox::warning(this, QString::fromUtf8("Téléphone manquant"),
+                             QString::fromUtf8("Le téléphone est obligatoire pour enregistrer "
+                                               "le rendez-vous dans la base de données."));
+        ui->champTel->setFocus();
+        return false;
+    }
+
+    const QString nouvDate  = p.date.toString("yyyy-MM-dd");
+    const QString nouvHeure = nouvDate + " " + p.heure.toString("HH:mm") + ":00.000000";
+
+    QSqlQuery q;
+    bool fait = false;
+
+    // 1) rendez-vous deja en base : UPDATE de la ligne retrouvee par son ancienne cle
+    if (p.enBase) {
+        q.prepare(QString(
+            "UPDATE gestionrendezvous SET "
+            "heure = TO_TIMESTAMP(?, '%1'), etat = ?, telephone = TO_NUMBER(?), "
+            "date_rendez_vous = TO_DATE(?, '%2'), motif = ? "
+            "WHERE heure = TO_TIMESTAMP(?, '%1') "
+            "AND date_rendez_vous = TO_DATE(?, '%2') "
+            "AND telephone = TO_NUMBER(?) AND ROWNUM = 1")
+            .arg(SQL_FORMAT_HEURE, SQL_FORMAT_DATE));
+        q.addBindValue(nouvHeure);
+        q.addBindValue(p.statut);
+        q.addBindValue(tel);
+        q.addBindValue(nouvDate);
+        q.addBindValue(p.motif);
+        q.addBindValue(p.cleHeure);
+        q.addBindValue(p.cleDate);
+        q.addBindValue(p.cleTel);
+        if (!q.exec()) {
+            QMessageBox::critical(this, QString::fromUtf8("Base de données"),
+                QString::fromUtf8("Échec de la modification :\n%1").arg(q.lastError().text()));
+            return false;
+        }
+        fait = q.numRowsAffected() > 0;   // 0 : la ligne a disparu, on la recree
+    }
+
+    // 2) nouveau rendez-vous : INSERT
+    if (!fait) {
+        q.prepare(QString(
+            "INSERT INTO gestionrendezvous (heure, etat, telephone, date_rendez_vous, motif) "
+            "VALUES (TO_TIMESTAMP(?, '%1'), ?, TO_NUMBER(?), TO_DATE(?, '%2'), ?)")
+            .arg(SQL_FORMAT_HEURE, SQL_FORMAT_DATE));
+        q.addBindValue(nouvHeure);
+        q.addBindValue(p.statut);
+        q.addBindValue(tel);
+        q.addBindValue(nouvDate);
+        q.addBindValue(p.motif);
+        if (!q.exec()) {
+            QMessageBox::critical(this, QString::fromUtf8("Base de données"),
+                QString::fromUtf8("Échec de l'enregistrement :\n%1").arg(q.lastError().text()));
+            return false;
+        }
+    }
+
+    p.enBase   = true;
+    p.cleHeure = nouvHeure;
+    p.cleDate  = nouvDate;
+    p.cleTel   = tel;
+    return true;
+}
+
+bool GestionRendezvous::supprimerEnBase(const Patient &p)
+{
+    QSqlQuery q;
+    q.prepare(QString(
+        "DELETE FROM gestionrendezvous "
+        "WHERE heure = TO_TIMESTAMP(?, '%1') "
+        "AND date_rendez_vous = TO_DATE(?, '%2') "
+        "AND telephone = TO_NUMBER(?) AND ROWNUM = 1")
+        .arg(SQL_FORMAT_HEURE, SQL_FORMAT_DATE));
+    q.addBindValue(p.cleHeure);
+    q.addBindValue(p.cleDate);
+    q.addBindValue(p.cleTel);
+    if (!q.exec()) {
+        QMessageBox::critical(this, QString::fromUtf8("Base de données"),
+            QString::fromUtf8("Échec de la suppression :\n%1").arg(q.lastError().text()));
+        return false;
+    }
+    return true;
 }

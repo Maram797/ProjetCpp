@@ -34,6 +34,13 @@ struct Patient
     QString statut     = "En attente";
     QString statutType = "neutre";   
     bool    rendezVousRealise = false;
+
+    // Cle du rendez-vous telle qu'elle est enregistree dans Oracle
+    // (la table n'a pas de colonne ID : on retrouve la ligne avec ces 3 valeurs)
+    bool    enBase   = false;
+    QString cleHeure;   // 'YYYY-MM-DD HH24:MI:SS.FF6'
+    QString cleDate;    // 'YYYY-MM-DD'
+    QString cleTel;     // chiffres uniquement
 };
 
 
@@ -130,6 +137,11 @@ private:
     void majStatistiques();
     void afficherPatient(const Patient &p);
     void appliquerModeEdition(bool actif);
+
+    // --- Base de donnees Oracle (table GESTIONRENDEZVOUS) ---
+    void chargerDepuisBase();                // lit les rendez-vous au demarrage
+    bool sauvegarderEnBase(Patient &p);      // INSERT ou UPDATE
+    bool supprimerEnBase(const Patient &p);  // DELETE
 
     Ui::GestionRendezvous *ui;
     charte m_charte;          

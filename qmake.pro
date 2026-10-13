@@ -1,12 +1,14 @@
-QT += core gui widgets printsupport
+QT += core gui widgets printsupport sql
 
-CONFIG += c++17
+CONFIG += c++17 console
 
 SOURCES += \
     main.cpp \
+    connection.cpp \
     gestionrendezvous.cpp
 
 HEADERS += \
+    connection.h \
     gestionrendezvous.h
 
 FORMS += \
