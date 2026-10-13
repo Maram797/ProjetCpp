@@ -1,4 +1,4 @@
-QT       += widgets
+QT       += widgets sql
 
 TEMPLATE = app
 TARGET = Pawche
@@ -6,10 +6,12 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    animal.cpp
+    animal.cpp \
+    connection.cpp
 
 HEADERS += \
-    animal.h
+    animal.h \
+    connection.h
 
 FORMS += \
     mainwindow.ui
