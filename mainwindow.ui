@@ -25,7 +25,6 @@ QMainWindow, #centralwidget, #centre, #pagescentre, #pageliste, #pagemodule,
 #colonnedroite, #lignePoste, #ligneDb { background-color: #FBF4EE; }
 QLabel { color: #713923; background-color: transparent; }
 
-/* Inputs */
 QLineEdit, QComboBox, QSpinBox {
   background-color: white; border: 1px solid #E8D8D0; border-radius: 8px;
   padding: 6px 8px; font-size: 10pt; color: black;
@@ -36,7 +35,6 @@ QComboBox QAbstractItemView {
 }
 #combocabinet { background-color: #F8E5DF; color: #713923; font-weight: bold; border: none; }
 
-/* Left menu */
 #sidebar { background-color: #FBF4EE; border: none; }
 #lblmarque { font-size: 16pt; font-weight: bold; }
 #lblposte, #lblpostenum { font-size: 7pt; font-weight: bold; }
@@ -56,7 +54,6 @@ QComboBox QAbstractItemView {
 }
 #btnsync:hover { background-color: #F8E5DF; }
 
-/* Top bar */
 #editrecherche { padding: 8px; }
 #lblavatar { background-color: #F8E5DF; border-radius: 18px; font-size: 9pt; font-weight: bold; }
 #btnnouvelanimal, #btnajouter {
@@ -72,7 +69,6 @@ QComboBox QAbstractItemView {
 #btnsupprimer:hover { background-color: #C2455F; border-color: #C2455F; color: white; }
 #btnmodifier:disabled, #btnsupprimer:disabled { color: #CDB5A8; border-color: #E8D8D0; }
 
-/* Page header + filter tabs */
 #lbltitrepage, #lbltitremodule { font-size: 22pt; font-weight: bold; color: black; }
 #lblsoustitrepage, #lblmodule { font-size: 11pt; color: black; }
 #btntous, #btnchiens, #btnchats {
@@ -81,7 +77,6 @@ QComboBox QAbstractItemView {
 }
 #btntous:checked, #btnchiens:checked, #btnchats:checked { background-color: #F8E5DF; }
 
-/* Table */
 #tableanimaux {
   background-color: white; border: 1px solid #E8D8D0; border-radius: 12px;
   font-size: 10pt; color: black; outline: 0;
@@ -94,14 +89,12 @@ QTableCornerButton::section { background-color: #F8E5DF; border: none; }
 QHeaderView::section { background-color: #F8E5DF; color: #713923; font-size: 8pt; font-weight: bold;
   border: none; border-right: 1px solid #E8D8D0; border-bottom: 1px solid #E8D8D0; padding: 8px; }
 
-/* Statistics bars */
 #barresains, #barreensoin, #barreurgent { background-color: #F3E9E2; border: none; border-radius: 6px; }
 #barresains::chunk { background-color: #713923; border-radius: 6px; }
 #barreensoin::chunk { background-color: #D9A384; border-radius: 6px; }
 #barreurgent::chunk { background-color: #EE91A5; border-radius: 6px; }
 #lblbsains, #lblbensoin, #lblburgent { font-size: 8pt; }
 
-/* Cards */
 #cadrestatistiques, #cadredetail { background-color: white; border: 1px solid #E8D8D0; border-radius: 16px; }
 #cadrestatistiques QLabel, #cadredetail QLabel { border: none; background-color: transparent; }
 #lbltitrestats, #lbltitredetail { font-size: 12pt; font-weight: bold; }
@@ -120,7 +113,6 @@ QHeaderView::section { background-color: #F8E5DF; color: #713923; font-size: 8pt
 }
 #btnconsulter:hover { background-color: #713923; color: white; }
 
-/* New / edit animal form */
 #cadreformulaire { background-color: white; border: 1px solid #E8D8D0; border-radius: 16px; }
 #cadreformulaire QLineEdit, #cadreformulaire QComboBox, #cadreformulaire QSpinBox { padding: 4px 8px; }
 #cadreformulaire QPushButton { padding: 6px 12px; }

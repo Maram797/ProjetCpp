@@ -67,7 +67,6 @@ void StatsBars::paintEvent(QPaintEvent *)
     f.setPointSize(8);
     p.setFont(f);
 
-    // Axes
     p.setPen(QColor("#E8D8D0"));
     p.drawLine(0, baseY, width(), baseY);
     p.drawLine(0, countH, 0, baseY);
