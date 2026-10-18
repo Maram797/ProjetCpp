@@ -47,6 +47,7 @@ template <> constexpr inline auto MainWindow::qt_create_metaobjectdata<qt_meta_t
         "on_btnTrierPrix_clicked",
         "on_btnTrierDate_clicked",
         "on_btnExportPdf_clicked",
+        "on_btnSaveQr_clicked",
         "on_inputSearch_textChanged",
         "text",
         "on_comboFilterType_currentTextChanged",
@@ -70,17 +71,19 @@ template <> constexpr inline auto MainWindow::qt_create_metaobjectdata<qt_meta_t
         QtMocHelpers::SlotData<void()>(7, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'on_btnExportPdf_clicked'
         QtMocHelpers::SlotData<void()>(8, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'on_btnSaveQr_clicked'
+        QtMocHelpers::SlotData<void()>(9, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'on_inputSearch_textChanged'
-        QtMocHelpers::SlotData<void(const QString &)>(9, 2, QMC::AccessPrivate, QMetaType::Void, {{
-            { QMetaType::QString, 10 },
+        QtMocHelpers::SlotData<void(const QString &)>(10, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { QMetaType::QString, 11 },
         }}),
         // Slot 'on_comboFilterType_currentTextChanged'
-        QtMocHelpers::SlotData<void(const QString &)>(11, 2, QMC::AccessPrivate, QMetaType::Void, {{
-            { QMetaType::QString, 10 },
+        QtMocHelpers::SlotData<void(const QString &)>(12, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { QMetaType::QString, 11 },
         }}),
         // Slot 'on_tableCommandes_cellClicked'
-        QtMocHelpers::SlotData<void(int, int)>(12, 2, QMC::AccessPrivate, QMetaType::Void, {{
-            { QMetaType::Int, 13 }, { QMetaType::Int, 14 },
+        QtMocHelpers::SlotData<void(int, int)>(13, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { QMetaType::Int, 14 }, { QMetaType::Int, 15 },
         }}),
     };
     QtMocHelpers::UintData qt_properties {
@@ -112,9 +115,10 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 4: _t->on_btnTrierPrix_clicked(); break;
         case 5: _t->on_btnTrierDate_clicked(); break;
         case 6: _t->on_btnExportPdf_clicked(); break;
-        case 7: _t->on_inputSearch_textChanged((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 8: _t->on_comboFilterType_currentTextChanged((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
-        case 9: _t->on_tableCommandes_cellClicked((*reinterpret_cast<std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<int>>(_a[2]))); break;
+        case 7: _t->on_btnSaveQr_clicked(); break;
+        case 8: _t->on_inputSearch_textChanged((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 9: _t->on_comboFilterType_currentTextChanged((*reinterpret_cast<std::add_pointer_t<QString>>(_a[1]))); break;
+        case 10: _t->on_tableCommandes_cellClicked((*reinterpret_cast<std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast<std::add_pointer_t<int>>(_a[2]))); break;
         default: ;
         }
     }
@@ -139,14 +143,14 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 10)
+        if (_id < 11)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 10;
+        _id -= 11;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 10)
+        if (_id < 11)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 10;
+        _id -= 11;
     }
     return _id;
 }

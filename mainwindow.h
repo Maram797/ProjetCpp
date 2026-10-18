@@ -3,19 +3,13 @@
 
 #include <QMainWindow>
 #include <QList>
+#include "employe.h" // On inclut la structure séparée
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
-struct Fournisseur
-{
-    QString id;
-    QString nom;
-    QString prenom;
-    QString telephone;
-    QString mail;
-};
+class QLabel;
 
 class MainWindow : public QMainWindow
 {
@@ -33,25 +27,34 @@ private slots:
     void on_btnTrierPrix_clicked();
     void on_btnTrierDate_clicked();
     void on_btnExportPdf_clicked();
+    void on_btnSaveQr_clicked();
     void on_inputSearch_textChanged(const QString &text);
     void on_comboFilterType_currentTextChanged(const QString &text);
     void on_tableCommandes_cellClicked(int row, int column);
 
 private:
     Ui::MainWindow *ui;
-    QList<Fournisseur> m_fournisseurs;
+    QList<Employe> m_employes;
+    QLabel *m_domainStatsLabel;
     bool m_sortAscNom;
-    bool m_sortAscPrenom;
+    bool m_sortAscPoste;
 
     void refreshTable();
     void updateStatistics();
     void clearForm();
-    QList<Fournisseur> currentFilteredList() const;
-    int fournisseurIndex(const QString &id) const;
-    Fournisseur fournisseurFromForm() const;
+    QList<Employe> currentFilteredList() const;
+    int employeIndex(const QString &id) const;
+    Employe employeFromForm() const;
     bool formIsValid();
-    void saveFournisseurs() const;
-    void loadFournisseurs();
+
+    // Connexion à la base de données
+    void loadEmployes();
+    bool addEmployeToDb(const Employe &e);
+    bool updateEmployeInDb(const Employe &e);
+    bool deleteEmployeFromDb(const QString &id);
+
+    QString generateEmployeId() const;
+    void updateQrForEmploye(const Employe &e);
 };
 
 #endif // MAINWINDOW_H

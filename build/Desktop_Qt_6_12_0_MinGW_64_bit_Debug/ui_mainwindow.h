@@ -12,6 +12,7 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QComboBox>
+#include <QtWidgets/QDateEdit>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHBoxLayout>
@@ -24,7 +25,6 @@
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
-#include "curvestatswidget.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -58,7 +58,7 @@ public:
     QFrame *statsFrame;
     QVBoxLayout *statsVLayout;
     QLabel *lblStatsTitle;
-    CurveStatsWidget *widgetCurve;
+    QWidget *widgetCurve;
     QFrame *alertFrame;
     QVBoxLayout *alertVLayout;
     QLabel *lblAlertHeading;
@@ -72,19 +72,45 @@ public:
     QHBoxLayout *rowIdLayout;
     QLabel *tagId;
     QLineEdit *txtId;
-    QHBoxLayout *rowDateLayout;
-    QLabel *tagDate;
+    QHBoxLayout *rowNomLayout;
+    QLabel *tagNom;
     QLineEdit *lineEdit;
-    QHBoxLayout *rowMontantLayout;
-    QLabel *tagMontant;
+    QHBoxLayout *rowPrenomLayout;
+    QLabel *tagPrenom;
     QLineEdit *lineEdit_2;
-    QHBoxLayout *rowTypeLayout;
-    QLabel *tagType;
+    QHBoxLayout *rowTelLayout;
+    QLabel *tagTel;
     QLineEdit *lineEdit_3;
-    QHBoxLayout *rowQteLayout;
-    QLabel *tagQte;
+    QHBoxLayout *rowMailLayout;
+    QLabel *tagMail;
     QLineEdit *lineEdit_4;
-    QHBoxLayout *rowEtatLayout;
+    QHBoxLayout *rowAdresseLayout;
+    QLabel *tagAdresse;
+    QLineEdit *lineEdit_5;
+    QHBoxLayout *rowEmbaucheLayout;
+    QLabel *tagEmbauche;
+    QDateEdit *dateEditEmbauche;
+    QHBoxLayout *rowPosteLayout;
+    QLabel *tagPoste;
+    QComboBox *comboPoste;
+    QHBoxLayout *rowNaissanceLayout;
+    QLabel *tagNaissance;
+    QDateEdit *dateEditNaissance;
+    QHBoxLayout *rowPwdLayout;
+    QLabel *tagPwd;
+    QLineEdit *lineEditMotDePasse;
+    QHBoxLayout *rowQuestionLayout;
+    QLabel *tagQuestion;
+    QComboBox *comboQuestion;
+    QHBoxLayout *rowReponseLayout;
+    QLabel *tagReponse;
+    QLineEdit *lineEditReponse;
+    QFrame *qrFrame;
+    QVBoxLayout *qrVLayout;
+    QLabel *lblQrTitle;
+    QLabel *lblQrImage;
+    QLabel *lblQrInfo;
+    QPushButton *btnSaveQr;
     QSpacerItem *formSpacer;
     QGridLayout *buttonsGrid;
     QPushButton *btnAjouter;
@@ -136,17 +162,6 @@ public:
 "        font-size: 11px;\n"
 "        font-weight: bold;\n"
 "    }\n"
-"    QPushButton.navButtonActive {\n"
-"        background-color: #633927;\n"
-"        border: 1px solid #633927;\n"
-"        border-radius: 8px;\n"
-"        padding: 9px 12px;\n"
-"        text-align: center;\n"
-"        color: #FFFFFF;\n"
-"        font-family: \"Segoe UI\", sans-serif;\n"
-"        font-size: 11px;\n"
-"        font-weight: bold;\n"
-"    }\n"
 "    QFrame.cardFrame {\n"
 "        background-color: #FFFFFF;\n"
 "        border: 1px solid #EFE6DF;\n"
@@ -161,8 +176,7 @@ public:
 "        font-family: \"Segoe UI\", sans-serif;\n"
 "        font-size: 11px;\n"
 "    }\n"
-"    QLine"
-                        "Edit:focus, QDateEdit:focus, QDoubleSpinBox:focus, QSpinBox:focus, QComboBox:focus {\n"
+"    QLineEdit:focus, QDateEdit:focus, QDoubleSpinBox:focus, QSpinBox:focus, QComboBox:focus {\n"
 "        border: 1.5px solid #633927;\n"
 "        background-color: #FFFDF9;\n"
 "    }\n"
@@ -171,7 +185,8 @@ public:
 "        border: 1px solid #EFE6DF;\n"
 "        border-radius: 12px;\n"
 "        gridline-color: #F5EEE9;\n"
-"        color: #3D2619;\n"
+"        co"
+                        "lor: #3D2619;\n"
 "        font-family: \"Segoe UI\", sans-serif;\n"
 "        font-size: 11px;\n"
 "        selection-background-color: #F8E2E6;\n"
@@ -192,8 +207,7 @@ public:
 "        border-radius: 8px;\n"
 "        font-weight: bold;\n"
 "        font-size: 11px;\n"
-"        p"
-                        "adding: 8px 14px;\n"
+"        padding: 8px 14px;\n"
 "        border: none;\n"
 "    }\n"
 "    QPushButton.actionBtn:hover {\n"
@@ -205,7 +219,8 @@ public:
 "        border: 1.5px solid #633927;\n"
 "        border-radius: 8px;\n"
 "        font-weight: bold;\n"
-"        font-size: 11px;\n"
+"        f"
+                        "ont-size: 11px;\n"
 "        padding: 7px 12px;\n"
 "    }\n"
 "    QPushButton.secondaryBtn:hover {\n"
@@ -406,7 +421,7 @@ public:
 
         statsVLayout->addWidget(lblStatsTitle);
 
-        widgetCurve = new CurveStatsWidget(statsFrame);
+        widgetCurve = new QWidget(statsFrame);
         widgetCurve->setObjectName("widgetCurve");
         widgetCurve->setMinimumSize(QSize(0, 160));
 
@@ -487,8 +502,8 @@ public:
 
         formFrame = new QFrame(centralwidget);
         formFrame->setObjectName("formFrame");
-        formFrame->setMinimumSize(QSize(310, 0));
-        formFrame->setMaximumSize(QSize(330, 16777215));
+        formFrame->setMinimumSize(QSize(330, 0));
+        formFrame->setMaximumSize(QSize(360, 16777215));
         formFrame->setStyleSheet(QString::fromUtf8("\n"
 "        QFrame#formFrame {\n"
 "            background-color: #FFFFFF;\n"
@@ -497,7 +512,7 @@ public:
 "        }\n"
 "       "));
         formVLayout = new QVBoxLayout(formFrame);
-        formVLayout->setSpacing(9);
+        formVLayout->setSpacing(6);
         formVLayout->setObjectName("formVLayout");
         formVLayout->setContentsMargins(14, 14, 14, 14);
         lblFormBanner = new QLabel(formFrame);
@@ -538,76 +553,236 @@ public:
 
         txtId = new QLineEdit(formFrame);
         txtId->setObjectName("txtId");
+        txtId->setReadOnly(true);
 
         rowIdLayout->addWidget(txtId);
 
 
         formVLayout->addLayout(rowIdLayout);
 
-        rowDateLayout = new QHBoxLayout();
-        rowDateLayout->setObjectName("rowDateLayout");
-        tagDate = new QLabel(formFrame);
-        tagDate->setObjectName("tagDate");
+        rowNomLayout = new QHBoxLayout();
+        rowNomLayout->setObjectName("rowNomLayout");
+        tagNom = new QLabel(formFrame);
+        tagNom->setObjectName("tagNom");
 
-        rowDateLayout->addWidget(tagDate);
+        rowNomLayout->addWidget(tagNom);
 
         lineEdit = new QLineEdit(formFrame);
         lineEdit->setObjectName("lineEdit");
 
-        rowDateLayout->addWidget(lineEdit);
+        rowNomLayout->addWidget(lineEdit);
 
 
-        formVLayout->addLayout(rowDateLayout);
+        formVLayout->addLayout(rowNomLayout);
 
-        rowMontantLayout = new QHBoxLayout();
-        rowMontantLayout->setObjectName("rowMontantLayout");
-        tagMontant = new QLabel(formFrame);
-        tagMontant->setObjectName("tagMontant");
+        rowPrenomLayout = new QHBoxLayout();
+        rowPrenomLayout->setObjectName("rowPrenomLayout");
+        tagPrenom = new QLabel(formFrame);
+        tagPrenom->setObjectName("tagPrenom");
 
-        rowMontantLayout->addWidget(tagMontant);
+        rowPrenomLayout->addWidget(tagPrenom);
 
         lineEdit_2 = new QLineEdit(formFrame);
         lineEdit_2->setObjectName("lineEdit_2");
 
-        rowMontantLayout->addWidget(lineEdit_2);
+        rowPrenomLayout->addWidget(lineEdit_2);
 
 
-        formVLayout->addLayout(rowMontantLayout);
+        formVLayout->addLayout(rowPrenomLayout);
 
-        rowTypeLayout = new QHBoxLayout();
-        rowTypeLayout->setObjectName("rowTypeLayout");
-        tagType = new QLabel(formFrame);
-        tagType->setObjectName("tagType");
+        rowTelLayout = new QHBoxLayout();
+        rowTelLayout->setObjectName("rowTelLayout");
+        tagTel = new QLabel(formFrame);
+        tagTel->setObjectName("tagTel");
 
-        rowTypeLayout->addWidget(tagType);
+        rowTelLayout->addWidget(tagTel);
 
         lineEdit_3 = new QLineEdit(formFrame);
         lineEdit_3->setObjectName("lineEdit_3");
 
-        rowTypeLayout->addWidget(lineEdit_3);
+        rowTelLayout->addWidget(lineEdit_3);
 
 
-        formVLayout->addLayout(rowTypeLayout);
+        formVLayout->addLayout(rowTelLayout);
 
-        rowQteLayout = new QHBoxLayout();
-        rowQteLayout->setObjectName("rowQteLayout");
-        tagQte = new QLabel(formFrame);
-        tagQte->setObjectName("tagQte");
+        rowMailLayout = new QHBoxLayout();
+        rowMailLayout->setObjectName("rowMailLayout");
+        tagMail = new QLabel(formFrame);
+        tagMail->setObjectName("tagMail");
 
-        rowQteLayout->addWidget(tagQte);
+        rowMailLayout->addWidget(tagMail);
 
         lineEdit_4 = new QLineEdit(formFrame);
         lineEdit_4->setObjectName("lineEdit_4");
 
-        rowQteLayout->addWidget(lineEdit_4);
+        rowMailLayout->addWidget(lineEdit_4);
 
 
-        formVLayout->addLayout(rowQteLayout);
+        formVLayout->addLayout(rowMailLayout);
 
-        rowEtatLayout = new QHBoxLayout();
-        rowEtatLayout->setObjectName("rowEtatLayout");
+        rowAdresseLayout = new QHBoxLayout();
+        rowAdresseLayout->setObjectName("rowAdresseLayout");
+        tagAdresse = new QLabel(formFrame);
+        tagAdresse->setObjectName("tagAdresse");
 
-        formVLayout->addLayout(rowEtatLayout);
+        rowAdresseLayout->addWidget(tagAdresse);
+
+        lineEdit_5 = new QLineEdit(formFrame);
+        lineEdit_5->setObjectName("lineEdit_5");
+
+        rowAdresseLayout->addWidget(lineEdit_5);
+
+
+        formVLayout->addLayout(rowAdresseLayout);
+
+        rowEmbaucheLayout = new QHBoxLayout();
+        rowEmbaucheLayout->setObjectName("rowEmbaucheLayout");
+        tagEmbauche = new QLabel(formFrame);
+        tagEmbauche->setObjectName("tagEmbauche");
+
+        rowEmbaucheLayout->addWidget(tagEmbauche);
+
+        dateEditEmbauche = new QDateEdit(formFrame);
+        dateEditEmbauche->setObjectName("dateEditEmbauche");
+        dateEditEmbauche->setCalendarPopup(true);
+
+        rowEmbaucheLayout->addWidget(dateEditEmbauche);
+
+
+        formVLayout->addLayout(rowEmbaucheLayout);
+
+        rowPosteLayout = new QHBoxLayout();
+        rowPosteLayout->setObjectName("rowPosteLayout");
+        tagPoste = new QLabel(formFrame);
+        tagPoste->setObjectName("tagPoste");
+
+        rowPosteLayout->addWidget(tagPoste);
+
+        comboPoste = new QComboBox(formFrame);
+        comboPoste->addItem(QString());
+        comboPoste->addItem(QString());
+        comboPoste->addItem(QString());
+        comboPoste->addItem(QString());
+        comboPoste->addItem(QString());
+        comboPoste->addItem(QString());
+        comboPoste->setObjectName("comboPoste");
+
+        rowPosteLayout->addWidget(comboPoste);
+
+
+        formVLayout->addLayout(rowPosteLayout);
+
+        rowNaissanceLayout = new QHBoxLayout();
+        rowNaissanceLayout->setObjectName("rowNaissanceLayout");
+        tagNaissance = new QLabel(formFrame);
+        tagNaissance->setObjectName("tagNaissance");
+
+        rowNaissanceLayout->addWidget(tagNaissance);
+
+        dateEditNaissance = new QDateEdit(formFrame);
+        dateEditNaissance->setObjectName("dateEditNaissance");
+        dateEditNaissance->setCalendarPopup(true);
+
+        rowNaissanceLayout->addWidget(dateEditNaissance);
+
+
+        formVLayout->addLayout(rowNaissanceLayout);
+
+        rowPwdLayout = new QHBoxLayout();
+        rowPwdLayout->setObjectName("rowPwdLayout");
+        tagPwd = new QLabel(formFrame);
+        tagPwd->setObjectName("tagPwd");
+
+        rowPwdLayout->addWidget(tagPwd);
+
+        lineEditMotDePasse = new QLineEdit(formFrame);
+        lineEditMotDePasse->setObjectName("lineEditMotDePasse");
+        lineEditMotDePasse->setEchoMode(QLineEdit::EchoMode::Password);
+
+        rowPwdLayout->addWidget(lineEditMotDePasse);
+
+
+        formVLayout->addLayout(rowPwdLayout);
+
+        rowQuestionLayout = new QHBoxLayout();
+        rowQuestionLayout->setObjectName("rowQuestionLayout");
+        tagQuestion = new QLabel(formFrame);
+        tagQuestion->setObjectName("tagQuestion");
+
+        rowQuestionLayout->addWidget(tagQuestion);
+
+        comboQuestion = new QComboBox(formFrame);
+        comboQuestion->addItem(QString());
+        comboQuestion->addItem(QString());
+        comboQuestion->addItem(QString());
+        comboQuestion->addItem(QString());
+        comboQuestion->setObjectName("comboQuestion");
+
+        rowQuestionLayout->addWidget(comboQuestion);
+
+
+        formVLayout->addLayout(rowQuestionLayout);
+
+        rowReponseLayout = new QHBoxLayout();
+        rowReponseLayout->setObjectName("rowReponseLayout");
+        tagReponse = new QLabel(formFrame);
+        tagReponse->setObjectName("tagReponse");
+
+        rowReponseLayout->addWidget(tagReponse);
+
+        lineEditReponse = new QLineEdit(formFrame);
+        lineEditReponse->setObjectName("lineEditReponse");
+
+        rowReponseLayout->addWidget(lineEditReponse);
+
+
+        formVLayout->addLayout(rowReponseLayout);
+
+        qrFrame = new QFrame(formFrame);
+        qrFrame->setObjectName("qrFrame");
+        qrVLayout = new QVBoxLayout(qrFrame);
+        qrVLayout->setSpacing(6);
+        qrVLayout->setObjectName("qrVLayout");
+        qrVLayout->setContentsMargins(8, 8, 8, 8);
+        lblQrTitle = new QLabel(qrFrame);
+        lblQrTitle->setObjectName("lblQrTitle");
+        lblQrTitle->setFont(font5);
+        lblQrTitle->setStyleSheet(QString::fromUtf8("color: #5C3826;"));
+        lblQrTitle->setAlignment(Qt::AlignmentFlag::AlignCenter);
+
+        qrVLayout->addWidget(lblQrTitle);
+
+        lblQrImage = new QLabel(qrFrame);
+        lblQrImage->setObjectName("lblQrImage");
+        lblQrImage->setMinimumSize(QSize(180, 180));
+        lblQrImage->setMaximumSize(QSize(180, 180));
+        lblQrImage->setStyleSheet(QString::fromUtf8("\n"
+"              background-color: #FFFDF9;\n"
+"              border: 1px solid #EFE4DC;\n"
+"              border-radius: 8px;\n"
+"              color: #A08B7E;\n"
+"              font-size: 10px;\n"
+"             "));
+        lblQrImage->setAlignment(Qt::AlignmentFlag::AlignCenter);
+
+        qrVLayout->addWidget(lblQrImage);
+
+        lblQrInfo = new QLabel(qrFrame);
+        lblQrInfo->setObjectName("lblQrInfo");
+        lblQrInfo->setStyleSheet(QString::fromUtf8("color: #5C3826; font-size: 10px;"));
+        lblQrInfo->setAlignment(Qt::AlignmentFlag::AlignCenter);
+        lblQrInfo->setWordWrap(true);
+
+        qrVLayout->addWidget(lblQrInfo);
+
+        btnSaveQr = new QPushButton(qrFrame);
+        btnSaveQr->setObjectName("btnSaveQr");
+        btnSaveQr->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+
+        qrVLayout->addWidget(btnSaveQr);
+
+
+        formVLayout->addWidget(qrFrame);
 
         formSpacer = new QSpacerItem(20, 10, QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Expanding);
 
@@ -663,62 +838,96 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "Pawch\303\251 - Gestion des Commandes Fournisseurs", nullptr));
+        MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "Pawch\303\251 - Gestion des Employ\303\251s", nullptr));
         labelLogo->setText(QString());
         btnNavAnimaux->setText(QCoreApplication::translate("MainWindow", "Gestion Animaux", nullptr));
         btnNavAnimaux->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "navButton", nullptr)));
-        btnNavCommandes->setText(QCoreApplication::translate("MainWindow", "gestionFournisseurs", nullptr));
+        btnNavCommandes->setText(QCoreApplication::translate("MainWindow", "Gestion Employ\303\251s", nullptr));
         btnNavCommandes->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "navButton", nullptr)));
-        btnNavSoins->setText(QCoreApplication::translate("MainWindow", "rendez_vous", nullptr));
+        btnNavSoins->setText(QCoreApplication::translate("MainWindow", "Rendez-vous", nullptr));
         btnNavSoins->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "navButton", nullptr)));
-        btnNavProduits->setText(QCoreApplication::translate("MainWindow", "gestion stokes", nullptr));
+        btnNavProduits->setText(QCoreApplication::translate("MainWindow", "Gestion Stocks", nullptr));
         btnNavProduits->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "navButton", nullptr)));
-        btnNavPaiements->setText(QCoreApplication::translate("MainWindow", "commandes", nullptr));
+        btnNavPaiements->setText(QCoreApplication::translate("MainWindow", "Commandes", nullptr));
         btnNavPaiements->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "navButton", nullptr)));
-        lblTitle->setText(QCoreApplication::translate("MainWindow", "Fournisseurs", nullptr));
-        lblSubtitle->setText(QCoreApplication::translate("MainWindow", "G\303\251rez les commandes fournisseurs, approvisionnements et livraisons", nullptr));
+        lblTitle->setText(QCoreApplication::translate("MainWindow", "Employ\303\251s", nullptr));
+        lblSubtitle->setText(QCoreApplication::translate("MainWindow", "G\303\251rez les employ\303\251s, leurs postes et leurs informations personnelles", nullptr));
         inputSearch->setPlaceholderText(QCoreApplication::translate("MainWindow", "\360\237\224\215 Rechercher par nom, pr\303\251nom, t\303\251l\303\251phone ou e-mail...", nullptr));
-        comboFilterType->setItemText(0, QCoreApplication::translate("MainWindow", "Tous les fournisseurs", nullptr));
+        comboFilterType->setItemText(0, QCoreApplication::translate("MainWindow", "Tous les employ\303\251s", nullptr));
         comboFilterType->setItemText(1, QCoreApplication::translate("MainWindow", "Gmail", nullptr));
         comboFilterType->setItemText(2, QCoreApplication::translate("MainWindow", "Outlook", nullptr));
         comboFilterType->setItemText(3, QCoreApplication::translate("MainWindow", "Yahoo", nullptr));
         comboFilterType->setItemText(4, QCoreApplication::translate("MainWindow", "Autres domaines", nullptr));
 
-        lblListTitle->setText(QCoreApplication::translate("MainWindow", "Liste des Fournisseur", nullptr));
-        btnTrierPrix->setText(QCoreApplication::translate("MainWindow", "\342\206\225 Trier par prix", nullptr));
+        lblListTitle->setText(QCoreApplication::translate("MainWindow", "Liste des Employ\303\251s", nullptr));
+        btnTrierPrix->setText(QCoreApplication::translate("MainWindow", "\342\206\225 Trier par nom", nullptr));
         btnTrierPrix->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "secondaryBtn", nullptr)));
-        btnTrierDate->setText(QCoreApplication::translate("MainWindow", "\360\237\223\205 Trier par date", nullptr));
+        btnTrierDate->setText(QCoreApplication::translate("MainWindow", "\360\237\222\274 Trier par poste", nullptr));
         btnTrierDate->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "secondaryBtn", nullptr)));
-        btnExportPdf->setText(QCoreApplication::translate("MainWindow", "\360\237\223\204 Exporter PDF", nullptr));
+        btnExportPdf->setText(QCoreApplication::translate("MainWindow", "\360\237\223\204 Attestation PDF", nullptr));
         QTableWidgetItem *___qtablewidgetitem = tableCommandes->horizontalHeaderItem(0);
-        ___qtablewidgetitem->setText(QCoreApplication::translate("MainWindow", "ID fournisseur", nullptr));
+        ___qtablewidgetitem->setText(QCoreApplication::translate("MainWindow", "ID employ\303\251", nullptr));
         QTableWidgetItem *___qtablewidgetitem1 = tableCommandes->horizontalHeaderItem(1);
         ___qtablewidgetitem1->setText(QCoreApplication::translate("MainWindow", "Nom", nullptr));
         QTableWidgetItem *___qtablewidgetitem2 = tableCommandes->horizontalHeaderItem(2);
-        ___qtablewidgetitem2->setText(QCoreApplication::translate("MainWindow", "prenom", nullptr));
+        ___qtablewidgetitem2->setText(QCoreApplication::translate("MainWindow", "Pr\303\251nom", nullptr));
         QTableWidgetItem *___qtablewidgetitem3 = tableCommandes->horizontalHeaderItem(3);
-        ___qtablewidgetitem3->setText(QCoreApplication::translate("MainWindow", "t\303\251l\303\251phone", nullptr));
+        ___qtablewidgetitem3->setText(QCoreApplication::translate("MainWindow", "T\303\251l\303\251phone", nullptr));
         QTableWidgetItem *___qtablewidgetitem4 = tableCommandes->horizontalHeaderItem(4);
         ___qtablewidgetitem4->setText(QCoreApplication::translate("MainWindow", "Mail", nullptr));
         statsFrame->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "cardFrame", nullptr)));
-        lblStatsTitle->setText(QCoreApplication::translate("MainWindow", "\360\237\223\210 Statistiques par domaine e-mail (Courbe)", nullptr));
-        lblAlertHeading->setText(QCoreApplication::translate("MainWindow", "Fournisseurs enregistr\303\251s", nullptr));
-        lblAlertBadge->setText(QCoreApplication::translate("MainWindow", "3", nullptr));
-        lblAlertDesc->setText(QCoreApplication::translate("MainWindow", "commandes en attente \342\232\240\357\270\217", nullptr));
-        lblTotalMontant->setText(QCoreApplication::translate("MainWindow", "Total: 1450", nullptr));
-        lblFormBanner->setText(QCoreApplication::translate("MainWindow", "+ Fournisseur", nullptr));
-        lblFormCircle->setText(QCoreApplication::translate("MainWindow", "\360\237\223\246", nullptr));
-        tagId->setText(QCoreApplication::translate("MainWindow", "ID Fournisseur", nullptr));
+        lblStatsTitle->setText(QCoreApplication::translate("MainWindow", "\360\237\223\210 Statistiques par ann\303\251e d'embauche", nullptr));
+        lblAlertHeading->setText(QCoreApplication::translate("MainWindow", "Employ\303\251s enregistr\303\251s", nullptr));
+        lblAlertBadge->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
+        lblAlertDesc->setText(QCoreApplication::translate("MainWindow", "employ\303\251s enregistr\303\251s", nullptr));
+        lblTotalMontant->setText(QCoreApplication::translate("MainWindow", "Avec e-mail : 0", nullptr));
+        lblFormBanner->setText(QCoreApplication::translate("MainWindow", "+ Employ\303\251", nullptr));
+        lblFormCircle->setText(QCoreApplication::translate("MainWindow", "\360\237\221\244", nullptr));
+        tagId->setText(QCoreApplication::translate("MainWindow", "ID Employ\303\251", nullptr));
         tagId->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "formTag", nullptr)));
-        txtId->setPlaceholderText(QCoreApplication::translate("MainWindow", "Ex: CMD-2026-01", nullptr));
-        tagDate->setText(QCoreApplication::translate("MainWindow", "Nom ", nullptr));
-        tagDate->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "formTag", nullptr)));
-        tagMontant->setText(QCoreApplication::translate("MainWindow", "prenom", nullptr));
-        tagMontant->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "formTag", nullptr)));
-        tagType->setText(QCoreApplication::translate("MainWindow", "T\303\250l\303\250phone:", nullptr));
-        tagType->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "formTag", nullptr)));
-        tagQte->setText(QCoreApplication::translate("MainWindow", "Mail", nullptr));
-        tagQte->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "formTag", nullptr)));
+        txtId->setPlaceholderText(QCoreApplication::translate("MainWindow", "Auto-g\303\251n\303\251r\303\251", nullptr));
+        tagNom->setText(QCoreApplication::translate("MainWindow", "Nom", nullptr));
+        tagNom->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "formTag", nullptr)));
+        tagPrenom->setText(QCoreApplication::translate("MainWindow", "Pr\303\251nom", nullptr));
+        tagPrenom->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "formTag", nullptr)));
+        tagTel->setText(QCoreApplication::translate("MainWindow", "T\303\251l\303\251phone", nullptr));
+        tagTel->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "formTag", nullptr)));
+        tagMail->setText(QCoreApplication::translate("MainWindow", "Mail", nullptr));
+        tagMail->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "formTag", nullptr)));
+        tagAdresse->setText(QCoreApplication::translate("MainWindow", "Adresse", nullptr));
+        tagAdresse->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "formTag", nullptr)));
+        tagEmbauche->setText(QCoreApplication::translate("MainWindow", "Embauche", nullptr));
+        tagEmbauche->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "formTag", nullptr)));
+        dateEditEmbauche->setDisplayFormat(QCoreApplication::translate("MainWindow", "dd/MM/yyyy", nullptr));
+        tagPoste->setText(QCoreApplication::translate("MainWindow", "Poste", nullptr));
+        tagPoste->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "formTag", nullptr)));
+        comboPoste->setItemText(0, QCoreApplication::translate("MainWindow", "V\303\251t\303\251rinaire", nullptr));
+        comboPoste->setItemText(1, QCoreApplication::translate("MainWindow", "Assistant v\303\251t\303\251rinaire", nullptr));
+        comboPoste->setItemText(2, QCoreApplication::translate("MainWindow", "Responsable RH", nullptr));
+        comboPoste->setItemText(3, QCoreApplication::translate("MainWindow", "Caissier", nullptr));
+        comboPoste->setItemText(4, QCoreApplication::translate("MainWindow", "Gestionnaire de stock", nullptr));
+        comboPoste->setItemText(5, QCoreApplication::translate("MainWindow", "Administrateur", nullptr));
+
+        tagNaissance->setText(QCoreApplication::translate("MainWindow", "Naissance", nullptr));
+        tagNaissance->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "formTag", nullptr)));
+        dateEditNaissance->setDisplayFormat(QCoreApplication::translate("MainWindow", "dd/MM/yyyy", nullptr));
+        tagPwd->setText(QCoreApplication::translate("MainWindow", "Mot de passe", nullptr));
+        tagPwd->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "formTag", nullptr)));
+        tagQuestion->setText(QCoreApplication::translate("MainWindow", "Question", nullptr));
+        tagQuestion->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "formTag", nullptr)));
+        comboQuestion->setItemText(0, QCoreApplication::translate("MainWindow", "Nom de votre premier animal ?", nullptr));
+        comboQuestion->setItemText(1, QCoreApplication::translate("MainWindow", "Ville de naissance ?", nullptr));
+        comboQuestion->setItemText(2, QCoreApplication::translate("MainWindow", "Nom de votre m\303\250re ?", nullptr));
+        comboQuestion->setItemText(3, QCoreApplication::translate("MainWindow", "Plat pr\303\251f\303\251r\303\251 ?", nullptr));
+
+        tagReponse->setText(QCoreApplication::translate("MainWindow", "R\303\251ponse", nullptr));
+        tagReponse->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "formTag", nullptr)));
+        qrFrame->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "cardFrame", nullptr)));
+        lblQrTitle->setText(QCoreApplication::translate("MainWindow", "\360\237\224\263 QR Code Employ\303\251", nullptr));
+        lblQrImage->setText(QCoreApplication::translate("MainWindow", "S\303\251lectionnez un employ\303\251", nullptr));
+        lblQrInfo->setText(QString());
+        btnSaveQr->setText(QCoreApplication::translate("MainWindow", "\360\237\222\276 Enregistrer QR", nullptr));
+        btnSaveQr->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "secondaryBtn", nullptr)));
         btnAjouter->setText(QCoreApplication::translate("MainWindow", "+ Ajouter", nullptr));
         btnAjouter->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "actionBtn", nullptr)));
         btnModifier->setText(QCoreApplication::translate("MainWindow", "\342\234\217 Modifier", nullptr));

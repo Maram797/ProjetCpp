@@ -17,10 +17,6 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
-        commande.cpp
-        commande.h
-        curvestatswidget.cpp
-        curvestatswidget.h
         resources.qrc
 )
 

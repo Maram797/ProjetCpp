@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QtCreatorProfiles>
+<!-- Written by QtCreator 20.0.2, 2026-10-12T11:41:38. -->
+<qtcreator>
+ <data>
+  <variable>Kit.IrrelevantAspects</variable>
+  <valuelist type="QVariantList">
+   <value type="QString">Python.Interpreter</value>
+  </valuelist>
+ </data>
+ <data>
+  <variable>Profile.0</variable>
+  <valuemap type="QVariantMap">
+   <valuelist type="QVariantList" key="PE.Kit.RelevantAspects">
+    <value type="QString">Debugger.Information</value>
+    <value type="QString">PE.Profile.Environment</value>
+    <value type="QString">Python.Interpreter</value>
+   </valuelist>
+   <value type="bool" key="PE.Profile.AutoDetected">true</value>
+   <value type="QString" key="PE.Profile.AutoDetectionSource">Python</value>
+   <valuemap type="QVariantMap" key="PE.Profile.Data">
+    <value type="QString" key="Debugger.Information">{cf3e8259-a345-42dd-9caf-a10e74440a0d}</value>
+    <value type="QString" key="Python.Interpreter">{6041261a-d14c-45a5-972e-91de70a839e2}</value>
+   </valuemap>
+   <value type="UnknownType" key="PE.Profile.DeviceTypeForIcon"></value>
+   <value type="QString" key="PE.Profile.Icon"></value>
+   <value type="QString" key="PE.Profile.Id">{6041261a-d14c-45a5-972e-91de70a839e2}</value>
+   <valuelist type="QVariantList" key="PE.Profile.MutableInfo"/>
+   <value type="QString" key="PE.Profile.Name">%{Python:Name}</value>
+   <value type="bool" key="PE.Profile.SDK">false</value>
+   <valuelist type="QVariantList" key="PE.Profile.StickyInfo">
+    <value type="QString">Python.Interpreter</value>
+   </valuelist>
+  </valuemap>
+ </data>
+ <data>
+  <variable>Profile.1</variable>
+  <valuemap type="QVariantMap">
+   <value type="bool" key="PE.Profile.AutoDetected">false</value>
+   <value type="QString" key="PE.Profile.AutoDetectionSource"></value>
+   <valuemap type="QVariantMap" key="PE.Profile.Data">
+    <valuelist type="QVariantList" key="CMake.ConfigurationKitInformation">
+     <value type="QString">CMAKE_CXX_COMPILER:FILEPATH=%{Compiler:Executable:Cxx}</value>
+     <value type="QString">CMAKE_C_COMPILER:FILEPATH=%{Compiler:Executable:C}</value>
+     <value type="QString">CMAKE_PREFIX_PATH:PATH=%{Qt:QT_INSTALL_PREFIX}</value>
+     <value type="QString">QT_QMAKE_EXECUTABLE:FILEPATH=%{Qt:qmakeExecutable}</value>
+    </valuelist>
+    <valuemap type="QVariantMap" key="CMake.GeneratorKitInformation">
+     <value type="QString" key="ExtraGenerator"></value>
+     <value type="QString" key="Generator">Ninja</value>
+     <value type="QString" key="Platform"></value>
+     <value type="QString" key="Toolset"></value>
+    </valuemap>
+    <value type="QString" key="CMakeProjectManager.CMakeKitInformation">{977268cb-e1ea-44bb-be9c-8134f2e47c32}</value>
+    <value type="QString" key="Debugger.Information">{cf3e8259-a345-42dd-9caf-a10e74440a0d}</value>
+    <value type="QByteArray" key="PE.Profile.BuildDeviceType">Desktop</value>
+    <value type="QByteArray" key="PE.Profile.DeviceType">Desktop</value>
+    <value type="QString" key="PE.Profile.SysRoot"></value>
+    <valuemap type="QVariantMap" key="PE.Profile.ToolChainsV3">
+     <value type="QByteArray" key="C">{72f5403d-2395-4036-976e-59ac396f324c}</value>
+     <value type="QByteArray" key="Cxx">{fa2f7130-a95a-4f9b-8e3a-9d9d7e437fa0}</value>
+    </valuemap>
+    <value type="int" key="QtSupport.QtInformation">-1</value>
+   </valuemap>
+   <value type="UnknownType" key="PE.Profile.DeviceTypeForIcon"></value>
+   <value type="QString" key="PE.Profile.Icon"></value>
+   <value type="QString" key="PE.Profile.Id">{fece13f6-c6e3-4a9e-b28e-e822d7ac1c42}</value>
+   <valuelist type="QVariantList" key="PE.Profile.MutableInfo"/>
+   <value type="QString" key="PE.Profile.Name">MinGW 14.0.0 64-bitSans nom</value>
+   <value type="bool" key="PE.Profile.SDK">false</value>
+   <valuelist type="QVariantList" key="PE.Profile.StickyInfo"/>
+  </valuemap>
+ </data>
+ <data>
+  <variable>Profile.2</variable>
+  <valuemap type="QVariantMap">
+   <value type="bool" key="PE.Profile.AutoDetected">false</value>
+   <value type="QString" key="PE.Profile.AutoDetectionSource"></value>
+   <valuemap type="QVariantMap" key="PE.Profile.Data">
+    <valuelist type="QVariantList" key="CMake.ConfigurationKitInformation">
+     <value type="QString">CMAKE_CXX_COMPILER:FILEPATH=%{Compiler:Executable:Cxx}</value>
+     <value type="QString">CMAKE_C_COMPILER:FILEPATH=%{Compiler:Executable:C}</value>
+     <value type="QString">CMAKE_PREFIX_PATH:PATH=%{Qt:QT_INSTALL_PREFIX}</value>
+     <value type="QString">QT_QMAKE_EXECUTABLE:FILEPATH=%{Qt:qmakeExecutable}</value>
+    </valuelist>
+    <valuemap type="QVariantMap" key="CMake.GeneratorKitInformation">
+     <value type="QString" key="ExtraGenerator"></value>
+     <value type="QString" key="Generator">Ninja</value>
+     <value type="QString" key="Platform"></value>
+     <value type="QString" key="Toolset"></value>
+    </valuemap>
+    <value type="QString" key="CMakeProjectManager.CMakeKitInformation">{977268cb-e1ea-44bb-be9c-8134f2e47c32}</value>
+    <value type="QString" key="Debugger.Information">{184fa7ea-e485-4893-8cb8-7fa6fb22b20b}</value>
+    <value type="QByteArray" key="PE.Profile.BuildDeviceType">Desktop</value>
+    <value type="QByteArray" key="PE.Profile.DeviceType">Desktop</value>
+    <value type="QString" key="PE.Profile.SysRoot">C:/Qt/qtcreator-20.0.2/Tools/mingw64/bin</value>
+    <valuemap type="QVariantMap" key="PE.Profile.ToolChainsV3">
+     <value type="QByteArray" key="C"></value>
+     <value type="QByteArray" key="Cxx"></value>
+    </valuemap>
+   </valuemap>
+   <value type="UnknownType" key="PE.Profile.DeviceTypeForIcon"></value>
+   <value type="QString" key="PE.Profile.Icon"></value>
+   <value type="QString" key="PE.Profile.Id">{5e757806-8c78-4853-8a2f-496514ad9621}</value>
+   <valuelist type="QVariantList" key="PE.Profile.MutableInfo"/>
+   <value type="QString" key="PE.Profile.Name">GDB 14.0.0</value>
+   <value type="bool" key="PE.Profile.SDK">false</value>
+   <valuelist type="QVariantList" key="PE.Profile.StickyInfo"/>
+  </valuemap>
+ </data>
+ <data>
+  <variable>Profile.3</variable>
+  <valuemap type="QVariantMap">
+   <value type="bool" key="PE.Profile.AutoDetected">false</value>
+   <value type="QString" key="PE.Profile.AutoDetectionSource"></value>
+   <valuemap type="QVariantMap" key="PE.Profile.Data">
+    <valuelist type="QVariantList" key="CMake.ConfigurationKitInformation">
+     <value type="QString">CMAKE_CXX_COMPILER:FILEPATH=%{Compiler:Executable:Cxx}</value>
+     <value type="QString">CMAKE_C_COMPILER:FILEPATH=%{Compiler:Executable:C}</value>
+     <value type="QString">CMAKE_PREFIX_PATH:PATH=%{Qt:QT_INSTALL_PREFIX}</value>
+     <value type="QString">QT_QMAKE_EXECUTABLE:FILEPATH=%{Qt:qmakeExecutable}</value>
+    </valuelist>
+    <valuemap type="QVariantMap" key="CMake.GeneratorKitInformation">
+     <value type="QString" key="ExtraGenerator"></value>
+     <value type="QString" key="Generator">Ninja</value>
+     <value type="QString" key="Platform"></value>
+     <value type="QString" key="Toolset"></value>
+    </valuemap>
+    <value type="QString" key="CMakeProjectManager.CMakeKitInformation">{977268cb-e1ea-44bb-be9c-8134f2e47c32}</value>
+    <value type="QString" key="Debugger.Information">{cf3e8259-a345-42dd-9caf-a10e74440a0d}</value>
+    <value type="QByteArray" key="PE.Profile.BuildDeviceType">Desktop</value>
+    <value type="QByteArray" key="PE.Profile.DeviceType">Desktop</value>
+    <valuemap type="QVariantMap" key="PE.Profile.ToolChainsV3">
+     <value type="QByteArray" key="C">{93c50d56-2f15-4ac7-b2cc-05ee807dbdc4}</value>
+     <value type="QByteArray" key="Cxx">{5ace9f3b-823a-463f-b0c4-91cf9dea9edd}</value>
+    </valuemap>
+    <value type="QString" key="PE.tmp.FinalName">Qt 6.12.0 (mingw_64)</value>
+    <valuelist type="QVariantList" key="PE.tmp.ForProjects">
+     <value type="QString">C:/Users/ASUS/Desktop/Qt/GestionCommandes/Gestion fournisseurs.pro</value>
+    </valuelist>
+    <value type="QString" key="PE.tmp.Name">Qt 6.12.0 (mingw_64) – temporaire</value>
+    <valuelist type="QVariantList" key="PE.tmp.QtSupport.QtInformation">
+     <value type="int">2</value>
+    </valuelist>
+    <value type="bool" key="PE.tmp.isTemporary">true</value>
+    <value type="int" key="QtSupport.QtInformation">2</value>
+   </valuemap>
+   <value type="UnknownType" key="PE.Profile.DeviceTypeForIcon"></value>
+   <value type="QString" key="PE.Profile.Icon"></value>
+   <value type="QString" key="PE.Profile.Id">{3df0ba84-c1ca-44ae-8d36-f6ec25f1a819}</value>
+   <valuelist type="QVariantList" key="PE.Profile.MutableInfo"/>
+   <value type="QString" key="PE.Profile.Name">Qt 6.12.0 (mingw_64) – temporaire</value>
+   <value type="bool" key="PE.Profile.SDK">false</value>
+   <valuelist type="QVariantList" key="PE.Profile.StickyInfo"/>
+  </valuemap>
+ </data>
+ <data>
+  <variable>Profile.Count</variable>
+  <value type="int">4</value>
+ </data>
+ <data>
+  <variable>Profile.Default</variable>
+  <value type="QString">{6041261a-d14c-45a5-972e-91de70a839e2}</value>
+ </data>
+ <data>
+  <variable>Version</variable>
+  <value type="int">1</value>
+ </data>
+</qtcreator>

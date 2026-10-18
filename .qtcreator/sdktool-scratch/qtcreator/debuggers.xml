@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QtCreatorDebuggers>
+<!-- Written by QtCreator 20.0.2, 2026-10-12T11:41:38. -->
+<qtcreator>
+ <data>
+  <variable>DebuggerItem.0</variable>
+  <valuemap type="QVariantMap">
+   <valuelist type="QVariantList" key="Abis">
+    <value type="QString">x86-windows-msys-pe-64bit</value>
+   </valuelist>
+   <value type="bool" key="AutoDetected">true</value>
+   <value type="QString" key="Binary">C:/Qt/Tools/mingw1310_64/bin/gdb.exe</value>
+   <value type="QString" key="DetectionSource"></value>
+   <value type="QString" key="DisplayName">GNU gdb 13.1.0 64-bit</value>
+   <value type="int" key="EngineType">1</value>
+   <value type="QString" key="Id">Debugger.qt.tools.win64_mingw1310</value>
+   <value type="QDateTime" key="LastModified"></value>
+   <value type="QString" key="Version"></value>
+   <value type="QString" key="WorkingDirectory"></value>
+  </valuemap>
+ </data>
+ <data>
+  <variable>DebuggerItem.1</variable>
+  <valuemap type="QVariantMap">
+   <valuelist type="QVariantList" key="Abis">
+    <value type="QString">x86-windows-msvc2022-pe-64bit</value>
+   </valuelist>
+   <value type="bool" key="AutoDetected">true</value>
+   <value type="QString" key="Binary">C:/Program Files/Windows Kits/10/Debuggers/x64/cdb.exe</value>
+   <value type="QString" key="DetectionSource"></value>
+   <value type="QString" key="DisplayName">CDB auto-détecté à l'emplacement « C:\Program Files\Windows Kits\10\Debuggers\x64\cdb.exe »</value>
+   <value type="int" key="EngineType">4</value>
+   <value type="QString" key="Id">{cf3e8259-a345-42dd-9caf-a10e74440a0d}</value>
+   <value type="QDateTime" key="LastModified"></value>
+   <value type="QString" key="Version"></value>
+   <value type="QString" key="WorkingDirectory"></value>
+  </valuemap>
+ </data>
+ <data>
+  <variable>DebuggerItem.2</variable>
+  <valuemap type="QVariantMap">
+   <valuelist type="QVariantList" key="Abis">
+    <value type="QString">x86-windows-msvc2022-pe-32bit</value>
+   </valuelist>
+   <value type="bool" key="AutoDetected">true</value>
+   <value type="QString" key="Binary">C:/Program Files (x86)/Windows Kits/10/Debuggers/x86/cdb.exe</value>
+   <value type="QString" key="DetectionSource"></value>
+   <value type="QString" key="DisplayName">CDB auto-détecté à l'emplacement « C:\Program Files (x86)\Windows Kits\10\Debuggers\x86\cdb.exe »</value>
+   <value type="int" key="EngineType">4</value>
+   <value type="QString" key="Id">{3ff44950-00d1-4af9-ba7a-1e16b74789c8}</value>
+   <value type="QDateTime" key="LastModified"></value>
+   <value type="QString" key="Version"></value>
+   <value type="QString" key="WorkingDirectory"></value>
+  </valuemap>
+ </data>
+ <data>
+  <variable>DebuggerItem.3</variable>
+  <valuemap type="QVariantMap">
+   <valuelist type="QVariantList" key="Abis">
+    <value type="QString">x86-windows-msys-pe-64bit</value>
+   </valuelist>
+   <value type="bool" key="AutoDetected">true</value>
+   <value type="QString" key="Binary">C:/Users/ASUS/AppData/Local/Microsoft/WinGet/Packages/BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe/mingw64/bin/gdb.exe</value>
+   <value type="QString" key="DetectionSource"></value>
+   <value type="QString" key="DisplayName">GDB du système à C:\Users\ASUS\AppData\Local\Microsoft\WinGet\Packages\BrechtSanders.WinLibs.POSIX.UCRT_Microsoft.Winget.Source_8wekyb3d8bbwe\mingw64\bin\gdb.exe</value>
+   <value type="int" key="EngineType">1</value>
+   <value type="QString" key="Id">{c4ca015b-97c2-4c7d-8944-fd57b70276ee}</value>
+   <value type="QDateTime" key="LastModified">2026-08-09T17:01:42.000</value>
+   <value type="QString" key="Version">64.0.0</value>
+   <value type="QString" key="WorkingDirectory"></value>
+  </valuemap>
+ </data>
+ <data>
+  <variable>DebuggerItem.4</variable>
+  <valuemap type="QVariantMap">
+   <valuelist type="QVariantList" key="Abis">
+    <value type="QString">x86-windows-msys-pe-64bit</value>
+   </valuelist>
+   <value type="bool" key="AutoDetected">false</value>
+   <value type="QString" key="Binary">C:/Qt/qtcreator-20.0.2/Tools/mingw64/bin/gdb.exe</value>
+   <value type="QString" key="DetectionSource"></value>
+   <value type="QString" key="DisplayName">GDB 14.0.0</value>
+   <value type="int" key="EngineType">1</value>
+   <value type="QString" key="Id">{184fa7ea-e485-4893-8cb8-7fa6fb22b20b}</value>
+   <value type="QDateTime" key="LastModified"></value>
+   <value type="QString" key="Version">64.0.0</value>
+   <value type="QString" key="WorkingDirectory"></value>
+  </valuemap>
+ </data>
+ <data>
+  <variable>DebuggerItem.5</variable>
+  <valuemap type="QVariantMap">
+   <valuelist type="QVariantList" key="Abis">
+    <value type="QString">x86-windows-msys-pe-64bit</value>
+   </valuelist>
+   <value type="bool" key="AutoDetected">true</value>
+   <value type="QString" key="Binary">C:/Qt/QtCreator-OpenSource-20.0.2/bin/clang/bin/lldb.exe</value>
+   <value type="QString" key="DetectionSource"></value>
+   <value type="QString" key="DisplayName">LLDB du système à C:\Qt\QtCreator-OpenSource-20.0.2\bin\clang\bin\lldb.exe</value>
+   <value type="int" key="EngineType">256</value>
+   <value type="QString" key="Id">{97943095-45fd-4067-a920-56249df3845d}</value>
+   <value type="QDateTime" key="LastModified">2026-09-23T02:10:10.897</value>
+   <value type="QString" key="Version">22.1.8</value>
+   <value type="QString" key="WorkingDirectory"></value>
+  </valuemap>
+ </data>
+ <data>
+  <variable>DebuggerItem.Count</variable>
+  <value type="int">6</value>
+ </data>
+ <data>
+  <variable>Version</variable>
+  <value type="int">1</value>
+ </data>
+</qtcreator>

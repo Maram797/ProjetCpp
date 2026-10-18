@@ -24,7 +24,6 @@
 #include <QtWidgets/QTableWidget>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
-#include "curvestatswidget.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -58,7 +57,7 @@ public:
     QFrame *statsFrame;
     QVBoxLayout *statsVLayout;
     QLabel *lblStatsTitle;
-    CurveStatsWidget *widgetCurve;
+    QWidget *widgetCurve;
     QFrame *alertFrame;
     QVBoxLayout *alertVLayout;
     QLabel *lblAlertHeading;
@@ -406,7 +405,7 @@ public:
 
         statsVLayout->addWidget(lblStatsTitle);
 
-        widgetCurve = new CurveStatsWidget(statsFrame);
+        widgetCurve = new QWidget(statsFrame);
         widgetCurve->setObjectName("widgetCurve");
         widgetCurve->setMinimumSize(QSize(0, 160));
 
@@ -701,7 +700,7 @@ public:
         QTableWidgetItem *___qtablewidgetitem4 = tableCommandes->horizontalHeaderItem(4);
         ___qtablewidgetitem4->setText(QCoreApplication::translate("MainWindow", "Mail", nullptr));
         statsFrame->setProperty("class", QVariant(QCoreApplication::translate("MainWindow", "cardFrame", nullptr)));
-        lblStatsTitle->setText(QCoreApplication::translate("MainWindow", "\360\237\223\210 Statistiques par domaine e-mail (Courbe)", nullptr));
+        lblStatsTitle->setText(QCoreApplication::translate("MainWindow", "\360\237\223\210 Statistiques par domaine e-mail", nullptr));
         lblAlertHeading->setText(QCoreApplication::translate("MainWindow", "Fournisseurs enregistr\303\251s", nullptr));
         lblAlertBadge->setText(QCoreApplication::translate("MainWindow", "3", nullptr));
         lblAlertDesc->setText(QCoreApplication::translate("MainWindow", "commandes en attente \342\232\240\357\270\217", nullptr));

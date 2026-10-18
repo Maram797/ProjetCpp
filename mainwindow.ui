@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Pawché - Gestion des Commandes Fournisseurs</string>
+   <string>Pawché - Gestion des Employés</string>
   </property>
   <property name="styleSheet">
    <string notr="true">
@@ -41,18 +41,7 @@
         background-color: #F8EEE6;
         border-color: #633927;
     }
-    QPushButton.navButton[active="true"], QPushButton.navButton[active="true"]:hover {
-        background-color: #633927;
-        border: 1px solid #633927;
-        border-radius: 8px;
-        padding: 9px 12px;
-        text-align: center;
-        color: #FFFFFF;
-        font-family: &quot;Segoe UI&quot;, sans-serif;
-        font-size: 11px;
-        font-weight: bold;
-    }
-    QPushButton.navButtonActive {
+    QPushButton.navButton[active=&quot;true&quot;], QPushButton.navButton[active=&quot;true&quot;]:hover {
         background-color: #633927;
         border: 1px solid #633927;
         border-radius: 8px;
@@ -224,7 +213,7 @@
        <item>
         <widget class="QPushButton" name="btnNavCommandes">
          <property name="text">
-          <string>gestionFournisseurs</string>
+          <string>Gestion Employés</string>
          </property>
          <property name="class" stdset="0">
           <string>navButton</string>
@@ -234,7 +223,7 @@
        <item>
         <widget class="QPushButton" name="btnNavSoins">
          <property name="text">
-          <string>rendez_vous</string>
+          <string>Rendez-vous</string>
          </property>
          <property name="class" stdset="0">
           <string>navButton</string>
@@ -244,7 +233,7 @@
        <item>
         <widget class="QPushButton" name="btnNavProduits">
          <property name="text">
-          <string>gestion stokes</string>
+          <string>Gestion Stocks</string>
          </property>
          <property name="class" stdset="0">
           <string>navButton</string>
@@ -254,7 +243,7 @@
        <item>
         <widget class="QPushButton" name="btnNavPaiements">
          <property name="text">
-          <string>commandes</string>
+          <string>Commandes</string>
          </property>
          <property name="class" stdset="0">
           <string>navButton</string>
@@ -282,7 +271,7 @@
          <string notr="true">color: #3D2619;</string>
         </property>
         <property name="text">
-          <string>Fournisseurs</string>
+         <string>Employés</string>
         </property>
        </widget>
       </item>
@@ -292,7 +281,7 @@
          <string notr="true">color: #7D6658; font-size: 11px; margin-bottom: 2px;</string>
         </property>
         <property name="text">
-         <string>Gérez les commandes fournisseurs, approvisionnements et livraisons</string>
+         <string>Gérez les employés, leurs postes et leurs informations personnelles</string>
         </property>
        </widget>
       </item>
@@ -304,7 +293,7 @@
         <item>
          <widget class="QLineEdit" name="inputSearch">
           <property name="placeholderText">
-          <string>🔍 Rechercher par nom, prénom, téléphone ou e-mail...</string>
+           <string>🔍 Rechercher par nom, prénom, téléphone ou e-mail...</string>
           </property>
           <property name="clearButtonEnabled">
            <bool>true</bool>
@@ -321,27 +310,27 @@
           </property>
           <item>
            <property name="text">
-           <string>Tous les fournisseurs</string>
+            <string>Tous les employés</string>
            </property>
           </item>
           <item>
            <property name="text">
-           <string>Gmail</string>
+            <string>Gmail</string>
            </property>
           </item>
           <item>
            <property name="text">
-           <string>Outlook</string>
+            <string>Outlook</string>
            </property>
           </item>
           <item>
            <property name="text">
-           <string>Yahoo</string>
+            <string>Yahoo</string>
            </property>
           </item>
           <item>
            <property name="text">
-           <string>Autres domaines</string>
+            <string>Autres domaines</string>
            </property>
           </item>
          </widget>
@@ -366,7 +355,7 @@
            <string notr="true">color: #5C3826;</string>
           </property>
           <property name="text">
-          <string>Liste des Fournisseur</string>
+           <string>Liste des Employés</string>
           </property>
          </widget>
         </item>
@@ -389,7 +378,7 @@
            <cursorShape>PointingHandCursor</cursorShape>
           </property>
           <property name="text">
-           <string>↕ Trier par prix</string>
+           <string>↕ Trier par nom</string>
           </property>
           <property name="class" stdset="0">
            <string>secondaryBtn</string>
@@ -402,7 +391,7 @@
            <cursorShape>PointingHandCursor</cursorShape>
           </property>
           <property name="text">
-           <string>📅 Trier par date</string>
+           <string>💼 Trier par poste</string>
           </property>
           <property name="class" stdset="0">
            <string>secondaryBtn</string>
@@ -426,7 +415,7 @@
            </string>
           </property>
           <property name="text">
-           <string>📄 Exporter PDF</string>
+           <string>📄 Attestation PDF</string>
           </property>
          </widget>
         </item>
@@ -454,7 +443,7 @@
         </attribute>
         <column>
          <property name="text">
-          <string>ID fournisseur</string>
+          <string>ID employé</string>
          </property>
         </column>
         <column>
@@ -464,12 +453,12 @@
         </column>
         <column>
          <property name="text">
-          <string>prenom</string>
+          <string>Prénom</string>
          </property>
         </column>
         <column>
          <property name="text">
-          <string>téléphone</string>
+          <string>Téléphone</string>
          </property>
         </column>
         <column>
@@ -515,12 +504,12 @@
               <string notr="true">color: #5C3826;</string>
              </property>
              <property name="text">
-              <string>📈 Statistiques par domaine e-mail (Courbe)</string>
+              <string>📈 Statistiques par année d'embauche</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="CurveStatsWidget" name="widgetCurve" native="true">
+            <widget class="QWidget" name="widgetCurve" native="true">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -575,7 +564,7 @@
               <string notr="true">color: #D3455B;</string>
              </property>
              <property name="text">
-              <string>Fournisseurs enregistrés</string>
+              <string>Employés enregistrés</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -595,7 +584,7 @@
               <string notr="true">color: #D3455B;</string>
              </property>
              <property name="text">
-              <string>3</string>
+              <string>0</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -608,7 +597,7 @@
               <string notr="true">color: #7D6658; font-size: 11px;</string>
              </property>
              <property name="text">
-              <string>commandes en attente ⚠️</string>
+              <string>employés enregistrés</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -633,7 +622,7 @@
               </string>
              </property>
              <property name="text">
-              <string>Total: 1450</string>
+              <string>Avec e-mail : 0</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -651,13 +640,13 @@
      <widget class="QFrame" name="formFrame">
       <property name="minimumSize">
        <size>
-        <width>310</width>
+        <width>330</width>
         <height>0</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>330</width>
+        <width>360</width>
         <height>16777215</height>
        </size>
       </property>
@@ -672,7 +661,7 @@
       </property>
       <layout class="QVBoxLayout" name="formVLayout">
        <property name="spacing">
-        <number>9</number>
+        <number>6</number>
        </property>
        <property name="leftMargin">
         <number>14</number>
@@ -704,7 +693,7 @@
           </string>
          </property>
          <property name="text">
-          <string>+ Fournisseur</string>
+          <string>+ Employé</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -738,19 +727,21 @@
           </string>
          </property>
          <property name="text">
-          <string>📦</string>
+          <string>👤</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignmentFlag::AlignCenter</set>
          </property>
         </widget>
        </item>
+
+       <!-- ID employé -->
        <item>
         <layout class="QHBoxLayout" name="rowIdLayout">
          <item>
           <widget class="QLabel" name="tagId">
            <property name="text">
-           <string>ID Fournisseur</string>
+            <string>ID Employé</string>
            </property>
            <property name="class" stdset="0">
             <string>formTag</string>
@@ -760,18 +751,23 @@
          <item>
           <widget class="QLineEdit" name="txtId">
            <property name="placeholderText">
-            <string>Ex: CMD-2026-01</string>
+            <string>Auto-généré</string>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
         </layout>
        </item>
+
+       <!-- Nom -->
        <item>
-        <layout class="QHBoxLayout" name="rowDateLayout">
+        <layout class="QHBoxLayout" name="rowNomLayout">
          <item>
-          <widget class="QLabel" name="tagDate">
+          <widget class="QLabel" name="tagNom">
            <property name="text">
-           <string>Nom </string>
+            <string>Nom</string>
            </property>
            <property name="class" stdset="0">
             <string>formTag</string>
@@ -783,12 +779,14 @@
          </item>
         </layout>
        </item>
+
+       <!-- Prénom -->
        <item>
-        <layout class="QHBoxLayout" name="rowMontantLayout">
+        <layout class="QHBoxLayout" name="rowPrenomLayout">
          <item>
-          <widget class="QLabel" name="tagMontant">
+          <widget class="QLabel" name="tagPrenom">
            <property name="text">
-           <string>prenom</string>
+            <string>Prénom</string>
            </property>
            <property name="class" stdset="0">
             <string>formTag</string>
@@ -800,12 +798,14 @@
          </item>
         </layout>
        </item>
+
+       <!-- Téléphone -->
        <item>
-        <layout class="QHBoxLayout" name="rowTypeLayout">
+        <layout class="QHBoxLayout" name="rowTelLayout">
          <item>
-          <widget class="QLabel" name="tagType">
+          <widget class="QLabel" name="tagTel">
            <property name="text">
-           <string>Tèlèphone:</string>
+            <string>Téléphone</string>
            </property>
            <property name="class" stdset="0">
             <string>formTag</string>
@@ -817,12 +817,14 @@
          </item>
         </layout>
        </item>
+
+       <!-- Mail -->
        <item>
-        <layout class="QHBoxLayout" name="rowQteLayout">
+        <layout class="QHBoxLayout" name="rowMailLayout">
          <item>
-          <widget class="QLabel" name="tagQte">
+          <widget class="QLabel" name="tagMail">
            <property name="text">
-           <string>Mail</string>
+            <string>Mail</string>
            </property>
            <property name="class" stdset="0">
             <string>formTag</string>
@@ -834,9 +836,321 @@
          </item>
         </layout>
        </item>
+
+       <!-- Adresse -->
        <item>
-        <layout class="QHBoxLayout" name="rowEtatLayout"/>
+        <layout class="QHBoxLayout" name="rowAdresseLayout">
+         <item>
+          <widget class="QLabel" name="tagAdresse">
+           <property name="text">
+            <string>Adresse</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>formTag</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit_5"/>
+         </item>
+        </layout>
        </item>
+
+       <!-- Date d'embauche -->
+       <item>
+        <layout class="QHBoxLayout" name="rowEmbaucheLayout">
+         <item>
+          <widget class="QLabel" name="tagEmbauche">
+           <property name="text">
+            <string>Embauche</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>formTag</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDateEdit" name="dateEditEmbauche">
+           <property name="displayFormat">
+            <string>dd/MM/yyyy</string>
+           </property>
+           <property name="calendarPopup">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+
+       <!-- Poste -->
+       <item>
+        <layout class="QHBoxLayout" name="rowPosteLayout">
+         <item>
+          <widget class="QLabel" name="tagPoste">
+           <property name="text">
+            <string>Poste</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>formTag</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="comboPoste">
+           <item>
+            <property name="text">
+             <string>Vétérinaire</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Assistant vétérinaire</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Responsable RH</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Caissier</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Gestionnaire de stock</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Administrateur</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </item>
+
+       <!-- Date de naissance -->
+       <item>
+        <layout class="QHBoxLayout" name="rowNaissanceLayout">
+         <item>
+          <widget class="QLabel" name="tagNaissance">
+           <property name="text">
+            <string>Naissance</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>formTag</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDateEdit" name="dateEditNaissance">
+           <property name="displayFormat">
+            <string>dd/MM/yyyy</string>
+           </property>
+           <property name="calendarPopup">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+
+       <!-- Mot de passe -->
+       <item>
+        <layout class="QHBoxLayout" name="rowPwdLayout">
+         <item>
+          <widget class="QLabel" name="tagPwd">
+           <property name="text">
+            <string>Mot de passe</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>formTag</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEditMotDePasse">
+           <property name="echoMode">
+            <enum>QLineEdit::EchoMode::Password</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+
+       <!-- Question secrète -->
+       <item>
+        <layout class="QHBoxLayout" name="rowQuestionLayout">
+         <item>
+          <widget class="QLabel" name="tagQuestion">
+           <property name="text">
+            <string>Question</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>formTag</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="comboQuestion">
+           <item>
+            <property name="text">
+             <string>Nom de votre premier animal ?</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Ville de naissance ?</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Nom de votre mère ?</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Plat préféré ?</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+        </layout>
+       </item>
+
+       <!-- Réponse -->
+       <item>
+        <layout class="QHBoxLayout" name="rowReponseLayout">
+         <item>
+          <widget class="QLabel" name="tagReponse">
+           <property name="text">
+            <string>Réponse</string>
+           </property>
+           <property name="class" stdset="0">
+            <string>formTag</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEditReponse"/>
+         </item>
+        </layout>
+       </item>
+
+       <!-- ============================================================ -->
+       <!--  SECTION QR CODE                                              -->
+       <!-- ============================================================ -->
+       <item>
+        <widget class="QFrame" name="qrFrame">
+         <property name="class" stdset="0">
+          <string>cardFrame</string>
+         </property>
+         <layout class="QVBoxLayout" name="qrVLayout">
+          <property name="spacing">
+           <number>6</number>
+          </property>
+          <property name="leftMargin">
+           <number>8</number>
+          </property>
+          <property name="topMargin">
+           <number>8</number>
+          </property>
+          <property name="rightMargin">
+           <number>8</number>
+          </property>
+          <property name="bottomMargin">
+           <number>8</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="lblQrTitle">
+            <property name="font">
+             <font>
+              <family>Segoe UI</family>
+              <pointsize>10</pointsize>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: #5C3826;</string>
+            </property>
+            <property name="text">
+             <string>🔳 QR Code Employé</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblQrImage">
+            <property name="minimumSize">
+             <size>
+              <width>180</width>
+              <height>180</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>180</width>
+              <height>180</height>
+             </size>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">
+              background-color: #FFFDF9;
+              border: 1px solid #EFE4DC;
+              border-radius: 8px;
+              color: #A08B7E;
+              font-size: 10px;
+             </string>
+            </property>
+            <property name="text">
+             <string>Sélectionnez un employé</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblQrInfo">
+            <property name="styleSheet">
+             <string notr="true">color: #5C3826; font-size: 10px;</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnSaveQr">
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="text">
+             <string>💾 Enregistrer QR</string>
+            </property>
+            <property name="class" stdset="0">
+             <string>secondaryBtn</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <!-- ============================================================ -->
+       <!--  FIN SECTION QR CODE                                          -->
+       <!-- ============================================================ -->
+
        <item>
         <spacer name="formSpacer">
          <property name="orientation">
@@ -920,14 +1234,6 @@
    </layout>
   </widget>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>CurveStatsWidget</class>
-   <extends>QWidget</extends>
-   <header>curvestatswidget.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="resources.qrc"/>
  </resources>

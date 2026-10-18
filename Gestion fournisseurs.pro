@@ -1,19 +1,25 @@
-QT       += core gui widgets printsupport
+QT       += core gui widgets printsupport sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
 
+# libqrencode (vcpkg - MinGW static)
+LIBS += -L"C:/Users/ASUS/Desktop/Qt/GestionCommandes/vcpkg/installed/x64-mingw-static/lib" -lqrencode
+INCLUDEPATH += "C:/Users/ASUS/Desktop/Qt/GestionCommandes/vcpkg/installed/x64-mingw-static/include"
+
 SOURCES += \
+    connection.cpp \
+    employe.cpp \
     main.cpp \
     mainwindow.cpp \
-    commande.cpp \
-    curvestatswidget.cpp
+    qrcodegenerator.cpp
 
 HEADERS += \
+    connection.h \
+    employe.h \
     mainwindow.h \
-    commande.h \
-    curvestatswidget.h
+    qrcodegenerator.h
 
 FORMS += \
     mainwindow.ui
