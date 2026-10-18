@@ -19,11 +19,15 @@ Connection& Connection::createInstance()
 
 bool Connection::createConnection()
 {
-    // Source ODBC utilisateur 64 bits configuree dans Windows.
+    
     db.setDatabaseName("Source_Projet2A");
     db.setUserName("slim");
-    db.setPassword(qEnvironmentVariable("DB_PASSWORD"));
-
+    const QString password = qEnvironmentVariable("DB_PASSWORD");
+    if (password.isEmpty()) {
+        qCritical() << "Connexion impossible : DB_PASSWORD n'est pas configurée.";
+        return false;
+    }
+    db.setPassword(password);
     if (db.open()) {
         qDebug() << "Connexion etablie";
         return true;

@@ -14,8 +14,7 @@ HEADERS += \
 FORMS += \
     gestionrendezvous.ui
 
-# Decommente si tu as un fichier resources.qrc dans le dossier
-# RESOURCES += resources.qrc
+RESOURCES += resources.qrc
 
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin

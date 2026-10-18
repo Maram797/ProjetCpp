@@ -1,767 +1,264 @@
 #include "gestionrendezvous.h"
 #include "ui_gestionrendezvous.h"
 
-#include <QAction>
 #include <QActionGroup>
-#include <QButtonGroup>
-#include <QCoreApplication>
-#include <QDateTime>
-#include <QDebug>
-#include <QDir>
-#include <QFileDialog>
-#include <QFile>
-#include <QFontMetrics>
-#include <QLabel>
-#include <QMap>
-#include <QPageSize>
-#include <QLineEdit>
-#include <QMenu>
-#include <QMenuBar>
-#include <QMessageBox>
-#include <QPainter>
-#include <QPainterPath>
-#include <QPixmap>
 #include <QPdfWriter>
-#include <QPushButton>
-#include <QRegularExpression>
-#include <QRegularExpressionValidator>
 #include <QSaveFile>
-#include <QSqlDatabase>
-#include <QSqlError>
-#include <QSqlQuery>
-#include <QScrollArea>
-#include <QScrollBar>
-#include <QStandardPaths>
-#include <QStatusBar>
-#include <QTextEdit>
-#include <QTextDocument>
-#include <QTimer>
-#include <QVBoxLayout>
+#include <QtSql>
+#include <QtWidgets>
 #include <algorithm>
-#include <cctype>
-#include <string>
-#include <sstream>
-#include <iostream>
-
-using std::string;
-using std::ostringstream;
-using std::cout;
-using std::endl;
+#include <functional>
 
 class AppointmentChart : public QWidget
 {
 public:
-    explicit AppointmentChart(QWidget *parent = nullptr)
-        : QWidget(parent)
-    {
-        setAttribute(Qt::WA_TransparentForMouseEvents);
-        setStyleSheet("background: transparent;");
-    }
-
+    explicit AppointmentChart(QWidget *parent = nullptr) : QWidget(parent) { setAttribute(Qt::WA_TransparentForMouseEvents); }
     void setAppointments(const QVector<Patient> &patients)
     {
-        QMap<QDate, QPair<int, int>> parDate;
-        for (const Patient &patient : patients) {
-            auto &compte = parDate[patient.date];
-            ++compte.first;
-            if (patient.rendezVousRealise)
-                ++compte.second;
-        }
-
-        m_dates = parDate.keys().toVector();
-        m_totaux.clear();
-        m_realises.clear();
-        for (const QDate &date : qAsConst(m_dates)) {
-            m_totaux.append(parDate.value(date).first);
-            m_realises.append(parDate.value(date).second);
-        }
+        QMap<QDate, QPair<int, int>> days;
+        for (const Patient &p : patients) { ++days[p.date].first; if (p.rendezVousRealise) ++days[p.date].second; }
+        m_dates = days.keys().toVector(); m_done.clear(); m_maxTotal = 0;
+        for (const QDate &date : m_dates) { m_maxTotal = qMax(m_maxTotal, days[date].first); m_done << days[date].second; }
         update();
     }
-
 protected:
     void paintEvent(QPaintEvent *) override
     {
-        QPainter painter(this);
-        painter.setRenderHint(QPainter::Antialiasing);
-
-        const QRectF plot(30, 5, width() - 45, height() - 22);
-        painter.setPen(QPen(QColor("#F3E6DC"), 1));
-        painter.drawLine(plot.bottomLeft(), plot.bottomRight());
-
-        if (m_dates.isEmpty())
-            return;
-
-        const int maximum = qMax(1, *std::max_element(m_totaux.cbegin(), m_totaux.cend()));
-        auto pointAt = [&](int index, int value) {
-            const qreal x = m_dates.size() == 1
-                ? plot.center().x()
-                : plot.left() + plot.width() * index / (m_dates.size() - 1);
-            const qreal y = plot.bottom() - plot.height() * value / maximum;
-            return QPointF(x, y);
-        };
-        auto drawSeries = [&](const QVector<int> &values, const QColor &color) {
-            QPainterPath path;
-            for (int i = 0; i < values.size(); ++i) {
-                const QPointF point = pointAt(i, values.at(i));
-                if (i == 0)
-                    path.moveTo(point);
-                else
-                    path.lineTo(point);
-            }
-            painter.setPen(QPen(color, 2));
-            painter.setBrush(Qt::NoBrush);
-            painter.drawPath(path);
-            painter.setBrush(color);
-            for (int i = 0; i < values.size(); ++i)
-                painter.drawEllipse(pointAt(i, values.at(i)), 3, 3);
-        };
-
-        drawSeries(m_totaux, QColor("#A98268"));
-        drawSeries(m_realises, QColor("#2E7D46"));
-
-        painter.setPen(QColor("#A98268"));
-        const int labelStep = qMax(1, m_dates.size() / 6);
-        for (int i = 0; i < m_dates.size(); i += labelStep) {
-            const QPointF point = pointAt(i, 0);
-            painter.drawText(QRectF(point.x() - 25, plot.bottom() + 3, 50, 16),
-                             Qt::AlignHCenter | Qt::AlignTop,
-                             m_dates.at(i).toString("dd/MM"));
+        QPainter p(this); const QRectF plot(42, 12, width() - 58, height() - 30);
+        p.setRenderHint(QPainter::Antialiasing); p.setPen(QColor("#6B3F2E"));
+        p.drawLine(plot.bottomLeft(), plot.topLeft()); p.drawLine(plot.bottomLeft(), plot.bottomRight());
+        if (m_dates.isEmpty()) return;
+        const int maximum = qMax(1, m_maxTotal);
+        QVector<QPointF> points;
+        for (int i = 0; i < m_dates.size(); ++i) {
+            const qreal x = m_dates.size() == 1 ? plot.center().x() : plot.left() + plot.width() * i / (m_dates.size() - 1);
+            points << QPointF(x, plot.bottom() - plot.height() * m_done[i] / maximum);
         }
+        p.setPen(QPen(QColor("#E77C8D"), 2)); p.drawPolyline(points.constData(), points.size());
+        p.setBrush(QColor("#E77C8D"));
+        for (const QPointF &point : points) p.drawEllipse(point, 2.5, 2.5);
+        p.setPen(QColor("#A98268")); const int step = qMax(1, m_dates.size() / 6);
+        for (int i = 0; i < m_dates.size(); i += step)
+            p.drawText(QRectF(points[i].x() - 25, plot.bottom() + 2, 50, 12), Qt::AlignHCenter, m_dates[i].toString("dd/MM"));
     }
-
 private:
     QVector<QDate> m_dates;
-    QVector<int> m_totaux;
-    QVector<int> m_realises;
+    QVector<int> m_done;
+    int m_maxTotal = 0;
 };
 
-// =====================  CLASSE charte  =====================
 
-charte::charte()
+static const QString FORMAT_DATE = QStringLiteral("dd/MM/yyyy"), FORMAT_HEURE = QStringLiteral("HH:mm"),
+    SQL_FORMAT_HEURE = QStringLiteral("YYYY-MM-DD HH24:MI:SS.FF6"), SQL_FORMAT_DATE = QStringLiteral("YYYY-MM-DD");
+
+static QString U(const char *s) { return QString::fromUtf8(s); }
+static QString numeroDossier(qint64 id) { return QString("DOS-%1-%2").arg(QDate::currentDate().year()).arg(id, 4, 10, QChar('0')); }
+
+static QString statusStyle(const QString &type)
 {
-    fondPrincipal   = "#FFF9F4";
-    fondSidebar     = "#FBF4EE";
-    texteBrun       = "#6B3F2E";
-    texteSecondaire = "#A98268";
-    bordure         = "#F3E6DC";
-    survol          = "#F9DEE4";
-    accent          = "#E77C8D";
-    police          = "Arial";
-    tailleTitre     = 20;
-    tailleTexte     = 12;
-    taillePetit     = 10;
-    rayon           = 8;
+    const bool success = type == "succes", alert = type == "alerte";
+    return QString("QLabel { background: %1; color: %2; border-radius: 10px; font-weight: bold; }")
+        .arg(success ? "#DDF3E4" : alert ? "#FCE1E5" : "#F3E6DC", success ? "#2E7D46" : alert ? "#C0394C" : "#6B3F2E");
 }
 
-charte::charte(string txt, string fond, string acc)
-{
-    fondPrincipal   = fond;
-    fondSidebar     = "#FBF4EE";
-    texteBrun       = txt;
-    texteSecondaire = "#A98268";
-    bordure         = "#F3E6DC";
-    survol          = "#F9DEE4";
-    accent          = acc;
-    police          = "Arial";
-    tailleTitre     = 20;
-    tailleTexte     = 12;
-    taillePetit     = 10;
-    rayon           = 8;
-}
-
-charte::charte(string fp, string fs, string tb, string ts, string bd,
-               string sv, string ac, string pol, int tt, int tx, int tp, int r)
-{
-    fondPrincipal = fp;  fondSidebar = fs;  texteBrun = tb;  texteSecondaire = ts;
-    bordure = bd;  survol = sv;  accent = ac;  police = pol;
-    tailleTitre = tt;  tailleTexte = tx;  taillePetit = tp;  rayon = r;
-}
-
-string charte::enTexte(int n) const
-{
-    ostringstream flux;
-    flux << n;
-    return flux.str();
-}
-
-string charte::couleurStatut(string type, bool fond) const
-{
-    if (type == "succes") return fond ? "#DDF3E4" : "#2E7D46";
-    if (type == "alerte") return fond ? "#FCE1E5" : "#C0394C";
-    return fond ? bordure : texteBrun;   // neutre
-}
-
-string charte::styleCadre(string nom, string couleurFond) const
-{
-    return "QFrame#" + nom + " {\n"
-                             "    background-color: " + couleurFond + ";\n"
-                           "    border: 1px solid " + bordure + ";\n"
-                       "    border-radius: " + enTexte(rayon + 2) + "px;\n}";
-}
-
-string charte::styleBoutonMenu(string nom) const
-{
-    return "QPushButton#" + nom + " {\n"
-                                  "    background-color: transparent;\n"
-                                  "    color: " + texteBrun + ";\n"
-                         "    border: none;\n"
-                         "    border-radius: " + enTexte(rayon) + "px;\n"
-                              "    text-align: left;\n"
-                              "    padding-left: 15px;\n"
-                              "    font-family: " + police + ";\n"
-                      "    font-size: 13px;\n"
-                      "    font-weight: bold;\n}\n"
-                      "QPushButton#" + nom + ":hover { background-color: " + survol + "; }\n"
-                                                            "QPushButton#" + nom + ":pressed { background-color: " + accent + "; color: white; }";
-}
-
-string charte::styleBoutonPrincipal(string nom) const
-{
-    return "QPushButton#" + nom + " {\n"
-                                  "    background-color: " + texteBrun + ";\n"
-                         "    color: white;\n"
-                         "    border: none;\n"
-                         "    border-radius: " + enTexte(rayon) + "px;\n"
-                              "    font-size: " + enTexte(tailleTexte) + "px;\n"
-                                    "    font-weight: bold;\n}\n"
-                                    "QPushButton#" + nom + ":hover { background-color: #5A3225; }";
-}
-
-string charte::styleLabel(string nom, string type) const
-{
-    string couleur = texteBrun, gras = "normal";
-    int taille = tailleTexte;
-    if (type == "titre")           { taille = tailleTitre; gras = "bold"; }
-    else if (type == "sous-titre") { couleur = texteSecondaire; taille = taillePetit + 1; }
-    else if (type == "section")    { gras = "bold"; }
-    else if (type == "rubrique")   { taille = tailleTexte + 2; gras = "bold"; }
-    else if (type == "nom")        { taille = tailleTitre - 2; gras = "bold"; }
-    else if (type == "valeur")     { taille = tailleTexte + 4; gras = "bold"; }
-    else if (type == "texte")      { taille = taillePetit + 1; }
-    else if (type == "petit")      { couleur = texteSecondaire; taille = taillePetit; }
-    else if (type == "etiquette")  { couleur = texteSecondaire; taille = taillePetit; gras = "bold"; }
-    else if (type == "accent")     { couleur = accent; taille = taillePetit + 1; }
-
-    return "QLabel#" + nom + " {\n"
-                             "    color: " + couleur + ";\n"
-                       "    font-size: " + enTexte(taille) + "px;\n"
-                               "    font-weight: " + gras + ";\n"
-                    "    background-color: transparent;\n}";
-}
-
-string charte::styleStatut(string nom, string type) const
-{
-    return "QLabel#" + nom + " {\n"
-                             "    background-color: " + couleurStatut(type, true) + ";\n"
-                                         "    color: " + couleurStatut(type, false) + ";\n"
-                                          "    font-size: " + enTexte(taillePetit) + "px;\n"
-                                    "    font-weight: bold;\n"
-                                    "    border-radius: 10px;\n}";
-}
-
-string charte::styleChampTexte(string nom) const
-{
-    return "QLineEdit#" + nom + " {\n"
-                                "    background-color: white;\n"
-                                "    color: " + texteBrun + ";\n"
-                         "    border: 1px solid " + bordure + ";\n"
-                       "    border-radius: 20px;\n"
-                       "    padding-left: 15px;\n"
-                       "    font-size: " + enTexte(tailleTexte) + "px;\n}";
-}
-
-string charte::styleFond(string nom, string zone) const
-{
-    string couleur = (zone == "sidebar") ? fondSidebar : fondPrincipal;
-    return "QFrame#" + nom + " {\n"
-                             "    background-color: " + couleur + ";\n"
-                       "    border: none;\n}";
-}
-
-string charte::styleCarte(string nom) const
-{
-    return "QFrame#" + nom + " {\n"
-                             "    background-color: #FDFBF9;\n"
-                             "    border: 1px solid " + bordure + ";\n"
-                       "    border-radius: " + enTexte(rayon) + "px;\n}";
-}
-
-string charte::styleBoutonSecondaire(string nom, bool aligneGauche) const
-{
-    string s = "QPushButton#" + nom + " {\n"
-                                      "    background-color: white;\n"
-                                      "    color: " + texteBrun + ";\n"
-                             "    border: 1px solid " + bordure + ";\n"
-                           "    border-radius: " + enTexte(rayon) + "px;\n"
-                                  "    font-size: " + enTexte(tailleTexte) + "px;\n"
-                                        "    font-weight: bold;\n";
-    if (aligneGauche)
-        s += "    text-align: left;\n    padding-left: 12px;\n";
-    s += "}\nQPushButton#" + nom + ":hover { background-color: " + survol + "; }";
-    if (aligneGauche)
-        s += "\nQPushButton#" + nom + "::menu-indicator { right: 10px; }";
-    return s;
-}
-
-string charte::styleBoutonPatient(string nom) const
-{
-    return "QPushButton#" + nom + " {\n"
-                                  "    background-color: transparent;\n"
-                                  "    color: " + texteBrun + ";\n"
-                         "    border: none;\n"
-                         "    border-radius: " + enTexte(rayon) + "px;\n"
-                              "    text-align: left;\n"
-                              "    padding-left: 55px;\n"
-                              "    font-size: " + enTexte(tailleTexte) + "px;\n"
-                                    "    font-weight: bold;\n}\n"
-                                    "QPushButton#" + nom + ":hover { background-color: " + survol + "; }\n"
-                                                            "QPushButton#" + nom + ":checked { background-color: " + survol + "; }";
-}
-
-string charte::styleAvatar(string nom, int diametre, bool accentue) const
-{
-    string s = "QLabel#" + nom + " {\n"
-                                 "    background-color: " + (accentue ? accent : bordure) + ";\n";
-    if (accentue)
-        s += "    color: white;\n    font-weight: bold;\n";
-    s += "    border-radius: " + enTexte(diametre / 2) + "px;\n}";
-    return s;
-}
-
-string charte::styleZoneTexte(string nom) const
-{
-    return "QTextEdit#" + nom + " {\n"
-                                "    background-color: #FDFBF9;\n"
-                                "    border: 1px solid " + bordure + ";\n"
-                       "    border-radius: " + enTexte(rayon) + "px;\n"
-                              "    color: " + texteBrun + ";\n"
-                         "    font-size: " + enTexte(taillePetit + 1) + "px;\n"
-                                        "    padding: 6px;\n}";
-}
-
-string charte::styleSidebar(string nom) const
-{
-    return "QFrame#" + nom + " {\n"
-                             "    background-color: " + fondSidebar + ";\n"
-                           "    border: 2px solid " + accent + ";\n}";
-}
-
-string charte::styleChampDiscret(string nom, string type) const
-{
-    const int taille = (type == "nom") ? tailleTitre - 2 : tailleTexte + 2;
-    return "QLineEdit#" + nom + " {\n"
-                                "    background-color: transparent;\n"
-                                "    color: " + texteBrun + ";\n"
-                         "    border: none;\n"
-                         "    border-bottom: 1px solid transparent;\n"
-                         "    padding: 0px;\n"
-                         "    font-size: " + enTexte(taille) + "px;\n"
-                               "    font-weight: bold;\n}\n"
-                               "QLineEdit#" + nom + ":hover { border-bottom: 1px dashed " + texteSecondaire + "; }\n"
-                                                                             "QLineEdit#" + nom + ":focus { border-bottom: 1px solid " + accent + "; }";
-}
-
-string charte::styleMenu(string nom) const
-{
-    return "QMenu#" + nom + " {\n"
-                            "    background-color: white;\n"
-                            "    color: " + texteBrun + ";\n"
-                         "    border: 1px solid " + bordure + ";\n"
-                       "    border-radius: " + enTexte(rayon) + "px;\n"
-                              "    padding: 4px;\n"
-                              "    font-size: " + enTexte(tailleTexte) + "px;\n}\n"
-                                    "QMenu#" + nom + "::item { padding: 6px 22px 6px 28px; border-radius: 6px; }\n"
-                   "QMenu#" + nom + "::item:selected { background-color: " + survol + "; color: " + texteBrun + "; }\n"
-                                                                                               "QMenu#" + nom + "::item:checked { font-weight: bold; }\n"
-                   "QMenu#" + nom + "::indicator { left: 8px; width: 12px; height: 12px; }";
-}
-
-string charte::styleScrollListe(string nom) const
-{
-    return "QScrollArea#" + nom + " { background: transparent; border: none; }\n"
-                                  "QScrollArea#" + nom + " QWidget#qt_scrollarea_viewport { background: transparent; }\n"
-                   "QScrollArea#" + nom + " QWidget#patientsContainer { background: transparent; }\n"
-                   "QScrollArea#" + nom + " QScrollBar:vertical { background: transparent; width: 8px; margin: 0; }\n"
-                   "QScrollArea#" + nom + " QScrollBar::handle:vertical { background: " + bordure + "; border-radius: 4px; min-height: 24px; }\n"
-                                                                             "QScrollArea#" + nom + " QScrollBar::add-line:vertical, QScrollArea#" + nom + " QScrollBar::sub-line:vertical { height: 0px; }\n"
-                                                                          "QScrollArea#" + nom + " QScrollBar::add-page:vertical, QScrollArea#" + nom + " QScrollBar::sub-page:vertical { background: transparent; }";
-}
-
-void charte::afficher() const
-{
-    cout << "===== CHARTE GRAPHIQUE =====" << endl;
-    cout << "Fond principal   : " << fondPrincipal << endl;
-    cout << "Fond sidebar     : " << fondSidebar << endl;
-    cout << "Texte principal  : " << texteBrun << endl;
-    cout << "Texte secondaire : " << texteSecondaire << endl;
-    cout << "Bordure          : " << bordure << endl;
-    cout << "Survol           : " << survol << endl;
-    cout << "Accent           : " << accent << endl;
-    cout << "Police           : " << police << endl;
-    cout << "Tailles (titre/texte/petit) : " << tailleTitre << "/"
-         << tailleTexte << "/" << taillePetit << " px" << endl;
-    cout << "Rayon des coins  : " << rayon << " px" << endl;
-}
-
-
-
-
-static QString qss(const std::string &s)
-{
-    return QString::fromStdString(s);
-}
-
-static const QString FORMAT_DATE  = QStringLiteral("dd/MM/yyyy");
-static const QString FORMAT_HEURE = QStringLiteral("HH:mm");
-
-// Raccourcit un texte pour qu'il tienne dans une ligne de la liste des patients
 static QString elide(const QString &texte, int largeur)
 {
-    QFont f;
-    f.setPixelSize(12);
-    f.setBold(true);
+    QFont f; f.setPixelSize(12); f.setBold(true);
     return QFontMetrics(f).elidedText(texte, Qt::ElideRight, largeur);
 }
 
-// Critere de tri : "a est-il avant b ?"
-static bool avant(const Patient &a, const Patient &b, int critere)
+static bool estRealise(const QString &texte)
 {
-    auto parHeure = [](const Patient &x, const Patient &y) {
-        return QDateTime(x.date, x.heure) < QDateTime(y.date, y.heure);
-    };
-    auto rang = [](const Patient &p) {          // alerte < neutre < succes
-        return p.statutType == "alerte" ? 0 : (p.statutType == "neutre" ? 1 : 2);
-    };
-
-    switch (critere) {
-    case 0:  return parHeure(a, b);
-    case 1:  return parHeure(b, a);
-    case 2:  return QString::localeAwareCompare(a.nom, b.nom) < 0;
-    case 3:  return QString::localeAwareCompare(b.nom, a.nom) < 0;
-    case 4:  return QString::localeAwareCompare(a.motif, b.motif) < 0;
-    case 5:  if (rang(a) != rang(b)) return rang(a) < rang(b);
-        return parHeure(a, b);
-    default: return a.id < b.id;
-    }
+    const QString s = texte.toLower();
+    return s.contains("réalis") || s.contains("realis") || s.contains("terminé") || s.contains("termine");
 }
 
-GestionRendezvous::GestionRendezvous(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::GestionRendezvous)
+
+static void echec(QWidget *parent, const char *titre, const char *message, const QString &detail)
+{
+    QMessageBox::critical(parent, U(titre), U(message).arg(detail));
+}
+
+template<class T>
+static bool validerChamp(QWidget *parent, QLineEdit *champ, const QString &format, const char *titre, const char *message, T &valeur)
+{
+    valeur = T::fromString(champ->text(), format);
+    if (valeur.isValid()) return true;
+    QMessageBox::warning(parent, U(titre), U(message)); champ->setFocus();
+    return false;
+}
+
+static bool avant(const Patient &a, const Patient &b, int critere)
+{
+    if (critere == 2 || critere == 3) {
+        const int c = QString::localeAwareCompare(a.motif, b.motif);
+        return critere == 2 ? c < 0 : c > 0;
+    }
+    return critere == 1 ? QDateTime(b.date, b.heure) < QDateTime(a.date, a.heure)
+                        : QDateTime(a.date, a.heure) < QDateTime(b.date, b.heure);
+}
+
+
+GestionRendezvous::GestionRendezvous(QWidget *parent) : QMainWindow(parent), ui(new Ui::GestionRendezvous)
 {
     ui->setupUi(this);
 
     ui->btnConsultations->setParent(ui->sideBar);
-    ui->btnConsultations->setMinimumSize(210, 45);
-    ui->btnConsultations->setGeometry(15, 250, 210, 45);
+    ui->btnConsultations->setMinimumSize(210, 45); ui->btnConsultations->setGeometry(15, 250, 210, 45);
     ui->btnConsultations->show();
     ui->searchBar->setParent(ui->mainContent);
-    ui->searchBar->setGeometry(20, 95, 420, 40);
-    ui->searchBar->setPlaceholderText(QString::fromUtf8("Rechercher..."));
+    ui->searchBar->setGeometry(20, 95, 420, 40); ui->searchBar->setPlaceholderText(U("Rechercher par motif..."));
     ui->searchBar->show();
-    ui->btnTrier->setGeometry(450, 95, 130, 40);
-    ui->pageTitle->setGeometry(20, 15, 350, 30);
-    ui->pageSubtitle->setGeometry(20, 45, 350, 18);
-    ui->patientsFrame->move(20, 135);
+    ui->btnTrier->setGeometry(450, 95, 130, 40); ui->pageTitle->setGeometry(20, 15, 350, 30);
+    ui->pageSubtitle->setGeometry(20, 45, 350, 18); ui->patientsFrame->move(20, 135);
     ui->selectedPatientFrame->move(340, 135);
     ui->appointmentStatsFrame->setGeometry(20, 610, 1020, 130);
     m_graphiqueRendezVous = new AppointmentChart(ui->appointmentStatsFrame);
-    m_graphiqueRendezVous->setGeometry(18, 44, 984, 78);
-    m_graphiqueRendezVous->show();
+    m_graphiqueRendezVous->setGeometry(18, 44, 984, 78); m_graphiqueRendezVous->show();
 
-    m_listeLayout = new QVBoxLayout(ui->patientsContainer);
-    m_listeLayout->setContentsMargins(10, 5, 6, 5);
-    m_listeLayout->setSpacing(10);
+    m_patientsContainer = new QWidget(ui->patientsFrame);
+    m_patientsContainer->setGeometry(6, 60, 288, 330);
+    m_patientsContainer->setAutoFillBackground(true); m_patientsContainer->setStyleSheet("background-color: white;");
+    m_listeLayout = new QVBoxLayout(m_patientsContainer);
+    m_listeLayout->setContentsMargins(10, 5, 6, 5); m_listeLayout->setSpacing(10);
+
+    
+    struct Action { QString texte; std::function<void()> fonction; };
+    const Action actions[] = {
+        {U("Modifier la fiche"), [this]() { modifierPatient(m_courant); }},
+        {U("En attente"), [this]() { setStatutPatient(m_courant, U("En attente"), "neutre"); }},
+        {U("Réalisé"), [this]() { setStatutPatient(m_courant, U("Réalisé"), "succes"); }}};
+    const QString actionStyle = QStringLiteral(
+        "QPushButton { background: #F3E6DC; color: #6B3F2E; border: none; border-radius: 6px; font-size: 10px; font-weight: bold; } "
+        "QPushButton:disabled { background: #F5F5F5; color: #A0A0A0; }");
+    auto *actionsWidget = new QWidget(ui->patientsFrame);
+    actionsWidget->setGeometry(2, 405, 296, 46);
+    auto *actionsLayout = new QHBoxLayout(actionsWidget);
+    actionsLayout->setContentsMargins(8, 0, 8, 0); actionsLayout->setSpacing(4);
+    for (const Action &a : actions) {
+        auto *bouton = new QPushButton(a.texte, actionsWidget);
+        bouton->setFixedHeight(36); bouton->setCursor(Qt::PointingHandCursor);
+        bouton->setStyleSheet(actionStyle); bouton->setEnabled(false);
+        actionsLayout->addWidget(bouton); m_actions << bouton;
+        connect(bouton, &QPushButton::clicked, this, a.fonction);
+    }
+
     m_groupe = new QButtonGroup(this);
-    m_groupe->setExclusive(true);
-
-    chargerLogo();
-    appliquerCharte();
-    configurerChamps();
-    configurerTri();
-
+    chargerLogo(); menuBar()->hide(); statusBar()->hide();
+    configurerChamps(); configurerTri();
+    connect(ui->searchBar, &QLineEdit::textChanged, this, [this](const QString &text) {
+        m_rechercheMotif = text.trimmed(); reconstruireListe();
+    });
     connect(ui->btnNouveauPatient, &QPushButton::clicked, this, &GestionRendezvous::nouveauPatient);
-    connect(ui->btnEnregistrer, &QPushButton::clicked,
-            this, &GestionRendezvous::enregistrerPatient);
-    connect(ui->btnExporterPreConsultation, &QPushButton::clicked,
-            this, &GestionRendezvous::exporterPreConsultationPdf);
+    connect(ui->btnEnregistrer, &QPushButton::clicked, this, &GestionRendezvous::enregistrerPatient);
+    connect(ui->btnExporterPreConsultation, &QPushButton::clicked, this, &GestionRendezvous::exporterPreConsultationPdf);
 
     chargerDepuisBase();
-    if (m_patients.isEmpty())   // base vide : patient de demonstration (non enregistre)
-        ajouterPatient(QString::fromUtf8("Milo"), QDate::currentDate(), QTime(9, 0));
     reconstruireListe();
-    selectionnerPatient(m_patients.first().id);
+    if (!m_patients.isEmpty()) selectionnerPatient(m_patients.first().id);
+    else {
+        afficherPatient(Patient());
+        ui->dossierLabel->setText(U("Aucun dossier sélectionné"));
+        for (QPushButton *bouton : m_actions) bouton->setEnabled(false);
+    }
 }
 
-GestionRendezvous::~GestionRendezvous()
-{
-    delete ui;
-}
-
+GestionRendezvous::~GestionRendezvous() { delete ui; }
 
 void GestionRendezvous::chargerLogo()
 {
-    const QString appDir = QCoreApplication::applicationDirPath();
-    const QString cwd    = QDir::currentPath();
-
-    QStringList candidats = {
-        ":/images/pawche.jpeg",            
-        ":/pawche.jpeg",
-        appDir + "/pawche.jpeg",           
-        appDir + "/images/pawche.jpeg",
-        cwd + "/pawche.jpeg",
-        cwd + "/images/pawche.jpeg",
-        "../../../Downloads/pawche.jpeg"   
-    };
-    const QStringList dl = QStandardPaths::standardLocations(QStandardPaths::DownloadLocation);
-    for (const QString &d : dl)
-        candidats << d + "/pawche.jpeg";
-
-    QPixmap pm;
-    for (const QString &c : qAsConst(candidats)) {
-        if (QFile::exists(c) && pm.load(c)) {
-            qInfo() << "Logo charge depuis" << c;
-            break;
-        }
-    }
-
-    QLabel *logo = ui->logoLabel;
-    logo->setAlignment(Qt::AlignCenter);
-    logo->setScaledContents(false);
-
-    if (!pm.isNull()) {
-        const qreal dpr = devicePixelRatioF();
-        QPixmap p = pm.scaled(logo->size() * dpr, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-        p.setDevicePixelRatio(dpr);
-        logo->setPixmap(p);
-    } else {
-        qWarning() << "Logo introuvable. Chemins essayes :" << candidats;
-        logo->setText(QString::fromUtf8("🐾  Pawche"));
-        logo->setStyleSheet(qss(m_charte.styleLabel("logoLabel", "titre")));
-    }
-}
-
-void GestionRendezvous::appliquer(const QString &nom, const std::string &style)
-{
-    if (QWidget *w = findChild<QWidget *>(nom))
-        w->setStyleSheet(qss(style));
-}
-
-void GestionRendezvous::appliquerCharte()
-{
-    const charte &c = m_charte;
-
-    if (QMenuBar *mb = findChild<QMenuBar *>())    mb->hide();
-    if (QStatusBar *sb = findChild<QStatusBar *>()) sb->hide();
-
-    appliquer("centralFrame", c.styleFond("centralFrame", "principal"));
-    appliquer("sideBar",      c.styleSidebar("sideBar"));      // cadre exterieur visible
-    appliquer("mainContent",  c.styleFond("mainContent", "sidebar"));
-
-    for (const char *n : {"btnAnimaux", "btnClients", "btnConsultations",
-                          "btnProduits", "btnCaisse"})
-        appliquer(n, c.styleBoutonMenu(n));
-
-    appliquer("searchBar",         c.styleChampTexte("searchBar"));
-    appliquer("btnCabinet",        c.styleBoutonSecondaire("btnCabinet"));
-    appliquer("btnNouveauPatient", c.styleBoutonPrincipal("btnNouveauPatient"));
-    appliquer("notifLabel",        c.styleLabel("notifLabel", "valeur"));
-    appliquer("avatarLabel",       c.styleAvatar("avatarLabel", 40, true));
-    appliquer("posteLabel",        c.styleLabel("posteLabel", "etiquette"));
-    appliquer("posteBadge",        c.styleStatut("posteBadge", "neutre"));
-    appliquer("salleLabel",        c.styleLabel("salleLabel", "sous-titre"));
-
-    appliquer("pageTitle",    c.styleLabel("pageTitle", "titre"));
-    appliquer("pageSubtitle", c.styleLabel("pageSubtitle", "sous-titre"));
-
-    // ----- Liste des patients du jour -----
-    appliquer("patientsFrame",      c.styleCadre("patientsFrame", "white"));
-    appliquer("patientsTitle",      c.styleLabel("patientsTitle", "rubrique"));
-    appliquer("patientsCountBadge", c.styleLabel("patientsCountBadge", "petit"));
-    appliquer("patientsScroll",     c.styleScrollListe("patientsScroll"));
-    appliquer("appointmentStatsFrame", c.styleCadre("appointmentStatsFrame", "white"));
-
-    appliquer("selectedPatientFrame", c.styleCadre("selectedPatientFrame", "white"));
-    appliquer("btnEnregistrer", c.styleBoutonPrincipal("btnEnregistrer"));
-    appliquer("btnExporterPreConsultation",
-              c.styleBoutonSecondaire("btnExporterPreConsultation"));
-    appliquer("btnTrier",        c.styleBoutonSecondaire("btnTrier", true));
-    appliquer("avatarSelected",  c.styleAvatar("avatarSelected", 60));
-    appliquer("patientName",     c.styleChampDiscret("patientName", "nom"));   // editable
-    appliquer("patientBreedAge", c.styleLabel("patientBreedAge", "sous-titre"));
-    appliquer("ownerLabel",      c.styleLabel("ownerLabel", "texte"));
-    appliquer("dossierLabel",    c.styleLabel("dossierLabel", "sous-titre"));
-    appliquer("genderLabel",     c.styleLabel("genderLabel", "accent"));
-
-    for (const char *k : {"date", "heure", "nom", "tel", "motif", "notes"}) {
-        const std::string key = k;
-        const std::string champ = std::string("champ") + char(std::toupper(k[0])) + (k + 1);
-        appliquer(QString::fromStdString(key + "Card"),    c.styleCarte(key + "Card"));
-        appliquer(QString::fromStdString(key + "Caption"), c.styleLabel(key + "Caption", "etiquette"));
-        appliquer(QString::fromStdString(champ),           c.styleChampDiscret(champ, "valeur"));
-    }
-
-    // zones de saisie
-    for (const char *n : {"motifTitle", "diagnosticTitle", "actesTitle"})
-        appliquer(n, c.styleLabel(n, "section"));
-    for (const char *n : {"motifText", "diagnosticText"})
-        appliquer(n, c.styleZoneTexte(n));
-    appliquer("actesSubtitle", c.styleLabel("actesSubtitle", "petit"));
+    QPixmap image;
+    for (const QString &chemin : {QString(":/images/pawche.jpeg"), QCoreApplication::applicationDirPath() + "/images/pawche.jpeg",
+                                  QDir::currentPath() + "/images/pawche.jpeg"})
+        if (image.load(chemin)) break;
+    ui->logoLabel->setAlignment(Qt::AlignCenter);
+    if (image.isNull()) ui->logoLabel->setText(U("🐾  Pawche"));
+    else ui->logoLabel->setPixmap(image.scaled(ui->logoLabel->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }
 
 void GestionRendezvous::configurerChamps()
 {
-    ui->champDate->setInputMask("00/00/0000;_");
-    ui->champHeure->setInputMask("00:00;_");
-    ui->champTel->setValidator(
-        new QRegularExpressionValidator(QRegularExpression("[0-9 +().\\-/]*"), this));
+    ui->champDate->setInputMask("00/00/0000;_"); ui->champHeure->setInputMask("00:00;_");
+    ui->champTel->setValidator(new QRegularExpressionValidator(QRegularExpression("[0-9 +().\\-/]*"), this));
     appliquerModeEdition(false);
 
-    connect(ui->patientName, &QLineEdit::textEdited, this, [this](const QString &t) {
-        if (!m_modeEdition) return;
-        if (Patient *p = patientCourant()) {
-            p->nom = t;
-            ui->champNom->setText(t);
+    
+    auto lier = [this](QLineEdit *champ, QString Patient::*membre, QLineEdit *miroir = nullptr) {
+        connect(champ, &QLineEdit::textEdited, this, [this, membre, miroir](const QString &texte) {
+            Patient *p = patientCourant();
+            if (!m_modeEdition || !p) return;
+            p->*membre = texte;
+            if (miroir) miroir->setText(texte);
             majLigne(p->id);
-        }
-    });
-    connect(ui->champNom, &QLineEdit::textEdited, this, [this](const QString &t) {
-        if (!m_modeEdition) return;
-        if (Patient *p = patientCourant()) {
-            p->nom = t;
-            ui->patientName->setText(t);
+        });
+    };
+    lier(ui->patientName, &Patient::nom, ui->champNom); lier(ui->champNom, &Patient::nom, ui->patientName);
+    lier(ui->champMotif, &Patient::motif); lier(ui->champTel, &Patient::telephone); lier(ui->champNotes, &Patient::notes);
+
+    
+    auto lierDateHeure = [this](QLineEdit *champ, auto membre, const QString &format) {
+        using T = std::decay_t<decltype(std::declval<Patient &>().*membre)>;
+        connect(champ, &QLineEdit::editingFinished, this, [this, champ, membre, format]() {
+            Patient *p = patientCourant();
+            if (!p || !m_modeEdition) return;
+            const T valeur = T::fromString(champ->text(), format);
+            if (valeur.isValid()) p->*membre = valeur;
+            else champ->setText((p->*membre).toString(format));
             majLigne(p->id);
-        }
-    });
+        });
+    };
+    lierDateHeure(ui->champDate, &Patient::date, FORMAT_DATE); lierDateHeure(ui->champHeure, &Patient::heure, FORMAT_HEURE);
 
-    connect(ui->champMotif, &QLineEdit::textEdited, this, [this](const QString &t) {
-        if (!m_modeEdition) return;
-        if (Patient *p = patientCourant()) { p->motif = t; majLigne(p->id); }
-    });
-    connect(ui->champTel, &QLineEdit::textEdited, this, [this](const QString &t) {
-        if (!m_modeEdition) return;
-        if (Patient *p = patientCourant()) p->telephone = t;
-    });
-    connect(ui->champNotes, &QLineEdit::textEdited, this, [this](const QString &t) {
-        if (!m_modeEdition) return;
-        if (Patient *p = patientCourant()) p->notes = t;
-    });
-
-    connect(ui->champDate, &QLineEdit::editingFinished, this, [this]() {
-        Patient *p = patientCourant();
-        if (!p || !m_modeEdition) return;
-        const QDate d = QDate::fromString(ui->champDate->text(), FORMAT_DATE);
-        if (d.isValid()) p->date = d;
-        else ui->champDate->setText(p->date.toString(FORMAT_DATE));
-        majLigne(p->id);
-    });
-    connect(ui->champHeure, &QLineEdit::editingFinished, this, [this]() {
-        Patient *p = patientCourant();
-        if (!p || !m_modeEdition) return;
-        const QTime t = QTime::fromString(ui->champHeure->text(), FORMAT_HEURE);
-        if (t.isValid()) p->heure = t;
-        else ui->champHeure->setText(p->heure.toString(FORMAT_HEURE));
-        majLigne(p->id);
-    });
-
-    connect(ui->motifText, &QTextEdit::textChanged, this, [this]() {
-        if (m_chargement || !m_modeEdition) return;
-        if (Patient *p = patientCourant()) p->constatations = ui->motifText->toPlainText();
-    });
-    connect(ui->diagnosticText, &QTextEdit::textChanged, this, [this]() {
-        if (m_chargement || !m_modeEdition) return;
-        if (Patient *p = patientCourant()) p->diagnostic = ui->diagnosticText->toPlainText();
-    });
+    auto lierLong = [this](QTextEdit *champ, QString Patient::*membre) {
+        connect(champ, &QTextEdit::textChanged, this, [this, champ, membre]() {
+            Patient *p = patientCourant();
+            if (m_modeEdition && p) p->*membre = champ->toPlainText();
+        });
+    };
+    lierLong(ui->motifText, &Patient::constatations); lierLong(ui->diagnosticText, &Patient::diagnostic);
 }
 
-// bouton Trier
 void GestionRendezvous::configurerTri()
 {
-    struct Option { const char *texte; int critere; };
-    const Option options[] = {
-                               { "Heure — plus tôt d'abord",   HeureCroissante },
-                               { "Heure — plus tard d'abord",  HeureDecroissante },
-                               { "Nom — A → Z",                NomAZ },
-                               { "Nom — Z → A",                NomZA },
-                               { "Motif — A → Z",              MotifAZ },
-                               { "Statut — urgents d'abord",   StatutUrgentsDabord },
-                               { "N° de dossier",              NumeroDossier },
-                               };
-
-    QMenu *menu = new QMenu(ui->btnTrier);
-    menu->setObjectName("menuTri");
-    menu->setStyleSheet(qss(m_charte.styleMenu("menuTri")));
-
-    QActionGroup *groupe = new QActionGroup(menu);
-    groupe->setExclusive(true);
-    for (const Option &o : options) {
-        QAction *a = menu->addAction(QString::fromUtf8(o.texte));
-        a->setCheckable(true);
-        a->setActionGroup(groupe);
-        a->setChecked(o.critere == m_critereTri);
-        const int critere = o.critere;
-        connect(a, &QAction::triggered, this, [this, critere]() { appliquerTri(critere); });
+    const struct { const char *texte; int critere; } options[] = {
+        {"Date/heure — plus tôt d'abord", HeureCroissante}, {"Date/heure — plus tard d'abord", HeureDecroissante},
+        {"Motif — A → Z", MotifAZ}, {"Motif — Z → A", MotifZA}};
+    auto *menu = new QMenu(ui->btnTrier);
+    auto *groupe = new QActionGroup(menu);
+    for (const auto &o : options) {
+        QAction *a = menu->addAction(U(o.texte));
+        a->setCheckable(true); a->setActionGroup(groupe); a->setChecked(o.critere == m_critereTri);
+        connect(a, &QAction::triggered, this, [this, critere = o.critere]() { m_critereTri = critere; reconstruireListe(); });
     }
     ui->btnTrier->setMenu(menu);
 }
 
-void GestionRendezvous::appliquerTri(int critere)
-{
-    m_critereTri = critere;
-    reconstruireListe();
-}
-
-// patients
-QString GestionRendezvous::genererDossier()
-{
-    
-    return QString("DOS-%1-%2").arg(QDate::currentDate().year())
-        .arg(m_dernierId, 4, 10, QChar('0'));
-}
 
 int GestionRendezvous::ajouterPatient(const QString &nom, const QDate &date, const QTime &heure)
 {
     Patient p;
-    p.id      = ++m_dernierId;
-    p.dossier = genererDossier();
-    p.nom     = nom;
-    p.date    = date;
-    p.heure   = heure;
+    p.id = ++m_dernierId; p.dossier = numeroDossier(p.id);
+    p.nom = nom; p.date = date; p.heure = heure;
     m_patients.append(p);
     return p.id;
 }
 
-Patient *GestionRendezvous::trouver(int id)
-{
-    for (Patient &p : m_patients)
-        if (p.id == id) return &p;
-    return nullptr;
-}
-
-Patient *GestionRendezvous::patientCourant()
-{
-    return trouver(m_courant);
-}
-
+Patient *GestionRendezvous::trouver(int id) { for (Patient &p : m_patients) if (p.id == id) return &p; return nullptr; }
+Patient *GestionRendezvous::patientCourant() { return trouver(m_courant); }
 
 void GestionRendezvous::nouveauPatient()
 {
-    const QTime maintenant = QTime::currentTime();
-    const int id = ajouterPatient(QString::fromUtf8("Nouveau patient"), QDate::currentDate(),
-                                  QTime(maintenant.hour(), maintenant.minute()));
-    m_courant = id;
+    const QTime t = QTime::currentTime();
+    const int id = ajouterPatient(U("Nouveau patient"), QDate::currentDate(), QTime(t.hour(), t.minute()));
     reconstruireListe();
-    selectionnerPatient(id);
-    appliquerModeEdition(true);
+    modifierPatient(id);
+}
 
-    // faire defiler jusqu'a la nouvelle ligne une fois la liste mise en page
-    QTimer::singleShot(0, this, [this, id]() {
-        if (QPushButton *b = findChild<QPushButton *>(QString("btnPatient%1").arg(id)))
-            ui->patientsScroll->ensureWidgetVisible(b);
-    });
-
-    ui->patientName->setFocus();
-    ui->patientName->selectAll();
+void GestionRendezvous::modifierPatient(int id)
+{
+    if (!trouver(id)) return;
+    selectionnerPatient(id); appliquerModeEdition(true);
+    ui->patientName->setFocus(); ui->patientName->selectAll();
 }
 
 void GestionRendezvous::selectionnerPatient(int id)
@@ -770,113 +267,76 @@ void GestionRendezvous::selectionnerPatient(int id)
     if (!p) return;
     appliquerModeEdition(false);
     m_courant = id;
-    if (QPushButton *b = findChild<QPushButton *>(QString("btnPatient%1").arg(id)))
-        b->setChecked(true);
+    for (QPushButton *bouton : m_actions) bouton->setEnabled(true);
+    if (auto *b = findChild<QPushButton *>(QString("btnPatient%1").arg(id))) b->setChecked(true);
     afficherPatient(*p);
 }
 
 void GestionRendezvous::afficherPatient(const Patient &p)
 {
-    m_chargement = true;
-    ui->patientName->setText(p.nom);
-    ui->champNom->setText(p.nom);
-    ui->champDate->setText(p.date.toString(FORMAT_DATE));
-    ui->champHeure->setText(p.heure.toString(FORMAT_HEURE));
-    ui->champMotif->setText(p.motif);
-    ui->champTel->setText(p.telephone);
-    ui->champNotes->setText(p.notes);
-    ui->motifText->setPlainText(p.constatations);
+    const QSignalBlocker bloqueMotif(ui->motifText), bloqueDiagnostic(ui->diagnosticText);
+    ui->patientName->setText(p.nom); ui->champNom->setText(p.nom);
+    ui->champDate->setText(p.date.toString(FORMAT_DATE)); ui->champHeure->setText(p.heure.toString(FORMAT_HEURE));
+    ui->champMotif->setText(p.motif); ui->champTel->setText(p.telephone);
+    ui->champNotes->setText(p.notes); ui->motifText->setPlainText(p.constatations);
     ui->diagnosticText->setPlainText(p.diagnostic);
+    ui->ownerLabel->setText(p.proprietaire.isEmpty()
+        ? U("Propriétaire : —") : U("Propriétaire : %1").arg(p.proprietaire));
     ui->dossierLabel->setText(QString("Dossier #%1").arg(p.dossier));
-    m_chargement = false;
 }
 
 void GestionRendezvous::appliquerModeEdition(bool actif)
 {
     m_modeEdition = actif;
-    ui->patientName->setReadOnly(!actif);
-    ui->champNom->setReadOnly(!actif);
-    ui->champDate->setReadOnly(!actif);
-    ui->champHeure->setReadOnly(!actif);
-    ui->champMotif->setReadOnly(!actif);
-    ui->champTel->setReadOnly(!actif);
-    ui->champNotes->setReadOnly(!actif);
-    ui->motifText->setReadOnly(!actif);
-    ui->diagnosticText->setReadOnly(!actif);
+    for (QLineEdit *f : {ui->patientName, ui->champNom, ui->champDate, ui->champHeure, ui->champMotif, ui->champTel, ui->champNotes})
+        f->setReadOnly(!actif);
+    for (QTextEdit *f : {ui->motifText, ui->diagnosticText}) f->setReadOnly(!actif);
     ui->btnEnregistrer->setEnabled(actif);
-    ui->btnEnregistrer->setText(actif
-        ? QString::fromUtf8("Enregistrer")
-        : QString::fromUtf8("Enregistré"));
+    ui->btnEnregistrer->setText(actif ? "Enregistrer" : "Enregistré");
 }
 
-//  liste des patients
+
 void GestionRendezvous::reconstruireListe()
 {
-    // 1. vider la liste
-    while (QLayoutItem *it = m_listeLayout->takeAt(0)) {
-        if (QWidget *w = it->widget()) {
-            if (auto *b = qobject_cast<QAbstractButton *>(w))
-                m_groupe->removeButton(b);
-            w->hide();
-            w->setParent(nullptr);
-            w->deleteLater();
-        }
-        delete it;
-    }
+    while (QLayoutItem *item = m_listeLayout->takeAt(0)) { delete item->widget(); delete item; }
 
-    //  ordre d'affichage selon le critere de tri
     QVector<int> ordre;
-    for (const Patient &p : qAsConst(m_patients))
-        ordre.append(p.id);
-    std::stable_sort(ordre.begin(), ordre.end(), [this](int a, int b) {
-        return avant(*trouver(a), *trouver(b), m_critereTri);
-    });
+    for (const Patient &p : m_patients)
+        if (m_rechercheMotif.isEmpty() || p.motif.contains(m_rechercheMotif, Qt::CaseInsensitive)) ordre << p.id;
+    std::stable_sort(ordre.begin(), ordre.end(), [this](int a, int b) { return avant(*trouver(a), *trouver(b), m_critereTri); });
 
-    // une ligne par patient : bouton + avatar + badge de statut
-    for (int id : qAsConst(ordre)) {
-        const QString nBtn = QString("btnPatient%1").arg(id);
-        const QString nAv  = QString("avatarPatient%1").arg(id);
-        const QString nSt  = QString("statusPatient%1").arg(id);
+    for (int id : ordre) {
+        auto *ligne = new QWidget(m_patientsContainer);
+        ligne->setFixedSize(262, 60);
+        auto *ligneLayout = new QHBoxLayout(ligne);
+        ligneLayout->setContentsMargins(0, 0, 0, 0); ligneLayout->setSpacing(3);
+        auto creerBouton = [ligne, ligneLayout](const QString &texte, QSize taille, const QString &style) {
+            auto *bouton = new QPushButton(texte, ligne);
+            bouton->setCursor(Qt::PointingHandCursor); bouton->setFixedSize(taille); bouton->setStyleSheet(style);
+            ligneLayout->addWidget(bouton);
+            return bouton;
+        };
 
-        auto *b = new QPushButton(ui->patientsContainer);
-        b->setObjectName(nBtn);
-        b->setCursor(Qt::PointingHandCursor);
-        b->setCheckable(true);
-        b->setFixedSize(262, 60);
-        b->setContextMenuPolicy(Qt::CustomContextMenu);
-        b->setStyleSheet(qss(m_charte.styleBoutonPatient(nBtn.toStdString())));
+        auto *b = creerBouton({}, {198, 60}, "QPushButton { background: transparent; color: #6B3F2E; border: none; "
+            "text-align: left; padding-left: 55px; font-weight: bold; } QPushButton:checked { background: #F9DEE4; }");
+        b->setObjectName(QString("btnPatient%1").arg(id)); b->setCheckable(true);
         m_groupe->addButton(b);
         connect(b, &QPushButton::clicked, this, [this, id]() { selectionnerPatient(id); });
-        connect(b, &QPushButton::customContextMenuRequested, this,
-                [this, b, id](const QPoint &pos) {
-            QMenu menu(b);
-            QAction *modifier = menu.addAction(QString::fromUtf8("Modifier le patient"));
-            QAction *supprimer = menu.addAction(QString::fromUtf8("Supprimer le patient"));
-            QAction *choix = menu.exec(b->mapToGlobal(pos));
-            if (choix == modifier)
-                modifierPatient(id);
-            else if (choix == supprimer)
-                supprimerPatient(id);
-        });
 
-        auto *av = new QLabel(QString::fromUtf8("🐾"), b);
-        av->setObjectName(nAv);
-        av->setGeometry(10, 12, 36, 36);
-        av->setAlignment(Qt::AlignCenter);
-        av->setAttribute(Qt::WA_TransparentForMouseEvents);
-        av->setStyleSheet(qss(m_charte.styleAvatar(nAv.toStdString(), 36)));
+        auto *supprimer = creerBouton(U("🗑"), {26, 28},
+            "QPushButton { background: #FCE8E6; color: #B3261E; border: none; border-radius: 6px; font-size: 13px; }");
+        supprimer->setToolTip(U("Supprimer le patient")); supprimer->setAccessibleName(U("Supprimer le patient"));
+        connect(supprimer, &QPushButton::clicked, this, [this, id]() { supprimerPatient(id); });
 
-        auto *st = new QLabel(b);
-        st->setObjectName(nSt);
-        st->setGeometry(184, 20, 68, 20);
-        st->setAlignment(Qt::AlignCenter);
-        st->setAttribute(Qt::WA_TransparentForMouseEvents);
+        auto etiquette = [b](const QString &texte, QRect zone) {
+            auto *l = new QLabel(texte, b);
+            l->setGeometry(zone); l->setAlignment(Qt::AlignCenter); l->setAttribute(Qt::WA_TransparentForMouseEvents);
+            return l;
+        };
+        etiquette(U("🐾"), {10, 12, 36, 36})->setStyleSheet("QLabel { background: #F3E6DC; border-radius: 18px; }");
+        etiquette({}, {122, 20, 68, 20})->setObjectName(QString("statusPatient%1").arg(id));
 
-        m_listeLayout->addWidget(b);
-        b->show();
-        av->show();
-        st->show();
-
+        m_listeLayout->addWidget(ligne); ligne->show();
         b->setChecked(id == m_courant);
         majLigne(id);
     }
@@ -889,401 +349,293 @@ void GestionRendezvous::majLigne(int id)
     const Patient *p = trouver(id);
     auto *b = findChild<QPushButton *>(QString("btnPatient%1").arg(id));
     if (!p || !b) return;
-
-    const QString nom   = p->nom.trimmed().isEmpty() ? QString::fromUtf8("(sans nom)") : p->nom;
-    const QString ligne2 = QString("%1 • %2").arg(p->heure.toString(FORMAT_HEURE),
-                                                  p->motif.trimmed().isEmpty() ? QString::fromUtf8("—") : p->motif);
-    b->setText(elide(nom, 125) + "\n" + elide(ligne2, 125));
-
+    const QString nom = p->nom.trimmed().isEmpty() ? U("(sans nom)") : p->nom;
+    const QString ligne2 = QString("%1 • %2").arg(p->heure.toString(FORMAT_HEURE), p->motif.trimmed().isEmpty() ? U("—") : p->motif);
+    b->setText(elide(nom, 65) + "\n" + elide(ligne2, 65));
     if (auto *st = findChild<QLabel *>(QString("statusPatient%1").arg(id))) {
-        st->setText(p->statut);
-        st->setStyleSheet(qss(m_charte.styleStatut(st->objectName().toStdString(),
-                                                   p->statutType.toStdString())));
+        st->setText(p->statut); st->setStyleSheet(statusStyle(p->statutType));
     }
 }
 
 void GestionRendezvous::majCompteur()
 {
-    int n = 0;
-    for (const Patient &p : qAsConst(m_patients))
-        if (p.statut == "En attente") ++n;
-    ui->patientsCountBadge->setText(QString("%1 en attente").arg(n));
-    majStatistiques();
-}
-
-void GestionRendezvous::majStatistiques()
-{
-    int realises = 0;
-    for (const Patient &p : qAsConst(m_patients))
-        if (p.rendezVousRealise) ++realises;
-
+    int enAttente = 0, realises = 0;
+    for (const Patient &p : m_patients) { enAttente += p.statut == "En attente"; realises += p.rendezVousRealise; }
     const int total = m_patients.size();
-    ui->statTotalLabel->setText(QString::fromUtf8("Total des rendez-vous : %1").arg(total));
-    ui->statRealisesLabel->setText(QString::fromUtf8("Réalisés : %1").arg(realises));
-    ui->statARealiserLabel->setText(QString::fromUtf8("À réaliser : %1").arg(total - realises));
+    ui->patientsCountBadge->setText(QString("%1 en attente").arg(enAttente));
+    ui->statTotalLabel->setText(U("Total des rendez-vous : %1").arg(total));
+    ui->statRealisesLabel->setText(U("Réalisés : %1").arg(realises));
+    ui->statARealiserLabel->setText(U("À réaliser : %1").arg(total - realises));
     m_graphiqueRendezVous->setAppointments(m_patients);
 }
 
-void GestionRendezvous::modifierPatient(int id)
-{
-    if (!trouver(id))
-        return;
-    selectionnerPatient(id);
-    appliquerModeEdition(true);
-    ui->patientName->setFocus();
-    ui->patientName->selectAll();
-}
 
 void GestionRendezvous::enregistrerPatient()
 {
     Patient *patient = patientCourant();
-    if (!patient || !m_modeEdition)
+    if (!patient || !m_modeEdition) return;
+    QDate date; QTime heure;
+    if (!validerChamp(this, ui->champDate, FORMAT_DATE, "Date invalide", "Saisissez une date valide avant d'enregistrer.", date)
+        || !validerChamp(this, ui->champHeure, FORMAT_HEURE, "Heure invalide", "Saisissez une heure valide avant d'enregistrer.", heure))
         return;
-
-    const QDate date = QDate::fromString(ui->champDate->text(), FORMAT_DATE);
-    if (!date.isValid()) {
-        QMessageBox::warning(this, QString::fromUtf8("Date invalide"),
-                             QString::fromUtf8("Saisissez une date valide avant d'enregistrer."));
-        ui->champDate->setFocus();
-        return;
-    }
-
-    const QTime heure = QTime::fromString(ui->champHeure->text(), FORMAT_HEURE);
-    if (!heure.isValid()) {
-        QMessageBox::warning(this, QString::fromUtf8("Heure invalide"),
-                             QString::fromUtf8("Saisissez une heure valide avant d'enregistrer."));
-        ui->champHeure->setFocus();
-        return;
-    }
-
-    patient->date = date;
-    patient->heure = heure;
-
-    // enregistrement dans Oracle (INSERT la premiere fois, UPDATE ensuite)
-    if (!sauvegarderEnBase(*patient))
-        return;   // on reste en mode edition pour corriger
-
-    majLigne(patient->id);
-    majCompteur();
-    appliquerModeEdition(false);
-}
-
-void GestionRendezvous::exporterPreConsultationPdf()
-{
-    const Patient *patient = patientCourant();
-    if (!patient) {
-        QMessageBox::warning(this, QString::fromUtf8("Aucun patient"),
-                             QString::fromUtf8("Sélectionnez un patient avant l'export."));
-        return;
-    }
-
-    const QString nom = patient->nom.trimmed().isEmpty()
-        ? QString::fromUtf8("patient")
-        : patient->nom.trimmed();
-    const QString fichierParDefaut =
-        QString("preconsultation_%1.pdf").arg(patient->dossier);
-    const QString chemin = QFileDialog::getSaveFileName(
-        this, QString::fromUtf8("Exporter la pré-consultation"),
-        QDir::home().filePath(fichierParDefaut),
-        QString::fromUtf8("Fichier PDF (*.pdf)"));
-    if (chemin.isEmpty())
-        return;
-
-    QString cheminPdf = chemin;
-    if (!cheminPdf.endsWith(".pdf", Qt::CaseInsensitive))
-        cheminPdf += ".pdf";
-
-    QSaveFile fichierPdf(cheminPdf);
-    if (!fichierPdf.open(QIODevice::WriteOnly)) {
-        QMessageBox::critical(this, QString::fromUtf8("Échec de l'export"),
-                              QString::fromUtf8("Impossible de créer le fichier PDF : %1")
-                                  .arg(fichierPdf.errorString()));
-        return;
-    }
-
-    auto html = [](const QString &value) {
-        const QString safeValue = value.trimmed().isEmpty()
-            ? QString::fromUtf8("Non renseigné")
-            : value.trimmed();
-        return safeValue.toHtmlEscaped().replace("\n", "<br>");
-    };
-
-    QTextDocument document;
-    document.setHtml(QString::fromUtf8(
-        "<html><head><meta charset='utf-8'/>"
-        "<style>"
-        "body{font-family:Arial,sans-serif;color:#3f302a;font-size:11pt;}"
-        "h1{color:#6B3F2E;font-size:20pt;}"
-        "h2{color:#6B3F2E;font-size:13pt;border-bottom:1px solid #F3E6DC;"
-        "padding-bottom:5px;margin-top:22px;}"
-        ".meta{color:#A98268;font-size:10pt;}"
-        ".field{margin:12px 0;}"
-        ".label{font-weight:bold;color:#6B3F2E;}"
-        ".value{margin-top:4px;padding:8px;background:#FDFBF9;"
-        "border:1px solid #F3E6DC;}"
-        "</style></head><body>"
-        "<h1>Questionnaire de pré-consultation</h1>"
-        "<p class='meta'>Dossier : %1 &nbsp; | &nbsp; Exporté le : %2</p>"
-        "<h2>Informations du patient</h2>"
-        "<div class='field'><div class='label'>Nom de l'animal</div>"
-        "<div class='value'>%3</div></div>"
-        "<div class='field'><div class='label'>Date et heure du rendez-vous</div>"
-        "<div class='value'>%4 à %5</div></div>"
-        "<div class='field'><div class='label'>Téléphone du propriétaire</div>"
-        "<div class='value'>%6</div></div>"
-        "<h2>Pré-consultation</h2>"
-        "<div class='field'><div class='label'>Motif de la consultation</div>"
-        "<div class='value'>%7</div></div>"
-        "<div class='field'><div class='label'>Notes communiquées</div>"
-        "<div class='value'>%8</div></div>"
-        "<div class='field'><div class='label'>Constatations préalables</div>"
-        "<div class='value'>%9</div></div>"
-        "</body></html>")
-        .arg(html(patient->dossier),
-             html(QDate::currentDate().toString(FORMAT_DATE)),
-             html(nom),
-             html(patient->date.toString(FORMAT_DATE)),
-             html(patient->heure.toString(FORMAT_HEURE)),
-             html(patient->telephone),
-             html(patient->motif),
-             html(patient->notes),
-             html(patient->constatations)));
-    document.setDocumentMargin(48);
-    {
-        QPdfWriter writer(&fichierPdf);
-        writer.setPageSize(QPageSize(QPageSize::A4));
-        writer.setResolution(96);
-        document.print(&writer);
-    }
-    if (!fichierPdf.commit()) {
-        QMessageBox::critical(this, QString::fromUtf8("Échec de l'export"),
-                              QString::fromUtf8("Impossible d'enregistrer le PDF : %1")
-                                  .arg(fichierPdf.errorString()));
-        return;
-    }
-
-    QMessageBox::information(this, QString::fromUtf8("Export terminé"),
-                             QString::fromUtf8("Le questionnaire de pré-consultation a été enregistré."));
-}
-
-void GestionRendezvous::supprimerPatient(int id)
-{
-    Patient *patient = trouver(id);
-    if (!patient)
-        return;
-
-    const QString nom = patient->nom.trimmed().isEmpty()
-        ? QString::fromUtf8("ce patient")
-        : patient->nom;
-    const auto confirmation = QMessageBox::question(
-        this, QString::fromUtf8("Supprimer le patient"),
-        QString::fromUtf8("Voulez-vous vraiment supprimer %1 ?").arg(nom),
-        QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
-    if (confirmation != QMessageBox::Yes)
-        return;
-
-    // suppression dans Oracle d'abord (si le rendez-vous y est enregistre)
-    if (patient->enBase && !supprimerEnBase(*patient))
-        return;
-
-    const int index = int(patient - m_patients.data());
-    m_patients.removeAt(index);
-    if (m_courant == id)
-        m_courant = -1;
-
+    patient->date = date; patient->heure = heure;
+    QString erreur;
+    if (!m_patientModel.sauvegarder(*patient, erreur)) { echec(this, "Base de données", "Échec de l'enregistrement :\n%1", erreur); return; }
     reconstruireListe();
-    if (!m_patients.isEmpty()) {
-        selectionnerPatient(m_patients.first().id);
-        return;
-    }
-
-    ui->patientName->clear();
-    ui->champNom->clear();
-    ui->champDate->clear();
-    ui->champHeure->clear();
-    ui->champMotif->clear();
-    ui->champTel->clear();
-    ui->champNotes->clear();
-    ui->motifText->clear();
-    ui->diagnosticText->clear();
-    ui->dossierLabel->setText(QString::fromUtf8("Aucun dossier sélectionné"));
-    appliquerModeEdition(false);
+    selectionnerPatient(patient->id);
 }
 
 void GestionRendezvous::setStatutPatient(int numero, const QString &texte, const QString &type)
 {
     Patient *p = trouver(numero);
-    if (!p)
+    if (!p) return;
+    const Patient ancien = *p;
+    p->statut = texte; p->statutType = type;
+    p->rendezVousRealise = type == "succes" || estRealise(texte);
+    QString erreur;
+    if (p->enBase && !m_patientModel.sauvegarder(*p, erreur)) {
+        *p = ancien;
+        echec(this, "Base de données", "Échec de la modification :\n%1", erreur);
+        majLigne(numero);
         return;
-    p->statut     = texte;
-    p->statutType = type;
-    p->rendezVousRealise =
-        type == "succes"
-        || texte.compare(QString::fromUtf8("Réalisé"), Qt::CaseInsensitive) == 0
-        || texte.compare(QStringLiteral("Realise"), Qt::CaseInsensitive) == 0
-        || texte.compare(QString::fromUtf8("Terminé"), Qt::CaseInsensitive) == 0
-        || texte.compare(QStringLiteral("Termine"), Qt::CaseInsensitive) == 0;
-    if (p->enBase)
-        sauvegarderEnBase(*p);   // met a jour la colonne ETAT
-    majLigne(numero);
-    majCompteur();
+    }
+    majLigne(numero); majCompteur();
+}
+
+void GestionRendezvous::supprimerPatient(int id)
+{
+    Patient *patient = trouver(id);
+    if (!patient) return;
+    const QString nom = patient->nom.trimmed().isEmpty() ? U("ce patient") : patient->nom;
+    if (QMessageBox::question(this, U("Supprimer le patient"), U("Voulez-vous vraiment supprimer %1 ?").arg(nom),
+                              QMessageBox::Yes | QMessageBox::No, QMessageBox::No) != QMessageBox::Yes) return;
+    QString erreur;
+    if (!m_patientModel.supprimer(*patient, erreur)) { echec(this, "Base de données", "Échec de la suppression :\n%1", erreur); return; }
+    m_patients.removeAt(int(patient - m_patients.data()));
+    if (m_courant == id) m_courant = -1;
+
+    reconstruireListe();
+    if (!m_patients.isEmpty()) { selectionnerPatient(m_patients.first().id); return; }
+
+    afficherPatient(Patient());     
+    ui->dossierLabel->setText(U("Aucun dossier sélectionné"));
+    appliquerModeEdition(false);
+    for (QPushButton *bouton : m_actions) bouton->setEnabled(false);
+}
+
+void GestionRendezvous::exporterPreConsultationPdf()
+{
+    const Patient *patient = patientCourant();
+    if (!patient) { QMessageBox::warning(this, U("Aucun patient"), U("Sélectionnez un patient avant l'export.")); return; }
+    QString chemin = QFileDialog::getSaveFileName(this, U("Exporter la pré-consultation"),
+        QDir::home().filePath(QString("preconsultation_%1.pdf").arg(patient->dossier)), U("Fichier PDF (*.pdf)"));
+    if (chemin.isEmpty()) return;
+    if (!chemin.endsWith(".pdf", Qt::CaseInsensitive)) chemin += ".pdf";
+
+    QSaveFile fichierPdf(chemin);
+    if (!fichierPdf.open(QIODevice::WriteOnly)) {
+        echec(this, "Échec de l'export", "Impossible de créer le fichier PDF : %1", fichierPdf.errorString()); return;
+    }
+    const QPair<QString, QString> fields[] = {
+        {"Nom de l'animal", patient->nom},
+        {"Date et heure du rendez-vous", patient->date.toString(FORMAT_DATE) + " à " + patient->heure.toString(FORMAT_HEURE)},
+        {"Téléphone du propriétaire", patient->telephone}, {"Motif de la consultation", patient->motif},
+        {"Notes communiquées", patient->notes}, {"Constatations préalables", patient->constatations}};
+    QStringList rows;
+    for (const auto &[label, raw] : fields)
+        rows << QString("<p><b>%1</b><br>%2</p>").arg(label,
+            (raw.trimmed().isEmpty() ? U("Non renseigné") : raw.trimmed()).toHtmlEscaped().replace("\n", "<br>"));
+    QTextDocument document;
+    document.setHtml(QString("<h1>Questionnaire de pré-consultation</h1>"
+        "<p>Dossier : %1 | Exporté le : %2</p><h2>Informations et pré-consultation</h2>%3")
+        .arg(patient->dossier.toHtmlEscaped(), QDate::currentDate().toString(FORMAT_DATE), rows.join(QString())));
+    document.setDocumentMargin(48);
+    {
+        QPdfWriter writer(&fichierPdf);
+        writer.setPageSize(QPageSize(QPageSize::A4)); writer.setResolution(96);
+        document.print(&writer);
+    }
+    if (!fichierPdf.commit()) {
+        echec(this, "Échec de l'export", "Impossible d'enregistrer le PDF : %1", fichierPdf.errorString()); return;
+    }
+    QMessageBox::information(this, U("Export terminé"), U("Le questionnaire de pré-consultation a été enregistré."));
 }
 
 
-// ============================================================
-//  Base de donnees Oracle : table GESTIONRENDEZVOUS
-//  Colonnes : HEURE (TIMESTAMP), ETAT, TELEPHONE (NUMBER),
-//             DATE_RENDEZ_VOUS (DATE), MOTIF
-//  Les valeurs sont echangees sous forme de texte puis converties
-//  par Oracle (TO_TIMESTAMP, TO_DATE, TO_NUMBER).
-// ============================================================
-static const QString SQL_FORMAT_HEURE = QStringLiteral("YYYY-MM-DD HH24:MI:SS.FF6");
-static const QString SQL_FORMAT_DATE  = QStringLiteral("YYYY-MM-DD");
-
-static QString chiffresSeulement(const QString &s)
+static QString chiffresSeulement(const QString &texte)
 {
-    QString r;
-    for (const QChar &ch : s)
-        if (ch.isDigit()) r += ch;
-    return r;
+    QString resultat;
+    for (const QChar c : texte) if (c.isDigit()) resultat += c;
+    return resultat;
+}
+
+static bool executer(QSqlQuery &query, QString &erreur)
+{
+    if (query.exec()) return true;
+    erreur = query.lastError().text(); return false;
+}
+
+static bool executer(QSqlQuery &query, QSqlDatabase &database, QString &erreur,
+                     const char *messageSiAucuneLigne = nullptr)
+{
+    if (!executer(query, erreur)) {
+        database.rollback();
+        return false;
+    }
+    if (!messageSiAucuneLigne || query.numRowsAffected() != 0) return true;
+    erreur = U(messageSiAucuneLigne);
+    database.rollback();
+    return false;
+}
+
+static bool invalide(QString &erreur, const char *message) { erreur = U(message); return false; }
+
+bool PatientModel::charger(QVector<Patient> &patients, QString &erreur)
+{
+    QSqlQuery query;
+    query.prepare(QString(
+        "SELECT r.ID_ANIMAL, TO_CHAR(r.HEURE, '%1'), TO_CHAR(r.DATE_RENDEZ_VOUS, '%2'), "
+        "TO_CHAR(r.TELEPHONE), r.ETAT, r.MOTIF, "
+        "NVL(r.PROPRIETAIRE, a.NOM_PROPRIETAIRE), a.NOM "
+        "FROM GESTIONRENDEZVOUS r "
+        "JOIN ANIMAUX a ON a.ID_ANIMAL = r.ID_ANIMAL "
+        "ORDER BY r.DATE_RENDEZ_VOUS, r.HEURE")
+        .arg(SQL_FORMAT_HEURE, SQL_FORMAT_DATE));
+    if (!executer(query, erreur)) return false;
+
+    QVector<Patient> resultat;
+    while (query.next()) {
+        Patient p;
+        p.id = resultat.size() + 1;
+        p.idAnimal = query.value(0).toLongLong();
+        const QString heure = query.value(1).toString();
+        const QString date = query.value(2).toString();
+        p.telephone = query.value(3).toString();
+        p.date = QDate::fromString(date, "yyyy-MM-dd");
+        p.heure = QTime::fromString(heure.mid(11, 5), "HH:mm");
+        if (!p.date.isValid() || !p.heure.isValid()) return invalide(erreur, "La base contient une date ou une heure invalide.");
+        p.dossier = numeroDossier(p.id);
+        p.cleTelephone = p.telephone;
+        p.statut = query.value(4).toString();
+        p.motif = query.value(5).toString();
+        p.proprietaire = query.value(6).toString();
+        p.nom = query.value(7).toString();
+        const QString statut = p.statut.toLower();
+        p.rendezVousRealise = estRealise(statut);
+        p.statutType = p.rendezVousRealise ? "succes" : statut.contains("urgent") || statut.contains("annul") ? "alerte" : "neutre";
+        p.enBase = true;
+        resultat.append(p);
+    }
+    if (query.lastError().isValid()) { erreur = query.lastError().text(); return false; }
+    patients = resultat;
+    return true;
+}
+
+bool PatientModel::sauvegarder(Patient &patient, QString &erreur)
+{
+    if (patient.nom.trimmed().isEmpty() || patient.nom.toUtf8().size() > 100)
+        return invalide(erreur, "Saisissez un nom d'animal (100 caractères maximum).");
+    for (const QChar c : patient.telephone)
+        if (!c.isDigit() && !QStringLiteral(" +().-/").contains(c))
+            return invalide(erreur, "Le numéro de téléphone contient un caractère invalide.");
+    const QString telephone = chiffresSeulement(patient.telephone);
+    if (!patient.date.isValid() || !patient.heure.isValid()) return invalide(erreur, "Saisissez une date et une heure valides.");
+    bool telephoneValide = false;
+    const qulonglong numeroTelephone = telephone.toULongLong(&telephoneValide);
+    if (!telephoneValide || numeroTelephone == 0 || telephone.size() > 15)
+        return invalide(erreur, "Saisissez un numéro de téléphone positif (15 chiffres maximum).");
+    if (patient.motif.toUtf8().size() > 200 || patient.statut.trimmed().isEmpty() || patient.statut.size() > 50
+        || (!patient.proprietaire.isEmpty() && patient.proprietaire.toUtf8().size() > 150))
+        return invalide(erreur, "Vérifiez le motif, le propriétaire et le statut du rendez-vous.");
+
+    const QString date = patient.date.toString("yyyy-MM-dd");
+    const QString heure = date + " " + patient.heure.toString("HH:mm") + ":00.000000";
+    QSqlDatabase database = QSqlDatabase::database();
+    if (!database.transaction()) {
+        erreur = database.lastError().text();
+        return false;
+    }
+    QSqlQuery query;
+    if (!patient.enBase) {
+        query.prepare(QString("BEGIN ENREGISTRER_RENDEZVOUS(?, TO_NUMBER(?), "
+                              "TO_TIMESTAMP(?, '%1'), ?, TO_DATE(?, '%2'), ?); END;")
+                      .arg(SQL_FORMAT_HEURE, SQL_FORMAT_DATE));
+        query.addBindValue(patient.nom.trimmed());
+        query.addBindValue(telephone);
+        query.addBindValue(heure);
+        query.addBindValue(patient.statut);
+        query.addBindValue(date);
+        query.addBindValue(patient.motif);
+        if (!executer(query, database, erreur)) return false;
+        query.finish();
+        query.prepare("SELECT ID_ANIMAL, NOM_PROPRIETAIRE FROM ANIMAUX "
+                      "WHERE LOWER(NOM) = LOWER(?) AND TELEPHONE = TO_NUMBER(?)");
+        query.addBindValue(patient.nom.trimmed());
+        query.addBindValue(telephone);
+        if (!executer(query, database, erreur) || !query.next()) {
+            if (erreur.isEmpty()) erreur = U("L'animal n'a pas été retrouvé après son enregistrement.");
+            database.rollback();
+            return false;
+        }
+        patient.idAnimal = query.value(0).toLongLong();
+        patient.proprietaire = query.value(1).toString();
+        if (patient.proprietaire.toUtf8().size() > 150) {
+            erreur = U("L'animal sélectionné n'a pas de propriétaire valide dans la base.");
+            database.rollback();
+            return false;
+        }
+        if (query.next()) {
+            erreur = U("Plusieurs animaux correspondent au même nom et téléphone.");
+            database.rollback();
+            return false;
+        }
+    } else {
+        query.prepare(QString("BEGIN MODIFIER_RENDEZVOUS(?, TO_NUMBER(?), ?, TO_NUMBER(?), "
+                              "TO_TIMESTAMP(?, '%1'), ?, TO_DATE(?, '%2'), ?, ?); END;")
+                      .arg(SQL_FORMAT_HEURE, SQL_FORMAT_DATE));
+        query.addBindValue(patient.idAnimal);
+        query.addBindValue(patient.cleTelephone);
+        query.addBindValue(patient.nom.trimmed());
+        query.addBindValue(telephone);
+        query.addBindValue(heure);
+        query.addBindValue(patient.statut);
+        query.addBindValue(date);
+        query.addBindValue(patient.motif);
+        query.addBindValue(patient.proprietaire);
+        if (!executer(query, database, erreur)) return false;
+    }
+    query.finish();
+    if (!database.commit()) {
+        erreur = database.lastError().text();
+        database.rollback();
+        return false;
+    }
+
+    patient.enBase = true;
+    patient.telephone = telephone;
+    patient.cleTelephone = telephone;
+    patient.dossier = numeroDossier(patient.id);
+    return true;
+}
+
+bool PatientModel::supprimer(const Patient &patient, QString &erreur)
+{
+    if (!patient.enBase) return true;
+    QSqlQuery query;
+    query.prepare("DELETE FROM GESTIONRENDEZVOUS WHERE ID_ANIMAL = ? AND TELEPHONE = TO_NUMBER(?)");
+    query.addBindValue(patient.idAnimal);
+    query.addBindValue(patient.cleTelephone);
+    if (!executer(query, erreur)) return false;
+    return query.numRowsAffected() > 0 || invalide(erreur, "Le rendez-vous n'existe plus dans la base de données.");
 }
 
 void GestionRendezvous::chargerDepuisBase()
 {
-    QSqlQuery q;
-    const QString sql = QString(
-        "SELECT TO_CHAR(heure, '%1'), TO_CHAR(date_rendez_vous, '%2'), "
-        "TO_CHAR(telephone), etat, motif "
-        "FROM gestionrendezvous ORDER BY date_rendez_vous, heure")
-        .arg(SQL_FORMAT_HEURE, SQL_FORMAT_DATE);
-
-    if (!q.exec(sql)) {
-        qDebug() << "Chargement impossible :" << q.lastError().text();
+    QString erreur;
+    if (!m_patientModel.charger(m_patients, erreur)) {
+        qCritical() << "Chargement des rendez-vous impossible :" << erreur;
+        echec(this, "Base de données", "Impossible de charger les rendez-vous :\n%1", erreur);
         return;
     }
-
-    while (q.next()) {
-        const QString cleHeure = q.value(0).toString();
-        const QString cleDate  = q.value(1).toString();
-        const QString tel      = q.value(2).toString();
-        const QString etat     = q.value(3).toString();
-        const QString motif    = q.value(4).toString();
-
-        const QDate date   = QDate::fromString(cleDate, "yyyy-MM-dd");
-        const QTime heure  = QTime::fromString(cleHeure.mid(11, 5), "HH:mm");
-
-        // La table n'a pas de colonne NOM : on affiche le telephone a la place
-        const int id = ajouterPatient(QString("Patient %1").arg(tel), date, heure);
-        Patient *p = trouver(id);
-        if (!p) continue;
-
-        p->telephone = tel;
-        p->motif     = motif;
-        if (!etat.trimmed().isEmpty())
-            p->statut = etat;
-
-        const QString e = p->statut.toLower();
-        if (e.contains(QString::fromUtf8("réalis")) || e.contains("realis")
-            || e.contains(QString::fromUtf8("terminé")) || e.contains("termine")) {
-            p->statutType = "succes";
-            p->rendezVousRealise = true;
-        } else if (e.contains("urgent") || e.contains("annul")) {
-            p->statutType = "alerte";
-        } else {
-            p->statutType = "neutre";
-        }
-
-        p->enBase   = true;
-        p->cleHeure = cleHeure;
-        p->cleDate  = cleDate;
-        p->cleTel   = chiffresSeulement(tel);
-    }
-}
-
-bool GestionRendezvous::sauvegarderEnBase(Patient &p)
-{
-    const QString tel = chiffresSeulement(p.telephone);
-    if (tel.isEmpty()) {
-        QMessageBox::warning(this, QString::fromUtf8("Téléphone manquant"),
-                             QString::fromUtf8("Le téléphone est obligatoire pour enregistrer "
-                                               "le rendez-vous dans la base de données."));
-        ui->champTel->setFocus();
-        return false;
-    }
-
-    const QString nouvDate  = p.date.toString("yyyy-MM-dd");
-    const QString nouvHeure = nouvDate + " " + p.heure.toString("HH:mm") + ":00.000000";
-
-    QSqlQuery q;
-    bool fait = false;
-
-    // 1) rendez-vous deja en base : UPDATE de la ligne retrouvee par son ancienne cle
-    if (p.enBase) {
-        q.prepare(QString(
-            "UPDATE gestionrendezvous SET "
-            "heure = TO_TIMESTAMP(?, '%1'), etat = ?, telephone = TO_NUMBER(?), "
-            "date_rendez_vous = TO_DATE(?, '%2'), motif = ? "
-            "WHERE heure = TO_TIMESTAMP(?, '%1') "
-            "AND date_rendez_vous = TO_DATE(?, '%2') "
-            "AND telephone = TO_NUMBER(?) AND ROWNUM = 1")
-            .arg(SQL_FORMAT_HEURE, SQL_FORMAT_DATE));
-        q.addBindValue(nouvHeure);
-        q.addBindValue(p.statut);
-        q.addBindValue(tel);
-        q.addBindValue(nouvDate);
-        q.addBindValue(p.motif);
-        q.addBindValue(p.cleHeure);
-        q.addBindValue(p.cleDate);
-        q.addBindValue(p.cleTel);
-        if (!q.exec()) {
-            QMessageBox::critical(this, QString::fromUtf8("Base de données"),
-                QString::fromUtf8("Échec de la modification :\n%1").arg(q.lastError().text()));
-            return false;
-        }
-        fait = q.numRowsAffected() > 0;   // 0 : la ligne a disparu, on la recree
-    }
-
-    // 2) nouveau rendez-vous : INSERT
-    if (!fait) {
-        q.prepare(QString(
-            "INSERT INTO gestionrendezvous (heure, etat, telephone, date_rendez_vous, motif) "
-            "VALUES (TO_TIMESTAMP(?, '%1'), ?, TO_NUMBER(?), TO_DATE(?, '%2'), ?)")
-            .arg(SQL_FORMAT_HEURE, SQL_FORMAT_DATE));
-        q.addBindValue(nouvHeure);
-        q.addBindValue(p.statut);
-        q.addBindValue(tel);
-        q.addBindValue(nouvDate);
-        q.addBindValue(p.motif);
-        if (!q.exec()) {
-            QMessageBox::critical(this, QString::fromUtf8("Base de données"),
-                QString::fromUtf8("Échec de l'enregistrement :\n%1").arg(q.lastError().text()));
-            return false;
-        }
-    }
-
-    p.enBase   = true;
-    p.cleHeure = nouvHeure;
-    p.cleDate  = nouvDate;
-    p.cleTel   = tel;
-    return true;
-}
-
-bool GestionRendezvous::supprimerEnBase(const Patient &p)
-{
-    QSqlQuery q;
-    q.prepare(QString(
-        "DELETE FROM gestionrendezvous "
-        "WHERE heure = TO_TIMESTAMP(?, '%1') "
-        "AND date_rendez_vous = TO_DATE(?, '%2') "
-        "AND telephone = TO_NUMBER(?) AND ROWNUM = 1")
-        .arg(SQL_FORMAT_HEURE, SQL_FORMAT_DATE));
-    q.addBindValue(p.cleHeure);
-    q.addBindValue(p.cleDate);
-    q.addBindValue(p.cleTel);
-    if (!q.exec()) {
-        QMessageBox::critical(this, QString::fromUtf8("Base de données"),
-            QString::fromUtf8("Échec de la suppression :\n%1").arg(q.lastError().text()));
-        return false;
-    }
-    return true;
+    m_dernierId = m_patients.size();
 }
