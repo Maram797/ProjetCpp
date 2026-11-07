@@ -8,17 +8,18 @@ SOURCES += \
     main.cpp \
     animal.cpp \
     connection.cpp \
-    mainwindow.cpp
+    Petcarecenter.cpp
 
 HEADERS += \
     animal.h \
     connection.h \
-    mainwindow.h
+    Petcarecenter.h
 
 FORMS += \
-    mainwindow.ui
+    Petcarecenter.ui
 
 RESOURCES += \
     resources.qrc
 
 win32: CONFIG += windows
+win32: LIBS += -ladvapi32

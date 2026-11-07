@@ -4,8 +4,9 @@
 #include <QRegularExpression>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QSqlQueryModel>
 
-QString healthText(Health h)
+QString Animal::healthText(Health h)
 {
     switch (h) {
     case Health::Sain: return QStringLiteral("Sain");
@@ -15,7 +16,7 @@ QString healthText(Health h)
     }
 }
 
-QColor healthColor(Health h)
+QColor Animal::healthColor(Health h)
 {
     switch (h) {
     case Health::Sain: return QColor("#287554");
@@ -30,13 +31,6 @@ QString ageText(int years)
     if (years <= 0) return QStringLiteral("Moins d'un an");
     if (years == 1) return QStringLiteral("1 an");
     return QStringLiteral("%1 ans").arg(years);
-}
-
-static Health healthFromString(const QString &v)
-{
-    if (v.compare("Urgent", Qt::CaseInsensitive) == 0) return Health::Urgent;
-    if (v.compare("En soin", Qt::CaseInsensitive) == 0) return Health::EnSoin;
-    return Health::Sain;
 }
 
 static QString cleanPhone(const QString &p)
@@ -62,29 +56,19 @@ static QSqlQueryModel *model(const QString &q)
 }
 
 Animal::Animal()
-    : m_id(0)
-    , m_espece(QStringLiteral("Chien"))
+    : m_espece(QStringLiteral("Chien"))
     , m_vaccinal(QStringLiteral("À jour"))
     , m_sante(Health::Sain)
 {
     m_dateNaissance = QDate::currentDate();
 }
 
-Animal::Animal(int id, const QString &nom, const QString &espece, const QString &race,
+Animal::Animal(const QString &nom, const QString &espece, const QString &race,
                const QDate &dateNaissance, const QString &puce, const QString &vaccinal,
                const QString &proprietaire, const QString &telephone, Health sante)
-    : m_id(id), m_nom(nom), m_espece(espece), m_race(race), m_dateNaissance(dateNaissance),
+    : m_nom(nom), m_espece(espece), m_race(race), m_dateNaissance(dateNaissance),
       m_puce(puce), m_vaccinal(vaccinal), m_proprietaire(proprietaire), m_telephone(telephone), m_sante(sante)
 {}
-
-int Animal::getAge() const
-{
-    if (!m_dateNaissance.isValid()) return 0;
-    const QDate today = QDate::currentDate();
-    int age = today.year() - m_dateNaissance.year();
-    if (today < m_dateNaissance.addYears(age)) --age;
-    return qMax(0, age);
-}
 
 bool Animal::ensureTable()
 {
@@ -160,17 +144,3 @@ QSqlQueryModel *Animal::trierParDateNaissance(bool asc)
     const QString order = asc ? QStringLiteral("ASC") : QStringLiteral("DESC");
     return model(QStringLiteral("SELECT id_animal, nom, espece, race, date_naissance, TRUNC(MONTHS_BETWEEN(SYSDATE, date_naissance) / 12) AS age, puce, vaccinal, nom_proprietaire, TO_CHAR(telephone), etat_sante FROM animaux ORDER BY date_naissance ") + order);
 }
-
-Animal Animal::trouverParId(int id)
-{
-    QSqlQuery q;
-    q.prepare("SELECT id_animal, nom, espece, race, date_naissance, puce, vaccinal, nom_proprietaire, TO_CHAR(telephone), etat_sante FROM animaux WHERE id_animal = :id");
-    q.bindValue(":id", id);
-    if (q.exec() && q.next()) {
-        return Animal(q.value(0).toInt(), q.value(1).toString(), q.value(2).toString(), q.value(3).toString(),
-                      q.value(4).toDate(), q.value(5).toString(), q.value(6).toString(), q.value(7).toString(),
-                      q.value(8).toString(), healthFromString(q.value(9).toString()));
-    }
-    return Animal();
-}
-

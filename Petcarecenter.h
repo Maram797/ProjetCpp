@@ -1,10 +1,11 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef PETCARECENTER_H
+#define PETCARECENTER_H
 
 #include <QMainWindow>
-#include <QSqlQueryModel>
 
 #include "animal.h"
+
+class QSqlQueryModel;
 
 namespace Ui {
 class MainWindow;
