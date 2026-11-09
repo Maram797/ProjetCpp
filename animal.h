@@ -1,5 +1,3 @@
-#pragma once
-
 #include <QColor>
 #include <QDate>
 #include <QString>

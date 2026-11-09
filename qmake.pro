@@ -22,4 +22,3 @@ RESOURCES += \
     resources.qrc
 
 win32: CONFIG += windows
-win32: LIBS += -ladvapi32

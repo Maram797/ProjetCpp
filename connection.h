@@ -1,15 +1,13 @@
-#pragma once
+#ifndef CONNECTION_H
+#define CONNECTION_H
 
 #include <QSqlDatabase>
 #include <QString>
 
 class Connection final {
 public:
-    static Connection &instance();
-    static QString loadSavedPassword(QString *error = nullptr);
-    static bool savePassword(const QString &password, QString *error = nullptr);
-    void setPassword(const QString &password);
-    bool open();
+    static Connection &createInstance();
+    bool createConnection();
     QString lastError() const;
 
 private:
@@ -18,7 +16,7 @@ private:
     Connection(const Connection &) = delete;
     Connection &operator=(const Connection &) = delete;
 
-    QSqlDatabase m_database;
-    QString m_password;
-    QString m_configurationError;
+    QSqlDatabase db;
 };
+
+#endif // CONNECTION_H
