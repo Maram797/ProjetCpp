@@ -7,15 +7,15 @@
 
 class Connection {
 public:
-    static Connection& createInstance(); // Méthode statique (Singleton)
-    bool createConnection();             // Établir la connexion
+    static Connection& createInstance();
+    bool createConnection();
 
 private:
     QSqlDatabase db;
-    Connection();                        // Constructeur privé
-    ~Connection();                       // Destructeur privé
-    Connection(const Connection&) = delete;            // Interdire la copie
-    Connection& operator=(const Connection&) = delete; // Interdire l'affectation
+    Connection();
+    ~Connection();
+    Connection(const Connection&) = delete;
+    Connection& operator=(const Connection&) = delete;
 };
 
-#endif // CONNECTION_H
+#endif

@@ -9,20 +9,18 @@ LIBS += -L"C:/Users/ASUS/Desktop/Qt/GestionCommandes/vcpkg/installed/x64-mingw-s
 INCLUDEPATH += "C:/Users/ASUS/Desktop/Qt/GestionCommandes/vcpkg/installed/x64-mingw-static/include"
 
 SOURCES += \
+    Petcarecenter.cpp \
     connection.cpp \
     employe.cpp \
-    main.cpp \
-    mainwindow.cpp \
-    qrcodegenerator.cpp
+    main.cpp
 
 HEADERS += \
+    Petcarecenter.h \
     connection.h \
-    employe.h \
-    mainwindow.h \
-    qrcodegenerator.h
+    employe.h
 
 FORMS += \
-    mainwindow.ui
+    Petcarecenter.ui
 
 RESOURCES += \
     resources.qrc

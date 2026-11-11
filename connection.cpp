@@ -22,7 +22,8 @@ bool Connection::createConnection() {
     // Assurez-vous que le nom correspond EXACTEMENT à celui dans ODBC 64 bits
     db.setDatabaseName("Projet");
     db.setUserName("system");
-    db.setPassword("nff14468000");
+
+    db.setPassword(qEnvironmentVariable("GESTIONCOMMANDES_DB_PASSWORD"));
 
     if (db.open()) {
         qDebug() << "Connexion à Oracle réussie !";

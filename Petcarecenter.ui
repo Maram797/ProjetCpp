@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>Petcarecenter</class>
+ <widget class="QMainWindow" name="Petcarecenter">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1274</width>
-    <height>780</height>
+    <width>1300</width>
+    <height>1042</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -734,8 +734,6 @@
          </property>
         </widget>
        </item>
-
-       <!-- ID employé -->
        <item>
         <layout class="QHBoxLayout" name="rowIdLayout">
          <item>
@@ -750,18 +748,16 @@
          </item>
          <item>
           <widget class="QLineEdit" name="txtId">
-           <property name="placeholderText">
-            <string>Auto-généré</string>
-           </property>
            <property name="readOnly">
             <bool>true</bool>
+           </property>
+           <property name="placeholderText">
+            <string>Auto-généré</string>
            </property>
           </widget>
          </item>
         </layout>
        </item>
-
-       <!-- Nom -->
        <item>
         <layout class="QHBoxLayout" name="rowNomLayout">
          <item>
@@ -779,8 +775,6 @@
          </item>
         </layout>
        </item>
-
-       <!-- Prénom -->
        <item>
         <layout class="QHBoxLayout" name="rowPrenomLayout">
          <item>
@@ -798,8 +792,6 @@
          </item>
         </layout>
        </item>
-
-       <!-- Téléphone -->
        <item>
         <layout class="QHBoxLayout" name="rowTelLayout">
          <item>
@@ -817,8 +809,6 @@
          </item>
         </layout>
        </item>
-
-       <!-- Mail -->
        <item>
         <layout class="QHBoxLayout" name="rowMailLayout">
          <item>
@@ -836,8 +826,6 @@
          </item>
         </layout>
        </item>
-
-       <!-- Adresse -->
        <item>
         <layout class="QHBoxLayout" name="rowAdresseLayout">
          <item>
@@ -855,8 +843,6 @@
          </item>
         </layout>
        </item>
-
-       <!-- Date d'embauche -->
        <item>
         <layout class="QHBoxLayout" name="rowEmbaucheLayout">
          <item>
@@ -881,8 +867,6 @@
          </item>
         </layout>
        </item>
-
-       <!-- Poste -->
        <item>
         <layout class="QHBoxLayout" name="rowPosteLayout">
          <item>
@@ -931,8 +915,6 @@
          </item>
         </layout>
        </item>
-
-       <!-- Date de naissance -->
        <item>
         <layout class="QHBoxLayout" name="rowNaissanceLayout">
          <item>
@@ -957,8 +939,6 @@
          </item>
         </layout>
        </item>
-
-       <!-- Mot de passe -->
        <item>
         <layout class="QHBoxLayout" name="rowPwdLayout">
          <item>
@@ -980,8 +960,6 @@
          </item>
         </layout>
        </item>
-
-       <!-- Question secrète -->
        <item>
         <layout class="QHBoxLayout" name="rowQuestionLayout">
          <item>
@@ -1020,8 +998,6 @@
          </item>
         </layout>
        </item>
-
-       <!-- Réponse -->
        <item>
         <layout class="QHBoxLayout" name="rowReponseLayout">
          <item>
@@ -1039,10 +1015,6 @@
          </item>
         </layout>
        </item>
-
-       <!-- ============================================================ -->
-       <!--  SECTION QR CODE                                              -->
-       <!-- ============================================================ -->
        <item>
         <widget class="QFrame" name="qrFrame">
          <property name="class" stdset="0">
@@ -1147,10 +1119,6 @@
          </layout>
         </widget>
        </item>
-       <!-- ============================================================ -->
-       <!--  FIN SECTION QR CODE                                          -->
-       <!-- ============================================================ -->
-
        <item>
         <spacer name="formSpacer">
          <property name="orientation">
